@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles/theme.css">
+<style>
+  body { margin: 0; font-family: var(--font-sans); background: #f5f5f2; padding: 20px; color: #1c1c1a; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .card {
+    background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden; flex: 1; min-width: 220px; max-width: 280px;
+  }
+  .card-header { background: #1B2B4B; color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .card-header .title { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+  .card-header .num { font-size: 18px; font-weight: 800; color: #F0A500; }
+  .card-body { padding: 14px 16px; }
+  .meta { display: flex; flex-direction: column; gap: 6px; }
+  .meta-row { display: flex; justify-content: space-between; font-size: 13px; }
+  .meta-row .key { color: #787872; font-weight: 500; }
+  .meta-row .val { font-weight: 600; color: #1c1c1a; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; border-radius: 9999px; padding: 3px 10px; }
+  .s-progress { background: #fef3c7; color: #92400e; }
+  .s-done     { background: #dcfce7; color: #166534; }
+  .s-waiting  { background: #f3e8ff; color: #6b21a8; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .card-footer { padding: 10px 16px; border-top: 1px solid #ebebе7; display: flex; justify-content: space-between; align-items: center; }
+  .price { font-size: 16px; font-weight: 700; color: #1B2B4B; }
+  .mech { font-size: 12px; color: #787872; }
+
+  /* Stat card */
+  .stat-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 16px 18px; min-width: 120px; max-width: 150px; }
+  .stat-label { font-size: 11px; font-weight: 600; color: #787872; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 800; color: #1B2B4B; line-height: 1; }
+  .stat-sub { font-size: 12px; color: #22c55e; font-weight: 600; margin-top: 4px; }
+  .stat-card.accent { border-top: 3px solid #F0A500; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <!-- OS Cards -->
+    <div class="card">
+      <div class="card-header">
+        <span class="title">Ordem de Serviço</span>
+        <span class="num">#0421</span>
+      </div>
+      <div class="card-body">
+        <div class="meta">
+          <div class="meta-row"><span class="key">Veículo</span><span class="val">Honda Civic 2019</span></div>
+          <div class="meta-row"><span class="key">Placa</span><span class="val">ABC-1234</span></div>
+          <div class="meta-row"><span class="key">Serviço</span><span class="val">Revisão completa</span></div>
+          <div class="meta-row"><span class="key">Status</span><span><span class="badge s-progress"><span class="dot"></span>Em andamento</span></span></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="price">R$ 1.240,00</span>
+        <span class="mech">Carlos A.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="title">Ordem de Serviço</span>
+        <span class="num">#0418</span>
+      </div>
+      <div class="card-body">
+        <div class="meta">
+          <div class="meta-row"><span class="key">Veículo</span><span class="val">Toyota Corolla 2021</span></div>
+          <div class="meta-row"><span class="key">Placa</span><span class="val">XYZ-9876</span></div>
+          <div class="meta-row"><span class="key">Serviço</span><span class="val">Troca de freios</span></div>
+          <div class="meta-row"><span class="key">Status</span><span><span class="badge s-waiting"><span class="dot"></span>Aguard. peça</span></span></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="price">R$ 680,00</span>
+        <span class="mech">Marcos L.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="title">Ordem de Serviço</span>
+        <span class="num">#0415</span>
+      </div>
+      <div class="card-body">
+        <div class="meta">
+          <div class="meta-row"><span class="key">Veículo</span><span class="val">VW Gol 2018</span></div>
+          <div class="meta-row"><span class="key">Placa</span><span class="val">DEF-5678</span></div>
+          <div class="meta-row"><span class="key">Serviço</span><span class="val">Alinhamento</span></div>
+          <div class="meta-row"><span class="key">Status</span><span><span class="badge s-done"><span class="dot"></span>Concluída</span></span></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="price">R$ 320,00</span>
+        <span class="mech">Ricardo S.</span>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="stat-card accent">
+        <div class="stat-label">OS Abertas</div>
+        <div class="stat-value">14</div>
+        <div class="stat-sub">+3 hoje</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Concluídas</div>
+        <div class="stat-value" style="color:#166534">38</div>
+        <div class="stat-sub" style="color:#166534">este mês</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

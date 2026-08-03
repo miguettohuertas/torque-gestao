@@ -1,0 +1,439 @@
+% ============================================================
+% RELATÓRIO PAC EXTENSIONISTA — TORQUE GESTÃO
+% Católica de Santa Catarina
+% ============================================================
+% chktex-file 1
+% chktex-file 13
+% chktex-file 44
+
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+\setstretch{1.5}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\headheight}{14.5pt}
+\setlength{\emergencystretch}{2em}
+
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcommand{\projectimage}[1]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=0.8\textwidth]{#1}%
+  }{%
+    \fbox{\parbox[c][0.32\textheight][c]{0.77\textwidth}{%
+      \centering\textit{Imagem não fornecida}\par\smallskip
+      \texttt{\detokenize{#1}}}}%
+  }%
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\titleformat{\section}{\normalfont\bfseries\normalsize\uppercase}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\bfseries\normalsize}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+% --- CAPA ---
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \centering
+  \thispagestyle{empty}
+
+  {\bfseries CENTRO UNIVERSITÁRIO --- CATÓLICA DE SANTA CATARINA}
+
+  \vspace{6pt}
+  {\bfseries ENGENHARIA DE SOFTWARE}
+
+  \vspace{48pt}
+
+  {\bfseries
+    Miguel Angelo Dufloth Filho \\
+    Miguel Angel Balladares Huertas \\
+    Leonardo Lotério de Lima \\
+    Lucas Honorato dos Santos
+  }
+
+  \vfill
+
+  {\bfseries\large RELATÓRIO FINAL \\ PAC EXTENSIONISTA}
+
+  \vspace{12pt}
+  {\bfseries\Large TORQUE GESTÃO: SISTEMA DE GESTÃO AUTOMOTIVA}
+
+  \vfill
+
+  {\bfseries JOINVILLE, 20 DE FEVEREIRO DE 2026}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+% --- SUMÁRIO ---
+\newpage
+\tableofcontents
+
+% ============================================================
+% 1. INTRODUÇÃO
+% ============================================================
+\newpage
+\section{Introdução}
+
+\subsection{Contextualização e Problematização}
+
+O presente relatório descreve o desenvolvimento do projeto \textbf{Torque Gestão}, um sistema web voltado para a modernização dos processos operacionais em oficinas mecânicas de pequeno e médio porte. A iniciativa surge da observação de um cenário comum no setor automotivo: estabelecimentos que, apesar de possuírem alta competência técnica mecânica, ainda operam com processos administrativos predominantemente analógicos, baseados em anotações em papel ou planilhas isoladas.
+
+A gestão de uma oficina envolve o controle simultâneo de múltiplos fluxos: entrada de veículos, diagnóstico técnico, orçamentação, aprovação pelo cliente, execução do serviço, gestão de peças e entrega final. A dependência de registros manuais gera problemas recorrentes:
+
+\begin{itemize}
+    \item \textbf{Falhas de Comunicação:} Ruídos entre o consultor técnico, o mecânico e o cliente.
+    \item \textbf{Perda de Informação:} Extravio de ordens de serviço físicas e histórico de manutenções.
+    \item \textbf{Incerteza do Cliente:} Falta de visibilidade sobre o status do serviço, gerando excesso de ligações para a oficina.
+\end{itemize}
+
+\subsection{Solução e Parceria}
+
+O projeto foi desenvolvido em parceria com oficinas locais da região de Joinville/SC, que serviram como base para a elicitação de requisitos reais. A solução proposta é uma aplicação web responsiva, otimizada para uso em dispositivos móveis e tablets dentro do ambiente da oficina, permitindo o acompanhamento em tempo real tanto pela equipe interna quanto pelo cliente final.
+
+% ============================================================
+% 2. PÚBLICO ALVO
+% ============================================================
+\section{Público Alvo}
+
+O Torque Gestão foi projetado para atender três perfis principais de usuários que compõem o ecossistema de uma oficina mecânica:
+
+\begin{enumerate}
+    \item \textbf{Gestores e Administradores:} Proprietários de oficinas de pequeno e médio porte que buscam centralizar o controle das Ordens de Serviço (OS), gerir o catálogo de serviços e visualizar métricas de produtividade.
+    \item \textbf{Mecânicos e Técnicos:} Profissionais que atuam diretamente no veículo. O sistema oferece uma interface de fácil leitura para atualização rápida de diagnósticos e status, mesmo em condições operacionais adversas (mãos sujas, uso de tablets).
+    \item \textbf{Clientes Finais:} Proprietários de veículos que utilizam o portal de autoatendimento para acompanhar o progresso dos serviços e consultar o histórico de manutenções, promovendo maior transparência no atendimento.
+\end{enumerate}
+
+% ============================================================
+% 3. OBJETIVOS
+% ============================================================
+\section{Objetivos}
+
+\subsection{Objetivo Geral}
+
+Desenvolver uma aplicação web denominada Torque Gestão para gerenciar serviços, ordens de serviço e o relacionamento com clientes de mecânicas automotivas de pequeno e médio porte, proporcionando maior eficiência operacional e melhoria no atendimento prestado.
+
+\subsection{Objetivos Específicos}
+
+\begin{itemize}
+    \item Implementar um módulo de gerenciamento de ordens de serviço, permitindo o registro, acompanhamento e encerramento de cada atendimento realizado na oficina.
+    \item Desenvolver funcionalidades de gestão de serviços, possibilitando o cadastro e controle dos tipos de serviços oferecidos pelo estabelecimento.
+    \item Criar um sistema de relacionamento com clientes, centralizando o histórico de atendimentos, dados dos veículos e informações de contato de cada cliente.
+\end{itemize}
+
+% ============================================================
+% 4. PROJETO
+% ============================================================
+\section{Projeto}
+
+% ── 4.1 ─────────────────────────────────────────────────────
+\subsection{Definição das Interfaces}
+
+As interfaces foram desenvolvidas utilizando a biblioteca \textbf{React}, priorizando a componentização e a reutilização de elementos visuais. O design seguiu diretrizes específicas para o ambiente de oficina, com botões de alto contraste e tipografia legível (Inter), garantindo usabilidade mesmo em condições operacionais adversas.
+
+O protótipo interativo está disponível em:
+\begin{center}
+    \url{https://torque-gestao.surge.sh}
+\end{center}
+
+\subsubsection{Tela de Login e Autenticação}
+Porta de entrada do sistema com acesso diferenciado por perfil (Admin, Mecânico ou Cliente). O usuário insere suas credenciais e é redirecionado ao painel correspondente às suas permissões.
+\begin{figure}[H]
+    \centering
+    \projectimage{tela_de_login.png}
+    \caption{Interface de Login unificada.}
+\end{figure}
+
+\subsubsection{Dashboard Administrativo}
+Visão panorâmica da oficina com indicadores de OS abertas, receita do mês e lista de ordens recentes. Cliques nos cartões de métricas levam às listas filtradas de serviços.
+\begin{figure}[H]
+    \centering
+    \projectimage{dashboard_admin.png}
+    \caption{Painel principal com métricas operacionais.}
+\end{figure}
+
+\subsubsection{Dashboard do Mecânico}
+Interface dedicada ao mecânico, exibindo exclusivamente as OS atribuídas ao técnico autenticado, com atualização rápida de status e acesso direto aos detalhes de cada OS.
+\begin{figure}[H]
+    \centering
+    \projectimage{dashboard_mecanico.png}
+    \caption{Painel do mecânico com OS atribuídas.}
+\end{figure}
+
+\subsubsection{Gerenciamento de Ordens de Serviço}
+Lista central com filtros por status (Aguardando Peças, Em Execução, Finalizada). Permite a abertura de novas OS e atualização de status em tempo real.
+\begin{figure}[H]
+    \centering
+    \projectimage{lista_de_os.png}
+    \caption{Módulo de gestão de ordens de serviço.}
+\end{figure}
+
+\subsubsection{Histórico de OS Finalizadas}
+Visão consolidada das OS concluídas e entregues, permitindo auditoria do histórico operacional da oficina.
+\begin{figure}[H]
+    \centering
+    \projectimage{historico_os.png}
+    \caption{Listagem de ordens de serviço finalizadas e entregues.}
+\end{figure}
+
+\subsubsection{Nova Ordem de Serviço}
+Formulário guiado para criação de OS com seleção de cliente e veículo cadastrados, descrição do problema e definição de prioridade (Alta, Média ou Baixa).
+\begin{figure}[H]
+    \centering
+    \projectimage{nova_os.png}
+    \caption{Formulário de abertura de nova Ordem de Serviço.}
+\end{figure}
+
+\subsubsection{Detalhes da Ordem de Serviço}
+Tela que separa itens de Mão de Obra de Peças Aplicadas para composição de orçamento claro, com registro de observações técnicas pelo mecânico.
+\begin{figure}[H]
+    \centering
+    \projectimage{detalhes_da_os.png}
+    \caption{Detalhamento de serviços e peças da OS.}
+\end{figure}
+
+\subsubsection{Histórico do Veículo}
+Linha do tempo completa de todas as OS de um veículo, permitindo ao mecânico consultar intervenções anteriores durante o diagnóstico técnico.
+\begin{figure}[H]
+    \centering
+    \projectimage{historico_do_veiculo.png}
+    \caption{Histórico completo de manutenções do veículo.}
+\end{figure}
+
+\subsubsection{Cadastro de Clientes e Veículos}
+Módulo para registro de dados dos clientes e vinculação de múltiplos veículos a um único proprietário, com busca rápida por placa ou nome.
+\begin{figure}[H]
+    \centering
+    \projectimage{clientes_e_veículos.png}
+    \caption{Gestão de relacionamento e frota de clientes.}
+\end{figure}
+
+\subsubsection{Perfil do Cliente}
+Visão consolidada de um cliente com dados cadastrais, frota de veículos e histórico de OS para atendimento personalizado.
+\begin{figure}[H]
+    \centering
+    \projectimage{perfil_do_cliente.png}
+    \caption{Perfil detalhado do cliente com frota e histórico.}
+\end{figure}
+
+\subsubsection{Cadastro de Novo Cliente}
+Formulário para registro de novos clientes com campos para dados pessoais e de contato, utilizado antes da abertura da primeira OS.
+\begin{figure}[H]
+    \centering
+    \projectimage{novo_cliente.png}
+    \caption{Formulário de cadastro de novo cliente.}
+\end{figure}
+
+\subsubsection{Cadastro de Veículo}
+Formulário para vinculação de novo veículo a um cliente existente, com campos para placa, modelo, ano e cor.
+\begin{figure}[H]
+    \centering
+    \projectimage{cadastro_de_veiculo.png}
+    \caption{Formulário de cadastro de veículo vinculado ao cliente.}
+\end{figure}
+
+\subsubsection{Lista de Veículos}
+Visão global de toda a frota cadastrada na oficina, com busca por proprietário, placa ou modelo.
+\begin{figure}[H]
+    \centering
+    \projectimage{lista_de_veiculos.png}
+    \caption{Lista completa de veículos cadastrados na oficina.}
+\end{figure}
+
+\subsubsection{Catálogo de Serviços e Peças}
+Repositório centralizado de serviços e peças com preços de referência para composição automatizada de orçamentos.
+\begin{figure}[H]
+    \centering
+    \projectimage{catalogo.png}
+    \caption{Catálogo interno de serviços e peças.}
+\end{figure}
+
+\subsubsection{Gestão de Usuários}
+Painel para controle de contas de acesso, com cadastro de perfis de administradores, mecânicos e clientes e definição de permissões.
+\begin{figure}[H]
+    \centering
+    \projectimage{gestao_de_usuarios.png}
+    \caption{Módulo de gestão de usuários e permissões.}
+\end{figure}
+
+\subsubsection{Configurações do Sistema}
+Parametrização geral da plataforma com dados cadastrais do estabelecimento, preferências de notificação e personalização operacional.
+\begin{figure}[H]
+    \centering
+    \projectimage{configuracoes.png}
+    \caption{Configurações gerais do sistema.}
+\end{figure}
+
+\subsubsection{Portal do Cliente --- Painel}
+Interface simplificada onde o cliente acompanha o progresso do veículo e acessa o histórico de manutenções sem entrar nas áreas administrativas.
+\begin{figure}[H]
+    \centering
+    \projectimage{portal_do_cliente.png}
+    \caption{Painel do portal do cliente.}
+\end{figure}
+
+\subsubsection{Portal do Cliente --- Acompanhamento de OS}
+Acompanhamento em tempo real do serviço em execução, com barra de progresso visual e detalhamento de mão de obra e peças.
+\begin{figure}[H]
+    \centering
+    \projectimage{portal_acompanhamento.png}
+    \caption{Acompanhamento de OS em tempo real pelo portal do cliente.}
+\end{figure}
+
+\subsubsection{Portal do Cliente --- Histórico de Manutenções}
+Histórico completo de serviços realizados na frota do cliente, acessível pelo portal sem necessidade de contato com a oficina.
+\begin{figure}[H]
+    \centering
+    \projectimage{portal_historico.png}
+    \caption{Histórico de manutenções disponível no portal do cliente.}
+\end{figure}
+
+% ── 4.2 ─────────────────────────────────────────────────────
+\subsection{Mapeamento de Riscos}
+
+\subsubsection{Considerações de Segurança}
+
+\begin{itemize}
+    \item \textbf{Riscos Identificados:} Vazamento de dados pessoais e veiculares de clientes, SQL Injection em formulários de cadastro e falhas de autenticação que permitiriam acesso indevido a módulos administrativos.
+    \item \textbf{Medidas de Mitigação:} Criptografia de senhas com Bcrypt, tráfego sob HTTPS (TLS/SSL), uso de ORM para sanitização automática das entradas e controle de acesso via tokens JWT com modelo RBAC (Role-Based Access Control).
+    \item \textbf{Conformidade:} O projeto observará as diretrizes do OWASP Top 10 e os preceitos da Lei Geral de Proteção de Dados (LGPD) quanto à minimização da coleta e ao consentimento do titular.
+\end{itemize}
+
+\subsubsection{Matriz de Riscos}
+
+\vspace{6pt}
+\noindent
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|L{4.1cm}|L{2.8cm}|L{1.5cm}|L{1.8cm}|L{1.8cm}|}
+\hline
+\textbf{Risco} & \textbf{Categoria} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Nível} \\
+\hline
+Vazamento de dados de clientes & Segurança & Baixa & Alto & Médio \\
+\hline
+SQL Injection em formulários & Segurança & Média & Alto & Alto \\
+\hline
+Falha de autenticação & Técnico & Baixa & Alto & Médio \\
+\hline
+Indisponibilidade da infraestrutura & Técnico & Baixa & Médio & Baixo \\
+\hline
+Violação da LGPD & Privacidade & Baixa & Alto & Médio \\
+\hline
+Atraso no cronograma & Organizacional & Média & Médio & Médio \\
+\hline
+Descontinuidade de serviço externo & Externo & Baixa & Médio & Baixo \\
+\hline
+\end{tabular}
+\vspace{6pt}
+
+\subsubsection{Requisitos Funcionais}
+
+Os requisitos funcionais descrevem os serviços específicos que o software deve fornecer e como o sistema deve reagir a entradas específicas.
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}{|L{1.3cm}|L{3.8cm}|L{9cm}|}
+\caption{Requisitos Funcionais do Torque Gestão} \\
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição} \\
+\hline
+\endfirsthead
+\multicolumn{3}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição} \\
+\hline
+\endhead
+\hline
+\multicolumn{3}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+RF01 & Gerenciamento de Clientes & Cadastro completo, edição e consulta de clientes, com validação de CPF/CNPJ e busca por nome ou documento para prevenir duplicidade de registros. \\
+\hline
+RF02 & Cadastro de Veículos & Vinculação de múltiplos veículos a um proprietário, registrando Placa (padrão Mercosul e antigo), Modelo, Marca, Ano e quilometragem atual. \\
+\hline
+RF03 & Emissão de Ordens de Serviço & Abertura de OS com separação obrigatória de itens de Mão de Obra e Peças Aplicadas, possibilitando geração de orçamento prévio antes da aprovação do cliente. \\
+\hline
+RF04 & Acompanhamento de Status & Fluxo de estados da OS: Aguardando Diagnóstico → Em Execução → Aguardando Peças → Finalizada → Entregue, com comunicação proativa ao cliente. \\
+\hline
+RF05 & Catálogo de Serviços e Peças & Cadastro de serviços (alinhamento, troca de óleo etc.) e peças com valores base, garantindo padronização de preços e agilidade no orçamento. \\
+\hline
+RF06 & Autenticação e Controle de Acesso & Validação de credenciais com RBAC via JWT: administradores acessam relatórios e configurações; mecânicos acessam apenas as OS sob sua responsabilidade. \\
+\hline
+\end{longtable}
+\vspace{6pt}
+
+\subsubsection{Requisitos Não Funcionais}
+
+Os requisitos não funcionais especificam critérios de qualidade e restrições técnicas, definindo não o que o sistema faz, mas como o faz.
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}{|L{1.3cm}|L{3.8cm}|L{9cm}|}
+\caption{Requisitos Não Funcionais do Torque Gestão} \\
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição} \\
+\hline
+\endfirsthead
+\multicolumn{3}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição} \\
+\hline
+\endhead
+\hline
+\multicolumn{3}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+RNF01 & Segurança de Dados & Senhas armazenadas com hash Bcrypt no PostgreSQL. Tráfego protegido por HTTPS (TLS/SSL). \\
+\hline
+RNF02 & Desempenho & Consultas de histórico de OS com até 500 registros por veículo devem responder em no máximo 2 segundos. \\
+\hline
+RNF03 & Disponibilidade & Meta de 99,5\% de uptime mensal, com back-end hospedado no Render e front-end no Vercel. \\
+\hline
+RNF04 & Portabilidade & Interface responsiva (Responsive Web Design) com suporte completo a tablets e dispositivos móveis. \\
+\hline
+RNF05 & Conformidade LGPD & Observância da Lei n.\textordmasculine{} 13.709/2018: consentimento registrado no cadastro, direito de acesso, portabilidade, correção e exclusão de dados garantidos. \\
+\hline
+RNF06 & Arquitetura de Comunicação & API RESTful com documentação OpenAPI/Swagger gerada automaticamente para facilitar integrações futuras. \\
+\hline
+\end{longtable}
+\vspace{6pt}
+
+% ── 4.3 ─────────────────────────────────────────────────────
+\subsection{Stack Tecnológica}
+
+\begin{itemize}
+    \item \textbf{Back-end:} Python com FastAPI para construção de APIs RESTful de alta performance e segurança.
+    \item \textbf{Front-end:} JavaScript/TypeScript com React para interfaces componentizadas e dashboards interativos.
+    \item \textbf{Banco de Dados:} PostgreSQL como SGBDR para armazenamento seguro e íntegro de clientes, veículos e OS.
+    \item \textbf{Conteinerização e CI/CD:} Docker para paridade entre ambientes; GitHub Actions para automação de testes e deploys.
+    \item \textbf{Hospedagem:} Render (back-end e banco de dados) e Vercel (front-end); AWS como alternativa escalável.
+    \item \textbf{Versionamento:} Git com repositório no GitHub/GitLab para controle de versão e colaboração da equipe.
+    \item \textbf{Protótipo:} React com Babel Standalone e hospedagem via Surge.sh para validação rápida das interfaces.
+    \item \textbf{Licenças:} MIT License (React, FastAPI), BSD License (Django), Apache 2.0 (Docker).
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,890 @@
+% ============================================================
+% RELATÓRIO FINAL PAC EXTENSIONISTA
+% Católica de Santa Catarina
+% ============================================================
+ 
+\documentclass[12pt, a4paper]{article}
+ 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{times}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage[alf]{abntex2cite}
+\usepackage{longtable}
+ 
+\setstretch{1.5}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+ 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+ 
+\titleformat{\section}{\normalfont\bfseries\normalsize}{}{0pt}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{}{0pt}{}
+\titleformat{\subsubsection}{\normalfont\bfseries\normalsize}{}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{8pt}{4pt}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+ 
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\setlength{\cftbeforesecskip}{2pt}
+ 
+\begin{document}
+ 
+% CAPA
+\begin{titlepage}
+  \centering
+  \thispagestyle{fancy}
+ 
+  {\bfseries CENTRO UNIVERSIT\'ARIO -- CAT\'OLICA DE SANTA CATARINA}
+ 
+  \vspace{6pt}
+  {\bfseries ENGENHARIA DE SOFTWARE}
+ 
+  \vspace{24pt}
+ 
+  {\bfseries
+    Miguel Angelo Dufloth Filho \\[4pt]
+    Miguel Angel Balladares Huertas \\[4pt]
+    Leonardo Lot\'erio de Lima \\[4pt]
+    Lucas Honorato dos Santos
+  }
+ 
+  \vfill
+ 
+  {\bfseries RELAT\'ORIO FINAL}
+ 
+  \vspace{6pt}
+  {\bfseries PAC EXTENSIONISTA}
+ 
+  \vspace{24pt}
+ 
+  \includegraphics[width=8cm]{logo.png}
+ 
+  \vfill
+ 
+  {\bfseries JOINVILLE, 20 DE FEVEREIRO DE 2026}
+\end{titlepage}
+ 
+% FICHA DE APROVAÇÃO
+\thispagestyle{fancy}
+ 
+\begin{center}
+  {\bfseries FICHA DE APROVAÇÃO}
+\end{center}
+ 
+\vspace{12pt}
+ 
+\noindent RELAT\'ORIO do PAC Extensionista apresentado como requisito parcial de avalia\c{c}\~ao
+na disciplina PAC Extensionista no curso de gradua\c{c}\~ao de Engenharia de Software do Centro
+Universit\'ario Cat\'olica de Santa Catarina em Joinville, sob supervis\~ao e orienta\c{c}\~ao
+do professor Claudinei Dias.
+ 
+\vspace{24pt}
+ 
+\noindent Joinville, 20 de fevereiro de 2026.
+ 
+\vspace{36pt}
+ 
+\begin{center}
+  {\bfseries
+    Miguel Angelo Dufloth Filho \\[4pt]
+    Miguel Angel Balladares Huertas \\[4pt]
+    Leonardo Lot\'erio de Lima \\[4pt]
+    Lucas Honorato dos Santos
+  }
+ 
+  \vspace{16pt}
+  Claudinei Dias
+ 
+  \vspace{4pt}
+  Professor respons\'avel
+\end{center}
+ 
+% SUMÁRIO
+\newpage
+\thispagestyle{fancy}
+ 
+\begin{center}
+  {\bfseries SUM\'ARIO}
+\end{center}
+ 
+\vspace{12pt}
+ 
+\noindent\textbf{1 INTRODU\c{C}\~AO} \dotfill \pageref{sec:intro}
+ 
+\vspace{4pt}
+\noindent\textbf{2 DESCRI\c{C}\~AO DO P\'UBLICO BENEFICIADO PELAS A\c{C}\~OES DE EXTENS\~AO} \dotfill \pageref{sec:publico}
+ 
+\vspace{4pt}
+\noindent\textbf{3 OBJETIVOS} \dotfill \pageref{sec:objetivos}
+ 
+\vspace{2pt}
+\noindent\hspace{1em}3.1 OBJETIVO GERAL \dotfill \pageref{sec:obj_geral}
+ 
+\vspace{2pt}
+\noindent\hspace{1em}3.2 OBJETIVOS ESPEC\'IFICOS \dotfill \pageref{sec:obj_especificos}
+ 
+\vspace{4pt}
+\noindent\textbf{4 DESCRI\c{C}\~AO DAS PRINCIPAIS ATIVIDADES REALIZADAS} \dotfill \pageref{sec:atividades}
+ 
+\vspace{4pt}
+\noindent\textbf{5 AVALIA\c{C}\~AO DO PROJETO PELO P\'UBLICO BENEFICIADO} \dotfill \pageref{sec:avaliacao}
+ 
+\vspace{4pt}
+\noindent\textbf{6 CONSIDERA\c{C}\~OES FINAIS -- AUTOAVALIA\c{C}\~AO DO PAC EXTENSIONISTA} \dotfill \pageref{sec:consideracoes}
+ 
+\vspace{4pt}
+\noindent\textbf{REFER\^ENCIAS} \dotfill \pageref{sec:referencias}
+ 
+\vspace{4pt}
+\noindent\textbf{AP\^ENDICES} \dotfill \pageref{sec:apendices}
+ 
+\vspace{4pt}
+\noindent\textbf{ANEXOS} \dotfill \pageref{sec:anexos}
+ 
+% 1 INTRODUÇÃO
+\newpage
+\phantomsection
+\label{sec:intro}
+\section*{1 INTRODU\c{C}\~AO}
+ 
+O presente relat\'orio descreve o desenvolvimento de uma aplica\c{c}\~ao web denominada
+\textbf{Torque Gest\~ao}, cujo objetivo \'e gerenciar servi\c{c}os e acompanhar processos de
+mec\^anicas automotivas. A iniciativa surgiu da identifica\c{c}\~ao de uma lacuna tecnol\'ogica
+no setor, onde estabelecimentos de pequeno e m\'edio porte frequentemente operam sem
+ferramentas digitais adequadas para o controle de suas opera\c{c}\~oes.
+
+A gest\~ao eficiente de uma oficina mec\^anica envolve m\'ultiplos processos simult\^aneos,
+desde o atendimento ao cliente at\'e o controle das ordens de servi\c{c}o e o acompanhamento
+do hist\'orico de cada ve\'iculo. A aus\^encia de sistemas informatizados nesse contexto pode
+resultar em falhas de comunica\c{c}\~ao, perda de informa\c{c}\~oes e queda na qualidade do
+atendimento prestado.
+
+Nesse sentido, o PAC Extensionista prop\^os o desenvolvimento de uma solu\c{c}\~ao tecnol\'ogica
+acess\'ivel e funcional, capaz de atender \`as demandas reais dessas oficinas. O sistema abrange
+o gerenciamento interno de ordens de servi\c{c}o, o controle de clientes e ve\'iculos, e um
+portal de autoatendimento para que o pr\'oprio cliente acompanhe o status do servi\c{c}o e
+consulte o hist\'orico do seu ve\'iculo de forma aut\^onoma, contribuindo tanto para a melhoria
+dos processos internos quanto para a transpar\^encia no atendimento prestado.
+ 
+% 2 PÚBLICO BENEFICIADO
+\newpage
+\phantomsection
+\label{sec:publico}
+\section*{2 DESCRI\c{C}\~AO DO P\'UBLICO BENEFICIADO PELAS A\c{C}\~OES DE EXTENS\~AO}
+ 
+O p\'ublico beneficiado pelas a\c{c}\~oes deste projeto extensionista s\~ao mec\^anicas automotivas
+de pequeno e m\'edio porte. Trata-se de estabelecimentos que, em geral, possuem entre um e vinte
+funcion\'arios, com opera\c{c}\~ao local ou regional, e que realizam servi\c{c}os de manuten\c{c}\~ao
+preventiva e corretiva de ve\'iculos automotores.
+
+O perfil desse p\'ublico \'e composto majoritariamente por empreendedores e gestores que conduzem
+suas opera\c{c}\~oes de forma manual ou com recursos tecnol\'ogicos limitados, como planilhas e
+anota\c{c}\~oes f\'isicas. Essa realidade imp\~oe desafios \`a organiza\c{c}\~ao dos servi\c{c}os,
+ao controle financeiro e ao relacionamento com os clientes.
+
+Al\'em dos gestores e mec\^anicos, o projeto beneficia diretamente os clientes finais das
+oficinas --- propriet\'arios de ve\'iculos que passam a ter acesso a um portal de
+autoatendimento para acompanhar o status dos servi\c{c}os em andamento e consultar o
+hist\'orico completo de atendimentos de seus ve\'iculos, sem depender de contato telef\^onico
+ou presencial com a oficina.
+
+As a\c{c}\~oes do projeto foram direcionadas a oficinas situadas na regi\~ao de Joinville, Santa
+Catarina, onde o setor automotivo representa uma parcela significativa da economia local, tornando
+a proposta especialmente relevante para o contexto da comunidade atendida.
+ 
+% 3 OBJETIVOS
+\newpage
+\phantomsection
+\label{sec:objetivos}
+\section*{3 OBJETIVOS}
+ 
+\phantomsection
+\label{sec:obj_geral}
+\subsection*{3.1 Objetivo Geral}
+ 
+Desenvolver uma aplica\c{c}\~ao web denominada Torque Gest\~ao para gerenciar servi\c{c}os,
+ordens de servi\c{c}o e o relacionamento com clientes de mec\^anicas automotivas de pequeno e
+m\'edio porte, proporcionando maior efici\^encia operacional e melhoria no atendimento prestado.
+ 
+\phantomsection
+\label{sec:obj_especificos}
+\subsection*{3.2 Objetivos Espec\'ificos}
+ 
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item Implementar um m\'odulo de gerenciamento de ordens de servi\c{c}o, permitindo o
+        registro, acompanhamento e encerramento de cada atendimento realizado na oficina.
+  \item Desenvolver funcionalidades de gest\~ao de servi\c{c}os, possibilitando o cadastro
+        e controle dos tipos de servi\c{c}os oferecidos pelo estabelecimento.
+  \item Criar um sistema de relacionamento com clientes, centralizando o hist\'orico de
+        atendimentos, dados dos ve\'iculos e informa\c{c}\~oes de contato de cada cliente.
+  \item Disponibilizar ao cliente final um portal de autoatendimento para acompanhamento
+        em tempo real do status dos servi\c{c}os em andamento e consulta ao hist\'orico
+        de atendimentos de seus ve\'iculos, promovendo transpar\^encia e reduzindo a
+        depend\^encia de contato direto com a oficina.
+\end{itemize}
+ 
+% 4 ATIVIDADES REALIZADAS
+\newpage
+\phantomsection
+\label{sec:atividades}
+\section*{4 DESCRI\c{C}\~AO DAS PRINCIPAIS ATIVIDADES REALIZADAS}
+ 
+Para o desenvolvimento da aplica\c{c}\~ao Torque Gest\~ao, ser\~ao aplicadas as seguintes escolhas t\'ecnicas e de seguran\c{c}a, fundamentais para a estrutura\c{c}\~ao do projeto:
+ 
+\subsection*{4.1 Stack Tecnol\'ogica}
+ 
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item \textbf{Linguagens de Programa\c{c}\~ao:} Python ser\'a utilizada para o desenvolvimento do back-end devido \`a sua sintaxe clara, alta produtividade e excelente ecossistema para a constru\c{c}\~ao de l\'ogicas de neg\'ocios e APIs. O JavaScript/TypeScript ser\'a adotado para o front-end por ser o padr\~ao da web para aplica\c{c}\~oes din\^amicas, onde o uso de tipagem est\'atica reduz erros em tempo de execu\c{c}\~ao e facilita a manuten\c{c}\~ao.
+  \item \textbf{Frameworks e Bibliotecas:} Ser\'a utilizado o FastAPI no back-end para a cria\c{c}\~ao \'agil e robusta de APIs RESTful, garantindo alta performance e seguran\c{c}a. O React ser\'a adotado no front-end para construir a interface de usu\'ario de forma componentizada, o que facilita a cria\c{c}\~ao de pain\'eis interativos (dashboards) para acompanhamento em tempo real das ordens de servi\c{c}o.
+  \item \textbf{Banco de Dados:} O PostgreSQL ser\'a empregado como sistema gerenciador de banco de dados relacional (SGBDR), garantindo alta integridade, seguran\c{c}a e escalabilidade para o armazenamento das informa\c{c}\~oes sens\'iveis de clientes, ve\'iculos e hist\'oricos de ordens de servi\c{c}o.
+  \item \textbf{Ferramentas de Desenvolvimento e Gest\~ao:} O desenvolvimento ocorrer\'a com o uso da IDE Visual Studio Code. O versionamento de c\'odigo ser\'a realizado utilizando Git, com reposit\'orios no GitHub/GitLab. Para conteineriza\c{c}\~ao, ser\'a adotado o Docker, assegurando a paridade entre os ambientes de desenvolvimento e produ\c{c}\~ao. A automa\c{c}\~ao de testes e deploys (CI/CD) ser\'a estruturada via GitHub Actions.
+  \item \textbf{Hospedagem:} A infraestrutura da aplica\c{c}\~ao ser\'a baseada em nuvem, utilizando a plataforma Render para a hospedagem do back-end (FastAPI) e do banco de dados (PostgreSQL), e o Vercel para a entrega otimizada do front-end (React), assegurando alta disponibilidade e facilidade de escala dentro do contexto acad\^emico do projeto.
+  \item \textbf{Licenciamento:} O projeto priorizar\'a tecnologias de c\'odigo aberto (Open Source), incorporando ferramentas sob a MIT License (React e FastAPI) e Apache License 2.0 (Docker).
+\end{itemize}
+ 
+\subsection*{4.2 Considera\c{c}\~oes de Seguran\c{c}a}
+ 
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item \textbf{Riscos Identificados:} Est\~ao mapeadas amea\c{c}as como o vazamento de dados pessoais e veiculares de clientes, inje\c{c}\~ao de c\'odigo (SQL Injection) atrav\'es de formul\'arios de cadastro, e falhas de autentica\c{c}\~ao que poderiam permitir acessos indevidos a m\'odulos administrativos restritos.
+  \item \textbf{Medidas de Mitiga\c{c}\~ao:} Para minimizar os riscos, ser\'a aplicada a criptografia de senhas utilizando Bcrypt e tr\'afego de dados sob o protocolo HTTPS (TLS/SSL). Ser\'a utilizado um ORM (Object-Relational Mapping) para sanitiza\c{c}\~ao autom\'atica das entradas no banco de dados. O controle de acesso ser\'a implementado via autentica\c{c}\~ao baseada em tokens (JWT) em conjunto com o modelo RBAC (\textit{Role-Based Access Control}).
+  \item \textbf{Normas e Boas Pr\'aticas Seguidas:} O projeto basear-se-\'a nas diretrizes do OWASP Top 10 para a preven\c{c}\~ao das vulnerabilidades web mais cr\'iticas e observar\'a os preceitos da Lei Geral de Prote\c{c}\~ao de Dados (LGPD) no que tange \`a minimiza\c{c}\~ao da coleta e \`a necessidade de consentimento.
+  \item \textbf{Responsabilidade \'Etica:} A privacidade ser\'a tratada como pilar no tratamento dos dados de clientes, garantindo total transpar\^encia, confidencialidade e a aus\^encia de compartilhamento de informa\c{c}\~oes com terceiros. A abordagem assegurar\'a a titularidade da informa\c{c}\~ao do consumidor e o uso exclusivo para a presta\c{c}\~ao do servi\c{c}o automotivo.
+\end{itemize}
+ 
+\subsection*{4.3 Plano de Gerenciamento dos Riscos}
+ 
+O plano de gerenciamento dos riscos descreve como os riscos do projeto Torque Gest\~ao ser\~ao
+identificados, avaliados, monitorados e controlados ao longo do seu ciclo de vida, servindo
+como base estrat\'egica para mitigar incertezas e aumentar as chances de sucesso.
+ 
+\subsubsection*{4.3.1 Metodologia}
+ 
+A abordagem adotada para o gerenciamento dos riscos combina an\'alise qualitativa e quantitativa.
+Os riscos ser\~ao identificados por meio de sess\~oes de \textit{brainstorming} entre os membros
+da equipe, revis\~ao de li\c{c}\~oes aprendidas de projetos similares e an\'alise dos requisitos
+t\'ecnicos do sistema. Cada risco identificado ser\'a registrado, classificado por categoria,
+avaliado quanto \`a probabilidade e ao impacto, e ter\'a uma resposta planejada associada.
+ 
+\subsubsection*{4.3.2 Fun\c{c}\~oes e Responsabilidades}
+ 
+\vspace{6pt}
+\noindent
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{5cm}|p{9cm}|}
+\hline
+\textbf{Respons\'avel} & \textbf{Atribui\c{c}\~oes} \\
+\hline
+Equipe de desenvolvimento & Identificar e reportar novos riscos t\'ecnicos durante o desenvolvimento \\
+\hline
+L\'ider do projeto & Avaliar, priorizar e monitorar os riscos registrados \\
+\hline
+Todos os integrantes & Participar das revis\~oes peri\'odicas e atualizar o status dos riscos \\
+\hline
+Professor orientador & Validar as estrat\'egias de resposta e acompanhar a evolu\c{c}\~ao do plano \\
+\hline
+\end{tabular}
+ 
+\subsubsection*{4.3.3 Or\c{c}amenta\c{c}\~ao}
+ 
+Por se tratar de um projeto acad\^emico com infraestrutura baseada em servi\c{c}os gratuitos ou
+de baixo custo (planos \textit{free tier} de AWS, Render e Vercel), os custos diretos de
+mitiga\c{c}\~ao de riscos s\~ao m\'inimos. Os recursos necess\'arios envolvem principalmente
+tempo de desenvolvimento para implementa\c{c}\~ao das medidas de seguran\c{c}a, como
+criptografia, testes de vulnerabilidade e configura\c{c}\~ao de autentica\c{c}\~ao.
+ 
+\subsubsection*{4.3.4 Tempos}
+ 
+As atividades de gerenciamento de riscos ser\~ao realizadas conforme o cronograma abaixo:
+ 
+\vspace{6pt}
+\noindent
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\textbf{Atividade} & \textbf{Frequ\^encia / Momento} \\
+\hline
+Identifica\c{c}\~ao de novos riscos & A cada sprint ou entrega de m\'odulo \\
+\hline
+Revis\~ao da matriz de riscos & Quinzenalmente \\
+\hline
+Atualiza\c{c}\~ao do status dos riscos & Ap\'os cada reuni\~ao de equipe \\
+\hline
+Auditoria final de riscos & Antes da entrega do produto final \\
+\hline
+\end{tabular}
+ 
+\subsubsection*{4.3.5 Categorias de Risco}
+ 
+Os riscos do projeto foram agrupados nas seguintes categorias:
+ 
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item \textbf{T\'ecnicos:} falhas de autentica\c{c}\~ao, vulnerabilidades de c\'odigo, indisponibilidade de infraestrutura e incompatibilidade entre tecnologias.
+  \item \textbf{Segurança e Privacidade:} vazamento de dados, SQL Injection e viola\c{c}\~ao da LGPD.
+  \item \textbf{Organizacionais:} atrasos no cronograma, sobrecarga da equipe e mudan\c{c}as de escopo.
+  \item \textbf{Externos:} descontinuidade de servi\c{c}os terceiros (APIs, plataformas de hospedagem) e altera\c{c}\~oes em requisitos legais.
+\end{itemize}
+ 
+\subsubsection*{4.3.6 Defini\c{c}\~oes de Probabilidade e Impacto}
+ 
+\vspace{6pt}
+\noindent
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|c|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{N\'ivel} & \textbf{Probabilidade} & \textbf{Impacto} \\
+\hline
+Baixo & Pouco prov\'avel de ocorrer no ciclo do projeto & Efeito m\'inimo, sem comprometer entregas \\
+\hline
+M\'edio & Poss\'ivel ocorr\^encia durante o desenvolvimento & Atraso ou retrabalho pontual em m\'odulos \\
+\hline
+Alto & Prov\'avel ou j\'a ocorreu em projetos similares & Compromete funcionalidades cr\'iticas ou a entrega final \\
+\hline
+\end{tabular}
+ 
+\subsubsection*{4.3.7 Matriz de Probabilidade e Impacto}
+ 
+A matriz a seguir combina probabilidade e impacto para classificar o n\'ivel de cada risco,
+orientando a prioriza\c{c}\~ao das a\c{c}\~oes de resposta. Riscos classificados como
+\textbf{Alto} exigem a\c{c}\~ao imediata; \textbf{M\'edio} requerem monitoramento cont\'inuo;
+\textbf{Baixo} s\~ao aceit\'aveis com controle peri\'odico.
+ 
+\vspace{6pt}
+\noindent
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{4.2cm}|c|c|c|p{3.8cm}|}
+\hline
+\textbf{Risco} & \textbf{Categoria} & \textbf{Prob.} & \textbf{Impacto} & \textbf{N\'ivel} \\
+\hline
+Vazamento de dados de clientes & Seguran\c{c}a & Baixa & Alto & M\'edio \\
+\hline
+SQL Injection em formul\'arios & Seguran\c{c}a & M\'edia & Alto & Alto \\
+\hline
+Falha de autentica\c{c}\~ao & T\'ecnico & Baixa & Alto & M\'edio \\
+\hline
+Indisponibilidade da infraestrutura & T\'ecnico & Baixa & M\'edio & Baixo \\
+\hline
+Viola\c{c}\~ao da LGPD & Privacidade & Baixa & Alto & M\'edio \\
+\hline
+Atraso no cronograma & Organizacional & M\'edia & M\'edio & M\'edio \\
+\hline
+Descontinuidade de servi\c{c}o externo & Externo & Baixa & M\'edio & Baixo \\
+\hline
+\end{tabular}
+ 
+\subsubsection*{4.3.8 Toler\^ancias das Partes Interessadas}
+ 
+As principais partes interessadas do projeto s\~ao a equipe de desenvolvimento, o professor
+orientador e as oficinas mec\^anicas beneficiadas. A toler\^ancia ao risco \'e considerada
+\textbf{baixa} para riscos de seguran\c{c}a e privacidade, dado o car\'ater sens\'ivel dos
+dados de clientes e ve\'iculos. Para riscos organizacionais, como atrasos pontuais no
+cronograma acad\^emico, a toler\^ancia \'e \textbf{moderada}, desde que as entregas principais
+sejam mantidas.
+ 
+\subsubsection*{4.3.9 Formatos de Relat\'orios}
+ 
+Os riscos ser\~ao documentados e comunicados por meio de: atualiza\c{c}\~oes na matriz de
+riscos ap\'os cada revis\~ao; relat\'orios de status compartilhados com o professor orientador;
+e registro das ocorr\^encias e respostas aplicadas no reposit\'orio do projeto (GitHub/GitLab),
+garantindo rastreabilidade e transpar\^encia ao longo do desenvolvimento.
+ 
+\subsubsection*{4.3.10 Forma de Acompanhamento}
+ 
+O monitoramento dos riscos ser\'a realizado por meio de reuni\~oes quinzenais da equipe,
+inspe\c{c}\~oes de c\'odigo com foco em seguran\c{c}a (OWASP Top 10), uso de ferramentas
+de an\'alise est\'atica e testes de integra\c{c}\~ao cont\'inua via GitHub Actions. Novos
+riscos identificados durante o desenvolvimento ser\~ao incorporados imediatamente \`a matriz,
+e riscos encerrados ser\~ao registrados como li\c{c}\~oes aprendidas para projetos futuros.
+
+% ============================================================
+%  SEÇÃO 4.4 — PROTOTIPAÇÃO E INTEGRAÇÕES
+% ============================================================
+
+\subsection*{4.4 Prototipa\c{c}\~ao de Alta Fidelidade e Defini\c{c}\~ao de Integrações}
+
+O processo de design do Torque Gest\~ao foi conduzido com base em um prot\'otipo de alta
+fidelidade, desenvolvido com o objetivo de validar os fluxos de navega\c{c}\~ao, a
+consist\^encia visual e a usabilidade das telas antes do in\'icio da implementa\c{c}\~ao.
+A prototipa\c{c}\~ao antecede o desenvolvimento como estrat\'egia para reduzir o risco de
+retrabalho e garantir o alinhamento entre a equipe e os requisitos especificados.
+
+\subsubsection*{4.4.1 Ferramenta e Design System}
+
+O prot\'otipo foi constru\'ido no \textbf{Figma}, ferramenta de design colaborativo adotada
+pelo projeto para a cria\c{c}\~ao de todos os \textit{wireframes} e telas de alta fidelidade.
+O design system aplicado em todas as telas segue as seguintes defini\c{c}\~oes:
+
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item \textbf{Cor prim\'aria:} \texttt{\#1B2B4B} (azul escuro institucional)
+  \item \textbf{Cor de destaque:} \texttt{\#F0A500} (âmbar)
+  \item \textbf{Tipografia:} Inter
+  \item \textbf{Princ\'ipios de interface:} elementos de grande dimens\~ao e alto contraste,
+        derivados da observa\c{c}\~ao direta do ambiente operacional da oficina (ver
+        Subse\c{c}\~ao~\ref{subsec:elicitacao})
+\end{itemize}
+
+O prot\'otipo cobre os seguintes fluxos principais, organizados em conformidade com os
+requisitos funcionais especificados na Se\c{c}\~ao~4.5: autentica\c{c}\~ao e dashboards
+por perfil (RF06); gerenciamento de clientes e ve\'iculos (RF01, RF02); ciclo completo
+de ordens de servi\c{c}o (RF03, RF04); cat\'alogo de servi\c{c}os e pe\c{c}as (RF05);
+gest\~ao de usu\'arios e configura\c{c}\~oes; e portal do cliente (RF07).
+
+O acesso ao prot\'otipo interativo est\'a dispon\'ivel no seguinte endere\c{c}o:
+
+\begin{center}
+  \textbf{[INSERIR LINK DO FIGMA]}
+\end{center}
+
+\subsubsection*{4.4.2 Integrações Previstas}
+
+O Torque Gest\~ao foi projetado com uma arquitetura aberta que permite integrações futuras
+por meio da API RESTful exposta pelo back-end (RNF06). As integrações previstas para
+vers\~oes subsequentes ao MVP s\~ao:
+
+\begin{itemize}[leftmargin=2cm, itemsep=4pt]
+  \item \textbf{Fornecedores de pe\c{c}as:} consulta de disponibilidade e pre\c{c}os via
+        API, agilizando a composi\c{c}\~ao de itens na ordem de servi\c{c}o.
+  \item \textbf{Notifica\c{c}\~oes externas:} envio de atualiza\c{c}\~oes de status ao
+        cliente por e-mail ou SMS, complementando o portal de autoatendimento (RF07).
+  \item \textbf{Sistemas de gest\~ao cont\'abil:} integrações com plataformas
+        especializadas (e.g., Conta Azul) para repasse das informa\c{c}\~oes operacionais
+        ao controle fiscal e tribut\'ario, mantendo o escopo do Torque Gest\~ao restrito
+        \`a gest\~ao da oficina.
+\end{itemize}
+
+% ============================================================
+%  SEÇÃO 4.5 — ENGENHARIA DE REQUISITOS
+% ============================================================
+
+\section{4.5 Engenharia de Requisitos}
+
+A Engenharia de Requisitos (ER) constitui uma das fases mais críticas e
+determinantes para o sucesso do \textit{software} Torque Gestão, atuando como
+interface fundamental entre as necessidades de negócio — frequentemente
+informais e subjetivas — dos gestores de oficinas mecânicas e a implementação
+técnica rigorosa. Conforme preconizado por \citeonline{sommerville2011}, a ER
+não é apenas uma etapa de escrita, mas um processo cíclico de descoberta,
+análise, documentação e verificação dos serviços e restrições que o sistema
+deve apresentar.
+
+Neste projeto, a ER foi tratada como pilar estratégico para mitigar o risco de
+desenvolvimento de funcionalidades inúteis ou de difícil operação. O objetivo
+central foi transformar a ausência de ferramentas de gestão informatizada
+identificada no setor automotivo em uma especificação técnica que garantisse
+eficiência operacional, segurança jurídica — em especial a conformidade com a
+Lei Geral de Proteção de Dados (LGPD) — e uma curva de aprendizado reduzida
+para os profissionais do setor.
+
+\citeonline{sommerville2011} distingue três categorias de requisitos que
+orientaram toda a estruturação desta seção: \textbf{requisitos funcionais},
+que descrevem os serviços e comportamentos esperados do sistema;
+\textbf{requisitos não funcionais}, que especificam restrições de qualidade e
+propriedades globais do sistema; e \textbf{requisitos de domínio}, oriundos do
+contexto de aplicação, como regulamentações legais e normas setoriais. As
+tabelas de requisitos apresentadas nas subseções seguintes compõem o núcleo do
+Documento de Requisitos do sistema, elaborado conforme as diretrizes do padrão
+IEEE~830.
+
+% ------------------------------------------------------------
+\subsection{4.5.1 Elicitação e Análise de Requisitos}
+\label{subsec:elicitacao}
+% ------------------------------------------------------------
+
+A fase de elicitação buscou compreender profundamente o domínio do problema: o
+déficit de maturidade digital e a gestão predominantemente analógica em
+oficinas mecânicas de pequeno e médio porte na região de Joinville, Santa
+Catarina. Dado que o setor automotivo representa uma parcela significativa da
+economia local, a precisão nesta fase foi essencial para garantir que os
+requisitos levantados refletissem necessidades reais e não suposições da equipe
+de desenvolvimento.
+
+Foram adotadas as seguintes técnicas complementares para assegurar uma visão
+holística do problema:
+
+\subsubsection{4.5.1.1 Entrevistas Estruturadas e Semiestruturadas}
+
+Foram realizadas reuniões com proprietários e administradores de oficinas. O
+foco não se limitou a identificar \textit{"o que o sistema deve fazer"}, mas a
+compreender as principais dificuldades operacionais recorrentes no processo de
+atendimento. Identificou-se que a perda de prazos de manutenção preventiva e a
+dificuldade em localizar o histórico de veículos com atendimentos anteriores
+eram os principais gargalos financeiros enfrentados pelos estabelecimentos.
+
+\subsubsection{4.5.1.2 Observação Direta (\textit{Etnografia})}
+
+A equipe analisou o fluxo de trabalho real no ambiente operacional da oficina.
+Observou-se que os mecânicos frequentemente operam em condições que dificultam
+a interação com dispositivos convencionais — mãos contaminadas por graxa e
+posições ergonomicamente desfavoráveis ao uso de teclados. Essa observação
+evidenciou a necessidade de interfaces com elementos visuais de grande dimensão,
+alto contraste cromático e suporte a dispositivos móveis (\textit{tablets}),
+reduzindo a dependência de registros físicos que podem se extraviar ou
+tornar-se ilegíveis.
+
+\subsubsection{4.5.1.3 Análise de Cenários e \textit{User Stories}}
+
+Foram elaboradas narrativas de uso para validar a lógica dos fluxos do sistema
+e identificar requisitos implícitos não mencionados nas entrevistas. Um exemplo
+representativo é apresentado a seguir:
+
+\begin{quote}
+\textit{"Um cliente retorna após seis meses com um problema recorrente no
+veículo. O mecânico responsável pelo atendimento precisa recuperar o diagnóstico
+anterior registrado no sistema para comparar as falhas e evitar retrabalho."}
+\end{quote}
+
+\noindent\textbf{Critério de aceitação:} o sistema deve exibir o último
+diagnóstico registrado para o veículo em até três interações a partir da tela
+de consulta de Ordens de Serviço, sem necessidade de buscas manuais em
+registros físicos.
+
+Esse exercício permitiu identificar requisitos implícitos de rastreabilidade e
+agilidade de consulta que não haviam emergido nas entrevistas estruturadas.
+Ao final da fase de elicitação, compreendeu-se que a agilidade na visualização
+de status e a integridade dos dados são mais valorizadas pelos usuários do que
+um grande volume de funcionalidades complexas.
+
+% ------------------------------------------------------------
+\subsection{4.5.2 Especificação de Requisitos}
+\label{subsec:especificacao}
+% ------------------------------------------------------------
+
+A especificação define detalhadamente as funções e as restrições operacionais
+do sistema. Seguindo o modelo proposto por \citeonline{sommerville2011}, os
+requisitos são organizados em dois níveis de abstração: \textbf{Requisitos de
+Usuário}, expressos em linguagem natural e destinados aos
+\textit{stakeholders} não técnicos, e \textbf{Requisitos de Sistema},
+descrições técnicas detalhadas destinadas à equipe de desenvolvimento. As
+tabelas a seguir representam os Requisitos de Sistema do Torque Gestão, já
+refinados a partir das declarações de usuário coletadas na fase de elicitação.
+
+% ------------------------------------------------------------
+\subsubsection{4.5.2.1 Requisitos Funcionais}
+% ------------------------------------------------------------
+
+Os requisitos funcionais descrevem os serviços específicos que o
+\textit{software} deve fornecer, o modo como o sistema deve reagir a entradas
+específicas e como deve se comportar em determinadas situações
+\cite{sommerville2011}. Os requisitos identificados para o Torque Gestão são
+apresentados na Tabela~\ref{tab:rf}.
+
+%Tabela 1 - Requisitos funcionais
+
+\begin{longtable}{|p{1.2cm}|p{3.5cm}|p{9.5cm}|}
+\caption{Requisitos Funcionais do Torque Gestão}
+\label{tab:rf} \\
+
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição e Implicações} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{r}{\footnotesize\textit{(continuação)}} \\
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição e Implicações} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\footnotesize\textit{(continua na próxima página)}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+RF01 & Gerenciamento de Clientes &
+O sistema deve permitir o cadastro completo, a edição e a consulta de clientes,
+com validação de CPF/CNPJ e mecanismo de busca por nome ou documento para
+prevenir a duplicidade de registros. \\
+\hline
+RF02 & Cadastro de Veículos &
+O sistema deve vincular múltiplos veículos a um único proprietário, registrando
+Placa (formato Mercosul --- \textbf{requisito de domínio}, ver
+Subseção~\ref{subsubsec:dominio}), Modelo, Marca, Ano e quilometragem atual
+para subsidiar previsões de manutenção preventiva. \\
+\hline
+RF03 & Emissão de Ordens de Serviço (OS) &
+O sistema deve permitir a abertura de OS detalhadas, separando obrigatoriamente
+os itens de \textit{"Mão de Obra"} dos itens de \textit{"Peças Aplicadas"},
+possibilitando a geração de orçamentos prévios antes da aprovação final pelo
+cliente. Esta separação implica um modelo relacional com tabela de itens
+discriminados por tipo, justificando o uso do PostgreSQL como SGBD. \\
+\hline
+RF04 & Acompanhamento de Status &
+O sistema deve implementar um fluxo de estados para a OS: \textit{"Aguardando
+Diagnóstico"}, \textit{"Em Execução"}, \textit{"Aguardando Peças"},
+\textit{"Finalizada"} e \textit{"Entregue"}, possibilitando o controle de
+produtividade da equipe e a comunicação proativa com o cliente. \\
+\hline
+RF05 & Catálogo de Serviços e Peças &
+O sistema deve manter um cadastro de serviços (e.g., alinhamento, troca de
+óleo) e peças, com descrição e referência de preço operacional para uso interno
+da oficina, agilizando a composição de orçamentos durante o atendimento.
+O controle fiscal e tributário é responsabilidade de sistemas especializados
+externos (e.g., sistemas de gestão contábil), fora do escopo deste projeto. \\
+\hline
+RF06 & Autenticação e Controle de Acesso &
+O sistema deve validar credenciais de acesso e aplicar o Controle de Acesso
+Baseado em Funções (\textit{Role-Based Access Control} --- RBAC), por meio de
+tokens JWT. São definidos três perfis: \textbf{Administrador}, com acesso
+completo ao sistema, incluindo configurações e relatórios operacionais;
+\textbf{Mecânico}, com acesso restrito às OS sob sua responsabilidade;
+e \textbf{Cliente}, com acesso exclusivo ao portal de acompanhamento de seus
+próprios veículos e serviços (ver RF07). \\
+\hline
+RF07 & Portal do Cliente &
+O sistema deve disponibilizar um portal de acesso \textit{self-service} para o
+cliente final, acessível via credenciais próprias. Por meio deste portal, o
+cliente poderá: (i) consultar o histórico completo de OS de seus veículos
+vinculados; (ii) acompanhar em tempo real o status da OS em andamento,
+refletindo os estados definidos em RF04; e (iii) visualizar o orçamento aprovado
+e os serviços executados. O portal não expõe dados de outros clientes, sendo o
+isolamento de dados garantido pela camada de autorização RBAC. \\
+
+\end{longtable}
+
+% ------------------------------------------------------------
+\subsubsection{4.5.2.2 Requisitos Não Funcionais}
+% ------------------------------------------------------------
+
+Os requisitos não funcionais especificam critérios de qualidade e restrições
+técnicas que o sistema deve observar, não descrevendo o que o sistema faz, mas
+como o faz \cite{sommerville2011}. Eles frequentemente se aplicam ao sistema
+como um todo e seu descumprimento pode inviabilizar a adoção do
+\textit{software} pelo público-alvo. Os requisitos não funcionais do Torque
+Gestão são apresentados na Tabela~\ref{tab:rnf}.
+
+%Tabela 2 - Requisitos não funcionais
+
+\begin{longtable}{|p{1.2cm}|p{3.5cm}|p{9.5cm}|}
+\caption{Requisitos Não Funcionais do Torque Gestão}
+\label{tab:rnf} \\
+
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição e Implicações} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{r}{\footnotesize\textit{(continuação)}} \\
+\hline
+\textbf{ID} & \textbf{Título} & \textbf{Descrição e Implicações} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\footnotesize\textit{(continua na próxima página)}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+RNF01 & Segurança de Dados &
+Todas as credenciais de acesso devem ser armazenadas com \textit{hash}
+criptográfico Bcrypt no PostgreSQL, impedindo a leitura de senhas em texto
+claro em caso de acesso não autorizado ao banco de dados. O tráfego entre
+cliente e servidor deve ser protegido pelo protocolo HTTPS (TLS/SSL). \\
+\hline
+RNF02 & Desempenho &
+O sistema deve ser otimizado de modo que consultas de histórico de OS — em
+condições de uso típico com até 500 registros por veículo — não ultrapassem
+2~segundos de tempo de resposta, mensuráveis por ferramentas de monitoramento
+de latência de API. Tempos superiores comprometem o fluxo de atendimento no
+ambiente operacional da oficina. \\
+\hline
+RNF03 & Disponibilidade &
+A aplicação será hospedada em infraestrutura de nuvem, utilizando a plataforma
+Render para o \textit{back-end} (FastAPI) e o banco de dados (PostgreSQL), e
+Vercel para a entrega do \textit{front-end} (React). A meta de disponibilidade
+é de 99,5\% de \textit{uptime} mensal, garantindo que interrupções no
+\textit{software} não paralisem as atividades da oficina. \\
+\hline
+RNF04 & Portabilidade &
+A interface deve seguir os princípios de \textit{Responsive Web Design},
+assegurando pleno funcionamento em dispositivos móveis. Esta exigência é
+derivada diretamente da fase de observação direta: mecânicos necessitam
+registrar avarias e fotografias ao lado do veículo, sem deslocamento até uma
+estação de trabalho fixa. \\
+\hline
+RNF05 & Conformidade Legal (LGPD) &
+O sistema deve observar a Lei Geral de Proteção de Dados (Lei
+n\textordmasculine~13.709/2018), em especial o Art.~18, que garante ao titular
+os direitos de: (i) acesso aos dados pessoais armazenados; (ii) portabilidade
+dos dados mediante solicitação; (iii) correção de dados incompletos ou
+desatualizados; e (iv) exclusão dos dados quando encerrado o relacionamento
+contratual (\textit{direito ao esquecimento}). O sistema deve registrar o
+consentimento do titular no ato do cadastro. Este é um \textbf{requisito de
+domínio} derivado do arcabouço jurídico brasileiro
+(ver Subseção~\ref{subsubsec:dominio}). \\
+\hline
+RNF06 & Arquitetura de Comunicação &
+O \textit{back-end} (FastAPI) deve expor uma API RESTful com documentação
+gerada automaticamente no padrão OpenAPI/Swagger, facilitando futuras
+integrações com fornecedores de peças, aplicativos móveis de terceiros e
+o portal do cliente (RF07). \\
+
+\end{longtable}
+
+
+
+% ------------------------------------------------------------
+\subsubsection{4.5.2.3 Requisitos de Domínio}
+\label{subsubsec:dominio}
+% ------------------------------------------------------------
+
+Conforme \citeonline{sommerville2011}, requisitos de domínio são restrições e
+características derivadas do domínio de aplicação do sistema, e não
+diretamente das necessidades expressas pelos usuários. Eles refletem
+convenções, regulamentações e práticas consolidadas no setor de atuação do
+\textit{software}. No contexto do Torque Gestão, dois requisitos de domínio
+foram identificados:
+
+\begin{enumerate}
+    \item \textbf{Formato de Placa Mercosul (RF02):} A legislação brasileira
+    determinou, por meio da Resolução CONTRAN n\textordmasculine~729/2018, a
+    adoção progressiva do padrão alfanumérico Mercosul (e.g., ABC1D23) para
+    novos emplacamentos. O sistema deve validar placas tanto no formato
+    antigo (AAA-9999) quanto no novo padrão, garantindo compatibilidade com
+    o parque veicular heterogêneo atendido pelas oficinas.
+
+    \item \textbf{Conformidade com a LGPD (RNF05):} A Lei Geral de Proteção
+    de Dados impõe obrigações específicas a qualquer sistema que armazene
+    dados pessoais de clientes, independentemente da vontade dos
+    \textit{stakeholders}. O não atendimento a este requisito expõe o
+    estabelecimento a sanções administrativas da ANPD (Autoridade Nacional
+    de Proteção de Dados).
+\end{enumerate}
+
+% ------------------------------------------------------------
+\subsection{4.5.3 Validação de Requisitos}
+\label{subsec:validacao}
+% ------------------------------------------------------------
+
+A validação de requisitos é a etapa destinada a verificar se a especificação
+produzida representa, de fato, o sistema que o cliente deseja construir
+\cite{sommerville2011}. Diferentemente da verificação — que pergunta
+\textit{"o sistema foi construído corretamente?"} —, a validação pergunta
+\textit{"o sistema correto foi especificado?"}. \citeonline{sommerville2011}
+define cinco critérios fundamentais que um conjunto de requisitos deve
+satisfazer: validade, consistência, completude, realismo e verificabilidade.
+Todos foram aplicados neste projeto, conforme descrito a seguir.
+
+\subsubsection{4.5.3.1 Validade}
+
+Verificou-se se as funções especificadas correspondem às necessidades reais dos
+usuários identificadas na fase de elicitação. Para tanto, os cenários e
+\textit{User Stories} construídos na
+Subseção~\ref{subsec:elicitacao} foram utilizados como instrumento de
+rastreabilidade: cada RF foi confrontado com pelo menos uma narrativa de uso,
+garantindo que nenhum requisito foi inserido por suposição da equipe sem
+respaldo nas entrevistas ou na observação direta.
+
+\subsubsection{4.5.3.2 Consistência}
+
+Os requisitos foram revisados em conjunto para detectar contradições internas.
+Um potencial conflito identificado foi entre RNF02 (desempenho — consultas em
+até 2~segundos) e RF03 (OS com separação detalhada de itens, operação de maior
+custo computacional). A análise concluiu que o uso de índices relacionais no
+PostgreSQL e a paginação de resultados no \textit{back-end} FastAPI são
+suficientes para que ambos os requisitos sejam satisfeitos simultaneamente,
+não havendo, portanto, inconsistência irreconciliável.
+
+\subsubsection{4.5.3.3 Completude}
+
+Verificou-se se todos os fluxos de trabalho identificados na etnografia estavam
+cobertos pela especificação. A revisão cruzada entre os cenários de uso
+(Subseção~\ref{subsec:elicitacao}) e as tabelas de requisitos funcionais
+confirmou que os processos de cadastro de clientes e veículos, abertura e
+acompanhamento de OS, controle de acesso por perfil, portal de acompanhamento
+do cliente (RF07) e conformidade legal foram integralmente contemplados.
+O escopo do sistema delimita-se à gestão operacional da oficina; funcionalidades
+de natureza fiscal e tributária — como emissão de notas fiscais e controle
+contábil — estão fora do escopo do Torque Gestão e devem ser endereçadas por
+sistemas especializados externos. As funcionalidades identificadas como
+desejáveis, mas inviáveis dentro do escopo do MVP (\textit{Minimum Viable
+Product}) — como a integração com fornecedores de peças via API — foram
+registradas como requisitos postergados para versões futuras, garantindo a
+completude do documento sem comprometer a viabilidade da entrega.
+
+\subsubsection{4.5.3.4 Realismo}
+
+Avaliou-se se o orçamento e o cronograma do PAC Extensionista permitiam a
+implementação de todos os requisitos especificados. Funcionalidades de alta
+complexidade foram postergadas para versões futuras com o objetivo de garantir
+a entrega de um MVP estável e funcional dentro do prazo acadêmico estabelecido.
+Esta análise foi conduzida em reuniões com o professor orientador Claudinei
+Dias, que validou o escopo frente à capacidade técnica e ao tempo disponível da
+equipe.
+
+\subsubsection{4.5.3.5 Verificabilidade}
+
+Cada requisito foi redigido de forma que pudesse ser submetido a testes
+objetivos e mensuráveis. O RNF02, por exemplo, pode ser verificado por
+ferramentas de monitoramento de latência de API, como o \textit{Postman} ou o
+painel de métricas do Render. O RF06 pode ser testado por meio de cenários de
+controle de acesso automatizados, tentando acessar rotas administrativas com
+credenciais de perfil mecânico ou cliente e verificando a resposta HTTP~403
+esperada. O RF07 pode ser validado por meio de testes de integração que
+confirmem o isolamento de dados entre clientes distintos e a correta exibição
+do status de OS em tempo real. A adoção deste critério desde a escrita dos
+requisitos assegura que a fase de testes do sistema terá insumos claros para a
+construção dos casos de teste.
+
+\bigskip
+\noindent
+O processo de Engenharia de Requisitos aqui documentado garante que o Torque
+Gestão não seja apenas um \textit{software} funcionalmente correto, mas uma
+solução estratégica, juridicamente adequada e operacionalmente confiável para
+o mercado automotivo de Joinville. A rastreabilidade entre as necessidades
+identificadas na elicitação, os requisitos especificados e os critérios de
+validação aplicados constitui a base sobre a qual as fases subsequentes de
+projeto, implementação e testes serão conduzidas.
+ 
+% 5 AVALIAÇÃO DO PROJETO
+\newpage
+\phantomsection
+\label{sec:avaliacao}
+\section*{5 AVALIA\c{C}\~AO DO PROJETO PELO P\'UBLICO BENEFICIADO}
+ 
+% 6 CONSIDERAÇÕES FINAIS
+\newpage
+\phantomsection
+\label{sec:consideracoes}
+\section*{6 CONSIDERA\c{C}\~OES FINAIS -- AUTOAVALIA\c{C}\~AO DO PAC EXTENSIONISTA}
+ 
+% REFERÊNCIAS EM BRANCO
+\newpage
+\phantomsection
+\label{sec:referencias}
+\section*{REFER\^ENCIAS}
+\bibliography{referencias}
+ 
+% APÊNDICES EM BRANCO
+\newpage
+\phantomsection
+\label{sec:apendices}
+\section*{AP\^ENDICES}
+ 
+% ANEXOS EM BRANCO
+\newpage
+\phantomsection
+\label{sec:anexos}
+\section*{ANEXOS}
+ 
+\end{document}

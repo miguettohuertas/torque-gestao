@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torque Gestão — UI Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #f5f5f2; color: #1c1c1a; height: 100vh; overflow: hidden; }
+#root { height: 100vh; display: flex; flex-direction: column; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d8d8d3; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ─── TOKENS ───────────────────────────────────────────────
+const T = {
+  primary: '#1B2B4B',
+  primary700: '#243760',
+  primary600: '#2e4578',
+  primary100: '#dde4f1',
+  primary50: '#f0f3f9',
+  amber: '#F0A500',
+  amber700: '#c98300',
+  amber100: '#fdf0d1',
+  bg: '#f5f5f2',
+  surface: '#ffffff',
+  border: '#d8d8d3',
+  borderLight: '#ebebе7',
+  fg: '#1c1c1a',
+  fgMuted: '#5e5e59',
+  fgSubtle: '#787872',
+  success: { bg: '#dcfce7', text: '#166534', dot: '#22c55e' },
+  warning: { bg: '#fef3c7', text: '#92400e', dot: '#f59e0b' },
+  error:   { bg: '#fee2e2', text: '#991b1b', dot: '#ef4444' },
+  info:    { bg: '#dbeafe', text: '#1e40af', dot: '#3b82f6' },
+  purple:  { bg: '#f3e8ff', text: '#6b21a8', dot: '#a855f7' },
+};
+
+// ─── DATA ─────────────────────────────────────────────────
+const OS_DATA = [
+  { id: '#0421', veiculo: 'Honda Civic 2019', placa: 'ABC-1234', cliente: 'João Silva', mecanico: 'Carlos A.', status: 'progress', valor: 1240, servico: 'Revisão completa', prioridade: 'alta', entrada: '20/04/2026' },
+  { id: '#0420', veiculo: 'Toyota Corolla 2021', placa: 'XYZ-9876', cliente: 'Maria Costa', mecanico: 'Marcos L.', status: 'waiting', valor: 680, servico: 'Troca de freios', prioridade: 'media', entrada: '19/04/2026' },
+  { id: '#0419', veiculo: 'VW Gol 2018', placa: 'DEF-5678', cliente: 'Pedro Alves', mecanico: 'Ricardo S.', status: 'open', valor: 420, servico: 'Alinhamento e balanceamento', prioridade: 'baixa', entrada: '18/04/2026' },
+  { id: '#0418', veiculo: 'Fiat Palio 2016', placa: 'GHI-3456', cliente: 'Ana Rodrigues', mecanico: 'Carlos A.', status: 'done', valor: 320, servico: 'Troca de óleo', prioridade: 'baixa', entrada: '17/04/2026' },
+  { id: '#0417', veiculo: 'Chevrolet Onix 2022', placa: 'JKL-7890', cliente: 'Lucas Ferreira', mecanico: 'Marcos L.', status: 'budget', valor: 2100, servico: 'Motor com barulho', prioridade: 'alta', entrada: '16/04/2026' },
+  { id: '#0416', veiculo: 'Ford Ka 2020', placa: 'MNO-1122', cliente: 'Carla Mendes', mecanico: 'Ricardo S.', status: 'cancelled', valor: 0, servico: 'Ar condicionado', prioridade: 'media', entrada: '15/04/2026' },
+];
+
+const STATUS_MAP = {
+  open:      { label: 'Aberta',            color: T.info },
+  progress:  { label: 'Em andamento',      color: T.warning },
+  waiting:   { label: 'Aguard. peça',      color: T.purple },
+  budget:    { label: 'Orçamento enviado', color: { bg: '#ffedd5', text: '#9a3412', dot: '#f97316' } },
+  done:      { label: 'Concluída',         color: T.success },
+  cancelled: { label: 'Cancelada',         color: T.error },
+};
+
+const STATS = [
+  { label: 'OS Abertas', value: 14, sub: '+3 hoje', subColor: T.amber },
+  { label: 'Em Andamento', value: 6, sub: 'agora', subColor: T.warning.text },
+  { label: 'Concluídas', value: 38, sub: 'este mês', subColor: T.success.text },
+  { label: 'Receita Mês', value: 'R$ 28.4k', sub: '+12% vs anterior', subColor: T.success.text },
+];
+
+const NAV_ADMIN = [
+  { section: 'Principal', items: [
+    { icon: '⊞', label: 'Painel', id: 'dashboard', badge: 14 },
+    { icon: '📋', label: 'Ordens de Serviço', id: 'os' },
+    { icon: '🚗', label: 'Veículos', id: 'veiculos' },
+    { icon: '👥', label: 'Clientes', id: 'clientes' },
+  ]},
+  { section: 'Gestão', items: [
+    { icon: '🔧', label: 'Equipe', id: 'equipe' },
+    { icon: '📦', label: 'Estoque', id: 'estoque' },
+    { icon: '💰', label: 'Financeiro', id: 'financeiro' },
+    { icon: '⚙️', label: 'Configurações', id: 'config' },
+  ]},
+];
+
+const NAV_MECH = [
+  { section: 'Minhas OS', items: [
+    { icon: '📋', label: 'Minhas Ordens', id: 'os', badge: 3 },
+    { icon: '🕐', label: 'Histórico', id: 'historico' },
+  ]},
+];
+
+const NAV_CLIENT = [
+  { section: 'Minha Conta', items: [
+    { icon: '🚗', label: 'Meus Veículos', id: 'veiculos' },
+    { icon: '📋', label: 'Meus Serviços', id: 'os' },
+    { icon: '💬', label: 'Mensagens', id: 'msgs' },
+  ]},
+];
+
+const USERS = {
+  admin:   { name: 'Roberto G.', role: 'Administrador', initials: 'RG', nav: NAV_ADMIN, color: T.amber },
+  mech:    { name: 'Carlos Andrade', role: 'Mecânico', initials: 'CA', nav: NAV_MECH, color: '#5b7ab8' },
+  client:  { name: 'João Silva', role: 'Cliente', initials: 'JS', nav: NAV_CLIENT, color: '#22c55e' },
+};
+
+// ─── COMPONENTS ───────────────────────────────────────────
+
+const Badge = ({ status }) => {
+  const s = STATUS_MAP[status] || STATUS_MAP.open;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      fontSize: 11, fontWeight: 600, borderRadius: 9999,
+      padding: '3px 10px', background: s.color.bg, color: s.color.text,
+      whiteSpace: 'nowrap',
+    }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: s.color.dot, flexShrink: 0 }} />
+      {s.label}
+    </span>
+  );
+};
+
+const RoleBadge = ({ role }) => {
+  const styles = {
+    admin:  { bg: T.primary, color: '#fff' },
+    mech:   { bg: T.primary700, color: T.amber },
+    client: { bg: T.primary50, color: T.primary, border: `1.5px solid ${T.primary100}` },
+  };
+  const labels = { admin: 'Administrador', mech: 'Mecânico', client: 'Cliente' };
+  const s = styles[role];
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center',
+      fontSize: 11, fontWeight: 600, borderRadius: 9999,
+      padding: '3px 12px', background: s.bg, color: s.color,
+      border: s.border || 'none',
+    }}>
+      {labels[role]}
+    </span>
+  );
+};
+
+const Sidebar = ({ activeRole, setActiveRole, activePage, setActivePage }) => {
+  const user = USERS[activeRole];
+  return (
+    <div style={{
+      width: 230, background: T.primary, display: 'flex', flexDirection: 'column',
+      flexShrink: 0, overflow: 'hidden',
+    }}>
+      {/* Logo */}
+      <div style={{ padding: '22px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
+          Torque<span style={{ color: T.amber }}>.</span>
+        </div>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 500, marginTop: 3 }}>Gestão de Oficina</div>
+      </div>
+
+      {/* Role switcher */}
+      <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Perfil ativo</div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {['admin','mech','client'].map(r => (
+            <button key={r} onClick={() => { setActiveRole(r); setActivePage('dashboard'); }}
+              style={{
+                flex: 1, height: 28, borderRadius: 6, border: 'none', cursor: 'pointer',
+                fontSize: 10, fontWeight: 700,
+                background: activeRole === r ? T.amber : 'rgba(255,255,255,0.08)',
+                color: activeRole === r ? T.primary : 'rgba(255,255,255,0.5)',
+                transition: 'all 150ms',
+              }}>
+              {r === 'admin' ? 'ADM' : r === 'mech' ? 'MEC' : 'CLI'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Nav */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+        {user.nav.map(section => (
+          <div key={section.section} style={{ marginBottom: 4 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '10px 8px 4px' }}>
+              {section.section}
+            </div>
+            {section.items.map(item => (
+              <button key={item.id} onClick={() => setActivePage(item.id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                  padding: '10px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                  fontSize: 14, fontWeight: activePage === item.id ? 600 : 500,
+                  color: activePage === item.id ? T.amber : 'rgba(255,255,255,0.65)',
+                  background: activePage === item.id ? 'rgba(240,165,0,0.12)' : 'transparent',
+                  marginBottom: 2, textAlign: 'left', transition: 'all 150ms',
+                }}>
+                <span style={{ fontSize: 15, width: 18, textAlign: 'center', flexShrink: 0 }}>{item.icon}</span>
+                <span style={{ flex: 1 }}>{item.label}</span>
+                {item.badge && (
+                  <span style={{ background: T.amber, color: T.primary, fontSize: 10, fontWeight: 700, borderRadius: 9999, padding: '1px 6px' }}>
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* User */}
+      <div style={{ padding: '14px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{
+          width: 36, height: 36, background: user.color, borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 13, fontWeight: 700, color: T.primary, flexShrink: 0,
+        }}>{user.initials}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{user.role}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TopBar = ({ title, actions }) => (
+  <div style={{
+    background: T.surface, borderBottom: `1px solid ${T.border}`,
+    padding: '0 24px', height: 60, display: 'flex', alignItems: 'center',
+    justifyContent: 'space-between', flexShrink: 0, gap: 12,
+  }}>
+    <h1 style={{ fontSize: 20, fontWeight: 700, color: T.primary }}>{title}</h1>
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>{actions}</div>
+  </div>
+);
+
+const Btn = ({ children, variant = 'primary', size = 'md', onClick, style = {} }) => {
+  const sizes = { sm: { height: 36, padding: '0 14px', fontSize: 13 }, md: { height: 44, padding: '0 18px', fontSize: 14 }, lg: { height: 52, padding: '0 24px', fontSize: 15 } };
+  const variants = {
+    primary:   { background: T.primary, color: '#fff' },
+    accent:    { background: T.amber, color: T.primary },
+    secondary: { background: T.primary50, color: T.primary, border: `1.5px solid ${T.primary100}` },
+    ghost:     { background: 'transparent', color: T.primary, border: `1.5px solid ${T.border}` },
+    danger:    { background: '#ef4444', color: '#fff' },
+  };
+  return (
+    <button onClick={onClick} style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+      fontFamily: 'Inter, sans-serif', fontWeight: 600, border: 'none', cursor: 'pointer',
+      borderRadius: 8, transition: 'all 150ms', whiteSpace: 'nowrap',
+      ...sizes[size], ...variants[variant], ...style,
+    }}>{children}</button>
+  );
+};
+
+const StatCard = ({ label, value, sub, subColor, accent }) => (
+  <div style={{
+    background: T.surface, borderRadius: 12, padding: '18px 20px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.07)', flex: 1, minWidth: 130,
+    borderTop: accent ? `3px solid ${T.amber}` : `3px solid transparent`,
+  }}>
+    <div style={{ fontSize: 11, fontWeight: 600, color: T.fgSubtle, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{label}</div>
+    <div style={{ fontSize: 30, fontWeight: 800, color: T.primary, lineHeight: 1 }}>{value}</div>
+    <div style={{ fontSize: 12, fontWeight: 600, color: subColor, marginTop: 6 }}>{sub}</div>
+  </div>
+);
+
+// ─── PAGES ────────────────────────────────────────────────
+
+const Dashboard = ({ role, onNavigate }) => (
+  <div style={{ padding: 24, overflowY: 'auto', flex: 1 }}>
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 13, color: T.fgSubtle, marginBottom: 4 }}>Hoje, 22 abr 2026</div>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        {STATS.map((s, i) => <StatCard key={i} accent={i === 0} {...s} />)}
+      </div>
+    </div>
+
+    {/* Recent OS */}
+    <div style={{ background: T.surface, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
+      <div style={{ padding: '14px 18px', borderBottom: `1px solid ${T.borderLight}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: T.primary }}>Ordens Recentes</span>
+        <Btn variant="ghost" size="sm" onClick={() => onNavigate('os')}>Ver todas</Btn>
+      </div>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr style={{ background: T.bg }}>
+            {['Nº OS','Veículo','Cliente','Mecânico','Status','Valor',''].map((h,i) => (
+              <th key={i} style={{ textAlign: 'left', fontSize: 11, fontWeight: 700, color: T.fgSubtle, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '10px 18px', borderBottom: `1px solid ${T.border}` }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {OS_DATA.slice(0, 4).map((os, i) => (
+            <tr key={i} style={{ borderBottom: i < 3 ? `1px solid ${T.borderLight}` : 'none' }}>
+              <td style={{ padding: '13px 18px', fontWeight: 700, color: T.primary, fontSize: 14 }}>{os.id}</td>
+              <td style={{ padding: '13px 18px' }}>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{os.veiculo}</div>
+                <div style={{ fontSize: 12, color: T.fgSubtle }}>{os.placa}</div>
+              </td>
+              <td style={{ padding: '13px 18px', fontSize: 14 }}>{os.cliente}</td>
+              <td style={{ padding: '13px 18px', fontSize: 14 }}>{os.mecanico}</td>
+              <td style={{ padding: '13px 18px' }}><Badge status={os.status} /></td>
+              <td style={{ padding: '13px 18px', fontWeight: 700, fontSize: 14, color: T.primary }}>
+                {os.valor ? `R$ ${os.valor.toLocaleString('pt-BR')},00` : '—'}
+              </td>
+              <td style={{ padding: '13px 18px' }}><Btn variant="ghost" size="sm">Ver</Btn></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+const OSList = ({ role }) => {
+  const [search, setSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const filtered = OS_DATA.filter(os => {
+    const matchSearch = !search || [os.id, os.veiculo, os.cliente, os.placa].some(v => v.toLowerCase().includes(search.toLowerCase()));
+    const matchStatus = filterStatus === 'all' || os.status === filterStatus;
+    const matchMech = role !== 'mech' || os.mecanico === 'Carlos A.';
+    return matchSearch && matchStatus && matchMech;
+  });
+
+  return (
+    <div style={{ padding: 24, overflowY: 'auto', flex: 1 }}>
+      {/* Filters */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: 220 }}>
+          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: T.fgSubtle, fontSize: 16 }}>⌕</span>
+          <input value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Buscar OS, veículo, cliente..."
+            style={{ width: '100%', height: 44, paddingLeft: 40, paddingRight: 14, border: `1.5px solid ${T.border}`, borderRadius: 8, fontSize: 14, fontFamily: 'Inter', outline: 'none', boxSizing: 'border-box' }} />
+        </div>
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
+          style={{ height: 44, padding: '0 14px', border: `1.5px solid ${T.border}`, borderRadius: 8, fontSize: 14, fontFamily: 'Inter', background: '#fff', minWidth: 180 }}>
+          <option value="all">Todos os status</option>
+          <option value="open">Aberta</option>
+          <option value="progress">Em andamento</option>
+          <option value="waiting">Aguardando peça</option>
+          <option value="budget">Orçamento enviado</option>
+          <option value="done">Concluída</option>
+          <option value="cancelled">Cancelada</option>
+        </select>
+        {role !== 'client' && <Btn variant="accent">+ Nova OS</Btn>}
+      </div>
+
+      {/* Table */}
+      <div style={{ background: T.surface, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: T.bg }}>
+              {['Nº OS','Veículo / Placa','Cliente','Mecânico','Serviço','Status','Valor','Entrada',''].map((h,i) => (
+                <th key={i} style={{ textAlign: 'left', fontSize: 11, fontWeight: 700, color: T.fgSubtle, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '10px 16px', borderBottom: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 && (
+              <tr><td colSpan={9} style={{ padding: '32px 16px', textAlign: 'center', color: T.fgSubtle, fontSize: 14 }}>Nenhuma ordem encontrada.</td></tr>
+            )}
+            {filtered.map((os, i) => (
+              <tr key={i} style={{ borderBottom: i < filtered.length-1 ? `1px solid ${T.borderLight}` : 'none', transition: 'background 120ms' }}
+                onMouseEnter={e => e.currentTarget.style.background = T.bg}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: T.primary, fontSize: 14 }}>{os.id}</td>
+                <td style={{ padding: '12px 16px' }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{os.veiculo}</div>
+                  <div style={{ fontSize: 12, color: T.fgSubtle }}>{os.placa}</div>
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: 14 }}>{os.cliente}</td>
+                <td style={{ padding: '12px 16px', fontSize: 14 }}>{os.mecanico}</td>
+                <td style={{ padding: '12px 16px', fontSize: 13, color: T.fgMuted, maxWidth: 160 }}>{os.servico}</td>
+                <td style={{ padding: '12px 16px' }}><Badge status={os.status} /></td>
+                <td style={{ padding: '12px 16px', fontWeight: 700, fontSize: 14, color: T.primary }}>
+                  {os.valor ? `R$ ${os.valor.toLocaleString('pt-BR')},00` : '—'}
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: 13, color: T.fgSubtle }}>{os.entrada}</td>
+                <td style={{ padding: '12px 16px' }}><Btn variant="secondary" size="sm">Abrir</Btn></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const Veiculos = () => {
+  const veiculos = [
+    { placa: 'ABC-1234', modelo: 'Honda Civic 2019', cliente: 'João Silva', cor: 'Prata', km: '87.500', ultima: '20/04/2026', os: 4 },
+    { placa: 'XYZ-9876', modelo: 'Toyota Corolla 2021', cliente: 'Maria Costa', cor: 'Preto', km: '42.200', ultima: '19/04/2026', os: 2 },
+    { placa: 'DEF-5678', modelo: 'VW Gol 2018', cliente: 'Pedro Alves', cor: 'Branco', km: '120.000', ultima: '18/04/2026', os: 6 },
+    { placa: 'GHI-3456', modelo: 'Fiat Palio 2016', cliente: 'Ana Rodrigues', cor: 'Vermelho', km: '98.700', ultima: '17/04/2026', os: 8 },
+  ];
+
+  return (
+    <div style={{ padding: 24, overflowY: 'auto', flex: 1 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+        {veiculos.map((v, i) => (
+          <div key={i} style={{ background: T.surface, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', overflow: 'hidden', minWidth: 220, flex: '1 1 220px', maxWidth: 280 }}>
+            <div style={{ background: T.primary, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Veículo</span>
+              <span style={{ fontSize: 16, fontWeight: 800, color: T.amber }}>{v.placa}</span>
+            </div>
+            <div style={{ padding: '14px 16px' }}>
+              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10, color: T.fg }}>{v.modelo}</div>
+              {[['Cliente', v.cliente], ['Cor', v.cor], ['KM', v.km], ['Última OS', v.ultima]].map(([k, val]) => (
+                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
+                  <span style={{ color: T.fgSubtle, fontWeight: 500 }}>{k}</span>
+                  <span style={{ fontWeight: 600 }}>{val}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: '10px 16px', borderTop: `1px solid ${T.borderLight}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 13, color: T.fgSubtle }}>{v.os} ordens</span>
+              <Btn variant="secondary" size="sm">Histórico</Btn>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Clientes = () => {
+  const clientes = [
+    { nome: 'João Silva', tel: '(11) 99999-1234', email: 'joao@email.com', veiculos: 2, os: 4, ultima: '20/04/2026' },
+    { nome: 'Maria Costa', tel: '(11) 98888-5678', email: 'maria@email.com', veiculos: 1, os: 2, ultima: '19/04/2026' },
+    { nome: 'Pedro Alves', tel: '(11) 97777-9012', email: 'pedro@email.com', veiculos: 1, os: 6, ultima: '18/04/2026' },
+    { nome: 'Ana Rodrigues', tel: '(11) 96666-3456', email: 'ana@email.com', veiculos: 2, os: 8, ultima: '17/04/2026' },
+    { nome: 'Lucas Ferreira', tel: '(11) 95555-7890', email: 'lucas@email.com', veiculos: 1, os: 1, ultima: '16/04/2026' },
+  ];
+
+  return (
+    <div style={{ padding: 24, overflowY: 'auto', flex: 1 }}>
+      <div style={{ background: T.surface, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: T.bg }}>
+              {['Cliente','Telefone','E-mail','Veículos','Total OS','Última visita',''].map((h,i) => (
+                <th key={i} style={{ textAlign: 'left', fontSize: 11, fontWeight: 700, color: T.fgSubtle, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '10px 16px', borderBottom: `1px solid ${T.border}` }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {clientes.map((c, i) => (
+              <tr key={i} style={{ borderBottom: i < clientes.length-1 ? `1px solid ${T.borderLight}` : 'none' }}
+                onMouseEnter={e => e.currentTarget.style.background = T.bg}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                <td style={{ padding: '12px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: T.primary50, border: `2px solid ${T.primary100}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: T.primary, flexShrink: 0 }}>
+                      {c.nome.split(' ').map(n=>n[0]).slice(0,2).join('')}
+                    </div>
+                    <span style={{ fontWeight: 600, fontSize: 14 }}>{c.nome}</span>
+                  </div>
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: 14 }}>{c.tel}</td>
+                <td style={{ padding: '12px 16px', fontSize: 14, color: T.fgMuted }}>{c.email}</td>
+                <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, textAlign: 'center' }}>{c.veiculos}</td>
+                <td style={{ padding: '12px 16px', fontSize: 14, fontWeight: 600, textAlign: 'center' }}>{c.os}</td>
+                <td style={{ padding: '12px 16px', fontSize: 13, color: T.fgSubtle }}>{c.ultima}</td>
+                <td style={{ padding: '12px 16px' }}><Btn variant="ghost" size="sm">Ver perfil</Btn></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const PlaceholderPage = ({ title }) => (
+  <div style={{ padding: 24, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ textAlign: 'center', color: T.fgSubtle }}>
+      <div style={{ fontSize: 40, marginBottom: 12 }}>🚧</div>
+      <div style={{ fontSize: 18, fontWeight: 600, color: T.primary, marginBottom: 4 }}>{title}</div>
+      <div style={{ fontSize: 14 }}>Tela em desenvolvimento — disponível na próxima versão.</div>
+    </div>
+  </div>
+);
+
+const PAGE_TITLES = {
+  dashboard: 'Painel', os: 'Ordens de Serviço', veiculos: 'Veículos',
+  clientes: 'Clientes', equipe: 'Equipe', estoque: 'Estoque',
+  financeiro: 'Financeiro', config: 'Configurações', historico: 'Histórico', msgs: 'Mensagens',
+};
+
+const PAGE_ACTIONS = {
+  dashboard: (role, nav) => role === 'admin' ? [<Btn key="os" variant="accent" onClick={() => nav('os')}>+ Nova OS</Btn>] : [],
+  os: (role) => role !== 'client' ? [<Btn key="new" variant="accent">+ Nova OS</Btn>] : [],
+  veiculos: (role) => role !== 'client' ? [<Btn key="new" variant="secondary">+ Cadastrar</Btn>] : [],
+  clientes: () => [<Btn key="new" variant="secondary">+ Novo cliente</Btn>],
+};
+
+// ─── APP ──────────────────────────────────────────────────
+const App = () => {
+  const [activeRole, setActiveRole] = useState(() => localStorage.getItem('tq_role') || 'admin');
+  const [activePage, setActivePage] = useState(() => localStorage.getItem('tq_page') || 'dashboard');
+
+  useEffect(() => { localStorage.setItem('tq_role', activeRole); }, [activeRole]);
+  useEffect(() => { localStorage.setItem('tq_page', activePage); }, [activePage]);
+
+  const navigate = (page) => setActivePage(page);
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'dashboard': return <Dashboard role={activeRole} onNavigate={navigate} />;
+      case 'os':        return <OSList role={activeRole} />;
+      case 'veiculos':  return <Veiculos />;
+      case 'clientes':  return <Clientes />;
+      default:          return <PlaceholderPage title={PAGE_TITLES[activePage] || activePage} />;
+    }
+  };
+
+  const actions = PAGE_ACTIONS[activePage] ? PAGE_ACTIONS[activePage](activeRole, navigate) : [];
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <Sidebar activeRole={activeRole} setActiveRole={setActiveRole} activePage={activePage} setActivePage={setActivePage} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <TopBar title={PAGE_TITLES[activePage] || activePage} actions={actions} />
+        {renderPage()}
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

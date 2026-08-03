@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles/theme.css">
+<style>
+  body { margin: 0; font-family: var(--font-sans); background: #fff; padding: 20px; color: #1c1c1a; }
+  .label { font-size: 10px; font-weight: 600; color: #787872; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+  .section { margin-bottom: 18px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  input, select, textarea {
+    font-family: var(--font-sans); font-size: 15px;
+    border: 1.5px solid #d8d8d3; border-radius: 8px;
+    padding: 0 14px; color: #1c1c1a; background: #fff;
+    transition: border-color 200ms; outline: none;
+    min-height: 48px; box-sizing: border-box;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #F0A500; box-shadow: 0 0 0 3px rgba(240,165,0,0.15);
+  }
+  input::placeholder { color: #9a9a94; }
+  input.error { border-color: #ef4444; }
+  input.success { border-color: #22c55e; }
+  input:disabled { background: #f5f5f2; color: #9a9a94; cursor: not-allowed; }
+
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field-label { font-size: 13px; font-weight: 600; color: #2e2e2b; }
+  .field-hint { font-size: 12px; color: #787872; }
+  .field-error { font-size: 12px; color: #ef4444; }
+
+  .search-wrap { position: relative; display: inline-flex; align-items: center; }
+  .search-wrap input { padding-left: 40px; }
+  .search-icon { position: absolute; left: 12px; color: #9a9a94; font-size: 16px; }
+</style>
+</head>
+<body>
+  <div class="section">
+    <div class="label">Campos de texto</div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Placa do Veículo</span>
+        <input type="text" placeholder="ABC-1234" style="width:180px">
+      </div>
+      <div class="field">
+        <span class="field-label">Nome do Cliente</span>
+        <input type="text" value="João Silva" style="width:220px">
+      </div>
+      <div class="field">
+        <span class="field-label">Erro de validação</span>
+        <input type="text" class="error" value="00000-000" style="width:160px">
+        <span class="field-error">CEP inválido</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Campo desabilitado</span>
+        <input type="text" disabled value="Somente leitura" style="width:200px">
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">Select · Search · Textarea</div>
+    <div class="row">
+      <div class="field">
+        <span class="field-label">Mecânico Responsável</span>
+        <select style="width:220px">
+          <option>Carlos Andrade</option>
+          <option>Marcos Lima</option>
+          <option>Ricardo Souza</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Busca</span>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" placeholder="Buscar ordem, cliente..." style="width:260px">
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Observações</span>
+        <textarea rows="2" placeholder="Descreva o problema relatado pelo cliente..." style="width:280px;padding:10px 14px;min-height:auto;resize:none"></textarea>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

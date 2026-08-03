@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles/theme.css">
+<style>
+  body { margin: 0; font-family: var(--font-sans); background: #fff; padding: 20px; }
+  .label { font-size: 10px; font-weight: 600; color: #787872; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  .section { margin-bottom: 20px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; border-radius: 9999px;
+    padding: 4px 12px; white-space: nowrap;
+  }
+  .badge-lg { font-size: 14px; padding: 6px 16px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  /* Status OS */
+  .s-open      { background: #dbeafe; color: #1e40af; }
+  .s-progress  { background: #fef3c7; color: #92400e; }
+  .s-waiting   { background: #f3e8ff; color: #6b21a8; }
+  .s-done      { background: #dcfce7; color: #166534; }
+  .s-cancelled { background: #fee2e2; color: #991b1b; }
+  .s-budget    { background: #ffedd5; color: #9a3412; }
+
+  /* Roles */
+  .r-admin    { background: #1B2B4B; color: #fff; }
+  .r-mech     { background: #243760; color: #F0A500; }
+  .r-client   { background: #f0f3f9; color: #1B2B4B; border: 1.5px solid #bbc9e4; }
+
+  /* Priority */
+  .p-high     { background: #fee2e2; color: #991b1b; }
+  .p-mid      { background: #fef3c7; color: #92400e; }
+  .p-low      { background: #f5f5f2; color: #444440; }
+
+  hr { border: none; border-top: 1px solid #ebebе7; margin: 16px 0; }
+</style>
+</head>
+<body>
+  <div class="section">
+    <div class="label">Status da Ordem de Serviço</div>
+    <div class="row">
+      <span class="badge s-open"><span class="dot"></span>Aberta</span>
+      <span class="badge s-progress"><span class="dot"></span>Em andamento</span>
+      <span class="badge s-waiting"><span class="dot"></span>Aguardando peça</span>
+      <span class="badge s-budget"><span class="dot"></span>Orçamento enviado</span>
+      <span class="badge s-done"><span class="dot"></span>Concluída</span>
+      <span class="badge s-cancelled"><span class="dot"></span>Cancelada</span>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="label">Perfis de usuário</div>
+    <div class="row">
+      <span class="badge badge-lg r-admin">Administrador</span>
+      <span class="badge badge-lg r-mech">Mecânico</span>
+      <span class="badge badge-lg r-client">Cliente</span>
+    </div>
+  </div>
+  <hr>
+  <div class="section">
+    <div class="label">Prioridade</div>
+    <div class="row">
+      <span class="badge p-high">▲ Alta</span>
+      <span class="badge p-mid">● Média</span>
+      <span class="badge p-low">▼ Baixa</span>
+    </div>
+  </div>
+</body>
+</html>

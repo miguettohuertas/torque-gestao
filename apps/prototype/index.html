@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Torque Gestão — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #1B2B4B; color: #1c1c1a; height: 100vh; overflow: hidden; }
+#root { height: 100vh; }
+
+@keyframes fadeIn    { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@keyframes bounceIn  { 0%{opacity:0;transform:scale(.88)} 60%{transform:scale(1.04)} 100%{opacity:1;transform:scale(1)} }
+@keyframes spin      { to{transform:rotate(360deg)} }
+@keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:.45} }
+@keyframes shimmer   { 0%{background-position:-600px 0} 100%{background-position:600px 0} }
+@keyframes slideUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d8d8d3; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- 1. Icons (must come before shared so STATUS_CFG can reference them) -->
+<script type="text/babel" src="src/icons.jsx"></script>
+
+<!-- 2. Tokens + base components -->
+<script type="text/babel" src="src/shared.jsx"></script>
+
+<!-- 3. Mock data -->
+<script type="text/babel" src="src/mock-data.jsx"></script>
+
+<!-- 4. Screens (order doesn't matter among them, but after shared + data) -->
+<script type="text/babel" src="src/screens-login.jsx"></script>
+<script type="text/babel" src="src/screens-admin.jsx"></script>
+<script type="text/babel" src="src/screens-service-orders.jsx"></script>
+<script type="text/babel" src="src/screens-customers.jsx"></script>
+<script type="text/babel" src="src/screens-management.jsx"></script>
+<script type="text/babel" src="src/screens-mechanic.jsx"></script>
+<script type="text/babel" src="src/screens-customer-portal.jsx"></script>
+
+<!-- 5. App shell + routing (must come last) -->
+<script type="text/babel" src="src/App.jsx"></script>
+</body>
+</html>

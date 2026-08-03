@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* ── Primary Scale ── */
+  --color-primary-950: #0a1120;
+  --color-primary-900: #111d33;
+  --color-primary-800: #1B2B4B;   /* brand primary */
+  --color-primary-700: #243760;
+  --color-primary-600: #2e4578;
+  --color-primary-500: #3d5a99;
+  --color-primary-400: #5b7ab8;
+  --color-primary-300: #8aa1cc;
+  --color-primary-200: #bbc9e4;
+  --color-primary-100: #dde4f1;
+  --color-primary-50:  #f0f3f9;
+
+  /* ── Amber / Accent Scale ── */
+  --color-amber-900: #7a4f00;
+  --color-amber-800: #a36900;
+  --color-amber-700: #c98300;
+  --color-amber-600: #e09500;
+  --color-amber-500: #F0A500;     /* brand accent */
+  --color-amber-400: #f4b832;
+  --color-amber-300: #f7cc66;
+  --color-amber-200: #fbe0a3;
+  --color-amber-100: #fdf0d1;
+  --color-amber-50:  #fffbf0;
+
+  /* ── Neutral Scale (warm tint) ── */
+  --color-neutral-950: #0f0f0e;
+  --color-neutral-900: #1c1c1a;
+  --color-neutral-800: #2e2e2b;
+  --color-neutral-700: #444440;
+  --color-neutral-600: #5e5e59;
+  --color-neutral-500: #787872;
+  --color-neutral-400: #9a9a94;
+  --color-neutral-300: #bcbcb6;
+  --color-neutral-200: #d8d8d3;
+  --color-neutral-100: #ebebе7;
+  --color-neutral-50:  #f5f5f2;
+  --color-neutral-0:   #ffffff;
+
+  /* ── Semantic Colors ── */
+  --color-success-700: #166534;
+  --color-success-500: #22c55e;
+  --color-success-100: #dcfce7;
+
+  --color-warning-700: #92400e;
+  --color-warning-500: #f59e0b;
+  --color-warning-100: #fef3c7;
+
+  --color-error-700:   #991b1b;
+  --color-error-500:   #ef4444;
+  --color-error-100:   #fee2e2;
+
+  --color-info-700:    #1e40af;
+  --color-info-500:    #3b82f6;
+  --color-info-100:    #dbeafe;
+
+  /* ── Semantic Aliases ── */
+  --bg-app:        #f5f5f2;
+  --bg-surface:    #ffffff;
+  --bg-sidebar:    #1B2B4B;
+  --bg-header:     #ffffff;
+
+  --fg-default:    #1c1c1a;
+  --fg-muted:      #5e5e59;
+  --fg-subtle:     #9a9a94;
+  --fg-inverted:   #ffffff;
+  --fg-accent:     #F0A500;
+  --fg-primary:    #1B2B4B;
+
+  --border-default:  #d8d8d3;
+  --border-strong:   #9a9a94;
+  --border-focus:    #F0A500;
+
+  /* ── Typography ── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold: 600;
+  --fw-bold:    700;
+  --fw-extrabold: 800;
+
+  --lh-tight:  1.2;
+  --lh-snug:   1.375;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.625;
+
+  /* ── Spacing ── */
+  --space-1:  0.25rem;   /* 4px */
+  --space-2:  0.5rem;    /* 8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+
+  /* ── Radius ── */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md:  0 2px 8px rgba(0,0,0,0.10);
+  --shadow-lg:  0 4px 20px rgba(0,0,0,0.12);
+  --shadow-xl:  0 8px 32px rgba(0,0,0,0.16);
+
+  /* ── Touch Targets ── */
+  --touch-sm:  40px;
+  --touch-md:  48px;   /* minimum recommended */
+  --touch-lg:  56px;   /* primary actions */
+
+  /* ── Transitions ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+}

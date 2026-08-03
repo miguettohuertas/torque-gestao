@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles/theme.css">
+<style>
+  body { margin: 0; font-family: var(--font-sans); background: #fff; padding: 20px; color: #1c1c1a; }
+  .label { font-size: 10px; font-weight: 600; color: #787872; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+  .section { margin-bottom: 18px; }
+  .space-row { display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; }
+  .sp { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .sp-block { background: #1B2B4B; border-radius: 2px; width: 100%; min-width: 14px; }
+  .sp-val { font-size: 10px; font-weight: 600; color: #5e5e59; }
+  .sp-name { font-size: 9px; color: #9a9a94; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .radius-box { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .radius-swatch { width: 56px; height: 56px; background: #1B2B4B; }
+  .shadow-box { width: 80px; height: 40px; background: #fff; margin-bottom: 6px; }
+  .rval { font-size: 10px; font-weight: 600; color: #5e5e59; }
+  .touch-row { display: flex; gap: 10px; align-items: flex-end; }
+  .touch { background: rgba(240,165,0,0.15); border: 1.5px dashed #F0A500; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .touch-val { font-size: 10px; font-weight: 700; color: #c98300; }
+  .touch-name { font-size: 9px; color: #9a9a94; }
+</style>
+</head>
+<body>
+  <div class="section">
+    <div class="label">Escala de Espaçamento</div>
+    <div class="space-row">
+      <div class="sp"><div class="sp-block" style="height:4px"></div><div class="sp-val">4px</div><div class="sp-name">space-1</div></div>
+      <div class="sp"><div class="sp-block" style="height:8px"></div><div class="sp-val">8px</div><div class="sp-name">space-2</div></div>
+      <div class="sp"><div class="sp-block" style="height:12px"></div><div class="sp-val">12px</div><div class="sp-name">space-3</div></div>
+      <div class="sp"><div class="sp-block" style="height:16px"></div><div class="sp-val">16px</div><div class="sp-name">space-4</div></div>
+      <div class="sp"><div class="sp-block" style="height:20px"></div><div class="sp-val">20px</div><div class="sp-name">space-5</div></div>
+      <div class="sp"><div class="sp-block" style="height:24px"></div><div class="sp-val">24px</div><div class="sp-name">space-6</div></div>
+      <div class="sp"><div class="sp-block" style="height:32px"></div><div class="sp-val">32px</div><div class="sp-name">space-8</div></div>
+      <div class="sp"><div class="sp-block" style="height:40px"></div><div class="sp-val">40px</div><div class="sp-name">space-10</div></div>
+      <div class="sp"><div class="sp-block" style="height:48px"></div><div class="sp-val">48px</div><div class="sp-name">space-12</div></div>
+      <div class="sp"><div class="sp-block" style="height:64px"></div><div class="sp-val">64px</div><div class="sp-name">space-16</div></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="section">
+      <div class="label">Raio de Borda</div>
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <div class="radius-box"><div class="radius-swatch" style="border-radius:4px"></div><div class="rval">4px sm</div></div>
+        <div class="radius-box"><div class="radius-swatch" style="border-radius:8px"></div><div class="rval">8px md</div></div>
+        <div class="radius-box"><div class="radius-swatch" style="border-radius:12px"></div><div class="rval">12px lg</div></div>
+        <div class="radius-box"><div class="radius-swatch" style="border-radius:16px"></div><div class="rval">16px xl</div></div>
+        <div class="radius-box"><div class="radius-swatch" style="border-radius:9999px;width:56px;height:30px"></div><div class="rval">full</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="label">Alvos de Toque</div>
+      <div class="touch-row">
+        <div class="touch" style="width:40px;height:40px;"><div class="touch-val">40px</div><div class="touch-name">sm</div></div>
+        <div class="touch" style="width:48px;height:48px;"><div class="touch-val">48px</div><div class="touch-name">md ★</div></div>
+        <div class="touch" style="width:56px;height:56px;"><div class="touch-val">56px</div><div class="touch-name">lg</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="label">Sombras</div>
+      <div style="display:flex;gap:12px;align-items:flex-end;">
+        <div><div class="shadow-box" style="box-shadow:0 1px 2px rgba(0,0,0,0.08);border-radius:6px;"></div><div class="rval">sm</div></div>
+        <div><div class="shadow-box" style="box-shadow:0 2px 8px rgba(0,0,0,0.10);border-radius:6px;"></div><div class="rval">md</div></div>
+        <div><div class="shadow-box" style="box-shadow:0 4px 20px rgba(0,0,0,0.12);border-radius:6px;"></div><div class="rval">lg</div></div>
+        <div><div class="shadow-box" style="box-shadow:0 8px 32px rgba(0,0,0,0.16);border-radius:6px;"></div><div class="rval">xl</div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles/theme.css">
+<style>
+  body { margin: 0; font-family: var(--font-sans); background: #f5f5f2; padding: 20px; color: #1c1c1a; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+  .card-header { padding: 14px 18px; border-bottom: 1px solid #ebebе7; display: flex; justify-content: space-between; align-items: center; }
+  .card-title { font-size: 15px; font-weight: 700; color: #1B2B4B; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; font-weight: 700; color: #787872; letter-spacing: 0.06em; text-transform: uppercase; padding: 10px 18px; background: #f5f5f2; border-bottom: 1px solid #d8d8d3; }
+  td { padding: 13px 18px; font-size: 14px; border-bottom: 1px solid #ebebе7; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f5f5f2; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; border-radius: 9999px; padding: 3px 10px; white-space: nowrap; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .s-progress { background: #fef3c7; color: #92400e; }
+  .s-done     { background: #dcfce7; color: #166534; }
+  .s-waiting  { background: #f3e8ff; color: #6b21a8; }
+  .s-open     { background: #dbeafe; color: #1e40af; }
+  .btn-sm { height: 34px; padding: 0 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; background: #f0f3f9; color: #1B2B4B; }
+  .num { font-weight: 700; color: #1B2B4B; }
+  .muted { color: #787872; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Ordens de Serviço</span>
+      <button class="btn-sm">+ Nova OS</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nº OS</th>
+          <th>Veículo / Placa</th>
+          <th>Cliente</th>
+          <th>Mecânico</th>
+          <th>Status</th>
+          <th>Valor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">#0421</td>
+          <td><div style="font-weight:600">Honda Civic 2019</div><div class="muted" style="font-size:12px">ABC-1234</div></td>
+          <td>João Silva</td>
+          <td>Carlos A.</td>
+          <td><span class="badge s-progress"><span class="dot"></span>Em andamento</span></td>
+          <td class="num">R$ 1.240,00</td>
+          <td><button class="btn-sm">Ver</button></td>
+        </tr>
+        <tr>
+          <td class="num">#0420</td>
+          <td><div style="font-weight:600">Toyota Corolla 2021</div><div class="muted" style="font-size:12px">XYZ-9876</div></td>
+          <td>Maria Costa</td>
+          <td>Marcos L.</td>
+          <td><span class="badge s-waiting"><span class="dot"></span>Aguard. peça</span></td>
+          <td class="num">R$ 680,00</td>
+          <td><button class="btn-sm">Ver</button></td>
+        </tr>
+        <tr>
+          <td class="num">#0419</td>
+          <td><div style="font-weight:600">VW Gol 2018</div><div class="muted" style="font-size:12px">DEF-5678</div></td>
+          <td>Pedro Alves</td>
+          <td>Ricardo S.</td>
+          <td><span class="badge s-open"><span class="dot"></span>Aberta</span></td>
+          <td class="num">R$ 420,00</td>
+          <td><button class="btn-sm">Ver</button></td>
+        </tr>
+        <tr>
+          <td class="num">#0418</td>
+          <td><div style="font-weight:600">Fiat Palio 2016</div><div class="muted" style="font-size:12px">GHI-3456</div></td>
+          <td>Ana Rodrigues</td>
+          <td>Carlos A.</td>
+          <td><span class="badge s-done"><span class="dot"></span>Concluída</span></td>
+          <td class="num">R$ 320,00</td>
+          <td><button class="btn-sm">Ver</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

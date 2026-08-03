@@ -1,0 +1,118 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Pacotes Básicos ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+\usepackage{helvet} % Fonte similar à Arial/Sans-Serif
+
+% --- Configuração de Margens (Padrão Acadêmico) ---
+\geometry{top=3cm, bottom=2cm, left=3cm, right=2cm}
+
+% --- Configuração de Parágrafos e Espaçamento ---
+\onehalfspacing % Espaçamento 1.5
+\renewcommand{\familydefault}{\sfdefault} % Define Sans-Serif como padrão
+
+% --- Estilo de Títulos ---
+\titleformat{\section}{\normalfont\bfseries\uppercase}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{1em}{}
+
+\begin{document}
+
+% --- CAPA ---
+\begin{titlepage}
+    \begin{center}
+        \textbf{CENTRO UNIVERSITÁRIO – CATÓLICA DE SANTA CATARINA} \\
+        \textbf{CURSO DE [NOME DO CURSO]} \\[4cm]
+        
+        \textbf{[NOME DOS ACADÊMICOS]} \\[4cm]
+        
+        \textbf{\large RELATÓRIO FINAL \\ PAC EXTENSIONISTA} \\
+        \vfill
+        
+        \textbf{JOINVILLE, \textit{[DIA]} DE \textit{[MÊS]} DE 2025}
+    \end{center}
+\end{titlepage}
+
+% --- FICHA DE APROVAÇÃO ---
+\newpage
+\begin{center}
+    \textbf{FICHA DE APROVAÇÃO} \\[2cm]
+\end{center}
+
+\noindent RELATÓRIO do PAC Extensionista apresentado como requisito parcial de avaliação na disciplina PAC Extensionista no curso de graduação de \textit{[Nome do Curso]} do Centro Universitário Católica de Santa Catarina em Joinville, sob supervisão e orientação do professor \textit{[Nome do Professor]}.\par\vspace{2cm}
+
+\begin{center}
+    Joinville, \textit{[Dia]} de \textit{[Mês]} de 2025. \\[2cm]
+    
+    \rule{10cm}{0.5pt} \\
+    \textit{[NOME DOS ACADÊMICOS]} \\[2cm]
+    
+    \rule{10cm}{0.5pt} \\
+    \textit{[Nome do Professor]} \\
+    Professor responsável
+\end{center}
+
+% --- SUMÁRIO ---
+\newpage
+\tableofcontents
+
+% --- CONTEÚDO ---
+\newpage
+
+\section{Introdução}
+% DICA: Apresentar a problemática, a justificativa e a pertinência.
+% Utilize citações para fundamentar a importância do assunto.
+\textit{[Escreva aqui a introdução, situando o leitor quanto ao tema, problema a ser resolvido e importância para o público beneficiado.]}
+
+\section{Descrição do público beneficiado pelas ações de extensão}
+% DICA: Descreva o perfil, local e dados do público beneficiado.
+\textit{[Descreva brevemente o público, perfil e localização geográfica das ações.]}
+
+\section{Objetivos}
+
+\subsection{Objetivo Geral}
+% DICA: Inicie com verbos de ação (Analisar, Verificar, Realizar, etc.).
+\textit{[Defina a intenção maior do projeto.]}
+
+\subsection{Objetivos Específicos}
+% DICA: Máximo de 3 objetivos. Inicie com verbos de ação.
+\begin{itemize}
+    \item \textit{[Objetivo específico 1]};
+    \item \textit{[Objetivo específico 2]};
+    \item \textit{[Objetivo específico 3]}.
+\end{itemize}
+
+\section{Descrição das principais atividades realizadas}
+% DICA: Relacione as atividades aos objetivos específicos (ex: 4.1, 4.2).
+\textit{[Descreva o que e como as ações foram desenvolvidas para solucionar a problemática.]}
+
+\section{Avaliação do projeto pelo público beneficiado}
+% DICA: Apresente percepções, metodologia de coleta e resultados.
+\textit{[Descreva a metodologia de pesquisa e os resultados obtidos com a comunidade.]}
+
+\section{Considerações Finais -- Autoavaliação do PAC Extensionista}
+% DICA: Responda se os objetivos foram alcançados, pontos fortes/fracos e aprendizados.
+\textit{[Arremate final do trabalho com base nos resultados obtidos e na experiência da equipe.]}
+
+\newpage
+\section*{Referências}
+\addcontentsline{toc}{section}{Referências}
+% DICA: Ordem alfabética, espaçamento simples.
+\textit{[Liste aqui as referências utilizadas conforme as normas da Católica SC.]}
+
+\newpage
+\section*{Apêndices}
+\addcontentsline{toc}{section}{Apêndices}
+\textit{[Material de autoria do pesquisador - Opcional.]}
+
+\newpage
+\section*{Anexos}
+\addcontentsline{toc}{section}{Anexos}
+\textit{[Material não elaborado pelo pesquisador - Opcional.]}
+
+\end{document}

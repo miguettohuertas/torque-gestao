@@ -1,0 +1,81 @@
+@startuml casos-de-uso
+title Casos de Uso — Torque Gestão
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowColor #1B2B4B
+skinparam ActorBorderColor #1B2B4B
+skinparam UsecaseBorderColor #1B2B4B
+skinparam UsecaseBackgroundColor #F8FAFC
+skinparam PackageBorderColor #CBD5E1
+skinparam PackageBackgroundColor #F1F5F9
+skinparam Padding 5
+skinparam RoundCorner 8
+
+actor "Administrador" as Admin
+actor "Mecânico"      as Mec
+actor "Cliente"       as Cli
+
+rectangle "Torque Gestão" {
+    package "Ordens de Serviço" {
+        usecase "Criar OS"            as UC01
+        usecase "Listar OS"           as UC02
+        usecase "Ver detalhe de OS"   as UC03
+        usecase "Atualizar status"    as UC04
+        usecase "Cancelar OS"         as UC05
+    }
+
+    package "Clientes e Veículos" {
+        usecase "Cadastrar cliente"   as UC06
+        usecase "Ver perfil"          as UC07
+        usecase "Cadastrar veículo"   as UC08
+        usecase "Histórico do veículo" as UC09
+    }
+
+    package "Catálogo" {
+        usecase "Consultar serviços"  as UC10
+        usecase "Consultar peças"     as UC11
+    }
+
+    package "Dashboard e Relatórios" {
+        usecase "Ver KPIs"            as UC12
+        usecase "Relatório financeiro" as UC13
+    }
+
+    package "Administração" {
+        usecase "Gerenciar usuários"  as UC14
+        usecase "Configurações"       as UC15
+    }
+
+    package "Portal do Cliente" {
+        usecase "Acompanhar OS"       as UC16
+        usecase "Histórico de serviços" as UC17
+    }
+}
+
+Admin --> UC01
+Admin --> UC02
+Admin --> UC03
+Admin --> UC04
+Admin --> UC05
+Admin --> UC06
+Admin --> UC07
+Admin --> UC08
+Admin --> UC09
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+
+Mec --> UC02
+Mec --> UC03
+Mec --> UC04
+
+Cli --> UC16
+Cli --> UC17
+
+@enduml
