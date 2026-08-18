@@ -1,0 +1,291 @@
+% ============================================================
+% DOCUMENTAÇÃO DO PRIMEIRO MVP — PAC VI — TORQUE GESTÃO
+% Católica de Santa Catarina
+% ============================================================
+% chktex-file 1
+% chktex-file 13
+% chktex-file 44
+
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{ragged2e}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{torquenavy}{HTML}{1B2B4B}
+\definecolor{torqueamber}{HTML}{F0A500}
+
+\setstretch{1.25}
+\setlength{\parindent}{1.1cm}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\titleformat{\section}{\normalfont\bfseries\large\color{torquenavy}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries\color{torquenavy}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\bfseries\itshape}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+% --- CABEÇALHO INSTITUCIONAL ---
+\thispagestyle{empty}
+\begin{center}
+    {\small CENTRO UNIVERSITÁRIO --- CATÓLICA DE SANTA CATARINA}\\
+    {\small ENGENHARIA DE SOFTWARE --- PAC VI}\\
+    {\small Documentação do Primeiro MVP do PAC VI}\\[14pt]
+    {\LARGE\bfseries Documentação do Primeiro MVP}\\[6pt]
+    {\Large\itshape Torque Gestão --- Sistema de Gestão Automotiva}
+\end{center}
+
+\vspace{8pt}
+{\color{torqueamber}\rule{\linewidth}{2.5pt}}
+\vspace{18pt}
+
+% --- FICHA DE IDENTIFICAÇÃO ---
+\renewcommand{\arraystretch}{1.35}
+\noindent
+\begin{tabular}{|L{3.2cm}|L{12.3cm}|}
+\hline
+\textbf{Nome do projeto} & Torque Gestão --- Sistema de Gestão Automotiva \\
+\hline
+\textbf{Integrantes} & Miguel Angelo Dufloth Filho; Miguel Angel Balladares Huertas; Leonardo Lotério de Lima; Lucas Honorato dos Santos \\
+\hline
+\textbf{Repositório} & \url{https://github.com/miguettohuertas/torque-gestao} \\
+\hline
+\textbf{Protótipo navegável} & \url{https://torque-gestao.surge.sh} \\
+\hline
+\textbf{Data de elaboração} & Joinville, 17 de agosto de 2026 \\
+\hline
+\textbf{Última revisão} & Joinville, 18 de agosto de 2026 \\
+\hline
+\textbf{Entrega desta documentação} & 27 de agosto de 2026, até 23h59 \\
+\hline
+\end{tabular}
+\vspace{4pt}
+
+\tableofcontents
+
+% ============================================================
+% 1. STATUS ATUAL DO PROJETO
+% ============================================================
+\section{Status Atual do Projeto}
+
+Este capítulo descreve o estado consolidado do projeto Torque Gestão ao final da migração do material herdado do PAC V e do onboarding inicial da equipe no PAC VI, servindo de linha de base (\emph{baseline}) para o planejamento do próximo MVP.
+
+\subsection{Entregas concluídas}
+
+\begin{itemize}
+    \item \textbf{Protótipo de alta fidelidade:} 19 telas mapeadas e navegáveis, desenvolvidas em React (Babel Standalone), publicadas em \url{https://torque-gestao.surge.sh}. Cobrem os três perfis de usuário do sistema --- Administrador, Mecânico e Cliente --- incluindo login unificado, dashboards, gestão completa de ordens de serviço (OS), cadastro de clientes e veículos, catálogo de serviços/peças, gestão de usuários, configurações e portal do cliente.
+    \item \textbf{Documentação de especificação (herdada do PAC V):} relatório final com Introdução, Público-alvo, Objetivos, Definição das 19 interfaces, Mapeamento de Riscos (incluindo matriz de riscos), 6 Requisitos Funcionais (RF01--RF06), 6 Requisitos Não Funcionais (RNF01--RNF06) e Stack Tecnológica --- disponível em \texttt{docs/academic/report.pdf}.
+    \item \textbf{Diagramas técnicos:} C4 (Contexto, Containers, Componentes), fluxo de processo de abertura de OS, diagrama de sequência, diagrama de estados da OS, modelo Entidade-Relacionamento e diagrama de casos de uso --- todos versionados em \texttt{docs/diagramas/} (Mermaid e PlantUML, com exportações PNG).
+    \item \textbf{Design system:} biblioteca de componentes de UI documentada em \texttt{docs/design-system/} (botões, cards, badges, cores, tipografia, inputs, navegação, tabelas, tokens de espaçamento) e prévia consolidada em \texttt{packages/ui/components}.
+    \item \textbf{Repositório do PAC VI estruturado:} novo repositório criado (\texttt{torque-gestao}), com monorepo organizado em \texttt{apps/}, \texttt{packages/}, \texttt{docs/}, \texttt{assets/} e \texttt{scripts/}, e pipeline de automação (\texttt{scripts/compile\_report.py}, \texttt{generate\_diagrams.py}, \texttt{generate\_docs.py}) para manter documentação e diagramas sincronizados com o protótipo.
+    \item \textbf{Equipe completa como colaboradora do repositório:} os quatro integrantes já têm acesso de escrita ao repositório do PAC VI, superando a pendência registrada no diagnóstico inicial da disciplina.
+\end{itemize}
+
+\subsection{O que ainda não foi iniciado}
+
+\begin{itemize}
+    \item \textbf{Back-end:} nenhuma linha de código de servidor foi escrita. Não existe ainda o pacote \texttt{apps/api} nem qualquer endpoint FastAPI.
+    \item \textbf{Banco de dados:} o PostgreSQL definido na stack ainda não foi provisionado; os dados do protótipo são inteiramente mockados em \texttt{apps/prototype/src/mock-data.jsx}, sem persistência real.
+    \item \textbf{Autenticação real:} o login do protótipo simula o acesso por perfil via \texttt{localStorage}, sem validação de credenciais, emissão de token ou controle de acesso efetivo (RF06 ainda não implementado).
+    \item \textbf{Integração contínua e deploy:} Docker, GitHub Actions, e as hospedagens em Render e Vercel previstas na stack ainda não foram configuradas.
+\end{itemize}
+
+\subsection{Síntese}
+
+Em resumo, o MVP atual do projeto é um \textbf{protótipo de interface completo e navegável, com toda a especificação funcional, os riscos e a arquitetura já documentados}, mas sem nenhuma camada de back-end, persistência ou autenticação real implementada. O próximo MVP, detalhado na seção seguinte, tem como missão transformar esse protótipo estático em uma aplicação funcional de ponta a ponta.
+
+% ============================================================
+% 2. PRÓXIMO MVP
+% ============================================================
+\section{Próximo MVP (MVP 2)}
+
+\subsection{Objetivo}
+
+Evoluir o Torque Gestão de um protótipo de interface com dados mockados para uma \textbf{aplicação funcional de ponta a ponta}, com back-end real em FastAPI, persistência em PostgreSQL e autenticação efetiva, cobrindo o fluxo essencial de uma oficina: cadastro de clientes e veículos, abertura e acompanhamento de ordens de serviço, consulta ao catálogo de serviços e peças, e leitura do status real pelo próprio cliente.
+
+\subsection{Escopo funcional priorizado}
+
+O escopo do MVP 2 foi priorizado a partir dos Requisitos Funcionais já especificados no relatório do PAC V. Os requisitos ligados ao fluxo central da oficina (RF01 a RF06) compõem o núcleo do MVP; funcionalidades administrativas de apoio (relatórios financeiros e KPIs avançados, gestão completa de usuários pela interface) ficam para uma terceira iteração, priorizando primeiro um fluxo de ponta a ponta funcionando de verdade.
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}{|L{1.3cm}|L{4cm}|L{9cm}|}
+\caption{Escopo funcional do MVP 2} \\
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Escopo no MVP 2} \\
+\hline
+\endfirsthead
+\multicolumn{3}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Escopo no MVP 2} \\
+\hline
+\endhead
+\hline
+\multicolumn{3}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+RF06 & Autenticação e Controle de Acesso & Endpoint de login real, emissão de JWT e middleware de RBAC (Admin, Mecânico, Cliente) protegendo as demais rotas. Implementado primeiro por ser pré-requisito de todo o restante. \\
+\hline
+RF01 & Gerenciamento de Clientes & CRUD completo de clientes via API, com validação de CPF/CNPJ e busca, substituindo o mock em pelo menos duas telas do protótipo. \\
+\hline
+RF02 & Cadastro de Veículos & CRUD de veículos vinculados a um cliente, com validação de placa (padrão Mercosul e antigo). \\
+\hline
+RF03 & Emissão de Ordens de Serviço & Criação de OS com itens de mão de obra e peças separados, cálculo automático do orçamento a partir do catálogo. \\
+\hline
+RF04 & Acompanhamento de Status & Persistência do fluxo de estados da OS (Aguardando Diagnóstico $\rightarrow$ Em Execução $\rightarrow$ Aguardando Peças $\rightarrow$ Finalizada $\rightarrow$ Entregue), com registro em \texttt{HISTORICO\_STATUS} a cada transição. \\
+\hline
+RF05 & Catálogo de Serviços e Peças & Endpoints de consulta (e cadastro por Admin) do catálogo, usados na composição do orçamento da OS. \\
+\hline
+\end{longtable}
+
+\noindent\textbf{Portal do cliente:} passa a ler dados reais no MVP 2. Reaproveitando os mesmos endpoints de RF01, RF02 e RF04 (sem back-end adicional), o cliente autenticado via RF06 consulta o status real de suas OS e o histórico real de seus veículos --- eliminando a lacuna que existia no rascunho anterior deste documento, em que o portal ficava ambíguo entre incluído e não incluído no MVP 2.
+
+\noindent\textbf{Fora do escopo do MVP 2} (reservado para o MVP 3): relatório financeiro e KPIs avançados do dashboard (dados agregados reais), tela de configurações do sistema, e refinamentos de UX do portal do cliente que dependem de infraestrutura adicional --- notificações em tempo real (e-mail/SMS) e atualização automática via \emph{WebSocket/polling}, que exigem componentes fora do escopo de back-end definido nesta iteração.
+
+\subsection{Arquitetura e modelo de dados}
+
+\begin{itemize}
+    \item \textbf{Novo pacote \texttt{apps/api}:} serviço FastAPI organizado em camadas de \emph{routers} (endpoints REST), \emph{schemas} (validação Pydantic) e \emph{models} (ORM SQLAlchemy), seguindo a stack já definida no relatório do PAC V.
+    \item \textbf{Banco de dados:} PostgreSQL, com schema derivado diretamente do modelo Entidade-Relacionamento já modelado em \texttt{docs/diagramas/modelo-er.md} --- entidades \texttt{CLIENTE}, \texttt{VEICULO}, \texttt{USUARIO}, \texttt{ORDEM\_SERVICO}, \texttt{ITEM\_OS}, \texttt{HISTORICO\_STATUS}, \texttt{CATALOGO\_SERVICO} e \texttt{CATALOGO\_PECA} --- versionado com migrations (Alembic).
+    \item \textbf{Autenticação:} tokens JWT com claim de perfil (\texttt{role}), validados por \emph{dependency injection} do FastAPI em cada rota protegida, implementando o RBAC previsto em RF06/RNF01.
+    \item \textbf{Documentação de API:} geração automática de especificação OpenAPI/Swagger (RNF06), publicada em \texttt{/docs} do serviço, servindo como coleção de referência para o time de front-end e como contrato formal entre back-end e front-end (ver mitigação do risco de inconsistência de contrato, Seção~\ref{sec:riscos-mvp2}).
+    \item \textbf{Front-end:} as telas prioritárias do protótipo (login, dashboard admin, lista/nova OS, detalhes da OS, cadastro de clientes e veículos, e as três telas do portal do cliente) passam a consumir a API real via \texttt{fetch}, substituindo progressivamente \texttt{apps/prototype/src/mock-data.jsx}.
+\end{itemize}
+
+\subsection{Entregáveis técnicos}
+
+\begin{itemize}
+    \item Pacote \texttt{apps/api} com os endpoints de RF01, RF02, RF03, RF04, RF05 e RF06 implementados e testados.
+    \item Script de migrations (Alembic) e \emph{seed} inicial do catálogo de serviços/peças.
+    \item \texttt{Dockerfile} do back-end e \texttt{docker-compose.yml} (API + PostgreSQL) para ambiente de desenvolvimento local, conforme a stack de conteinerização já definida.
+    \item Workflow de GitHub Actions executando lint e suíte de testes automatizados (\texttt{pytest}) a cada \emph{pull request}.
+    \item Suíte de testes cobrindo as regras de negócio críticas: cálculo de orçamento (RF03) e transições de status da OS (RF04).
+    \item Telas do protótipo (login, gestão de OS, cadastro de clientes/veículos e portal do cliente) conectadas à API real.
+    \item Atualização do README com instruções de execução local (\emph{passo a passo}) e, caso o schema real divirja do modelo mockado, atualização de \texttt{docs/diagramas/modelo-er.md}.
+\end{itemize}
+
+\subsection{Critérios de aceite (Definition of Done do MVP 2)}
+
+O MVP 2 será considerado concluído quando, cumulativamente:
+
+\begin{enumerate}
+    \item o ambiente completo (API + banco de dados) subir localmente com um único comando (\texttt{docker compose up});
+    \item o login autenticar de fato contra o banco de dados, emitindo um JWT válido e respeitando o RBAC por perfil;
+    \item cadastro de clientes e veículos persistir no PostgreSQL, sobrevivendo a um \emph{reload} da aplicação;
+    \item a criação e a atualização de status de uma OS persistirem e respeitarem o fluxo de estados definido em RF04;
+    \item o catálogo de serviços e peças for consultável via API e utilizado no cálculo do orçamento da OS;
+    \item a documentação OpenAPI/Swagger estiver publicada e acessível;
+    \item as telas de login, gestão de OS, cadastro de clientes/veículos \textbf{e o portal do cliente (leitura de status e histórico)} consumirem dados reais da API, em vez do mock;
+    \item o pipeline de CI (lint + testes) estiver executando automaticamente a cada \emph{pull request}.
+\end{enumerate}
+
+\subsection{Cronograma e divisão de responsabilidades}
+\label{sec:cronograma-mvp2}
+
+As datas abaixo são o compromisso interno da equipe a partir de \textbf{18 de agosto de 2026}, com as fases distribuídas de forma equilibrada entre os quatro integrantes. Cada responsável principal conduz sua fase e revisa o trabalho das demais via \emph{pull request}; a fase seguinte só começa oficialmente após a anterior atingir sua entrega, mas a Fase 1 corre em paralelo à finalização desta documentação para que já exista progresso técnico concreto até 27/08.
+
+\vspace{6pt}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|L{3cm}|L{3cm}|L{2cm}|L{6.2cm}|}
+\caption{Cronograma e responsáveis do MVP 2} \label{tab:cronograma-mvp2} \\
+\hline
+\textbf{Fase} & \textbf{Responsável} & \textbf{Período} & \textbf{Entrega da fase} \\
+\hline
+\endfirsthead
+\multicolumn{4}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{Fase} & \textbf{Responsável} & \textbf{Período} & \textbf{Entrega da fase} \\
+\hline
+\endhead
+\hline
+\multicolumn{4}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+Fase 0 --- Documentação e planejamento & Todos os integrantes & 18/08 a 27/08 & Esta documentação revisada (escopo, cronograma e riscos do MVP 2) finalizada e enviada ao professor até 27/08, 23h59. \\
+\hline
+Fase 1 --- Infraestrutura e modelagem & Miguel Angelo Dufloth Filho & 18/08 a 27/08 (em paralelo à Fase 0) & Pacote \texttt{apps/api} criado; \texttt{docker-compose} com PostgreSQL local funcionando; schema modelado e primeira \emph{migration} (Alembic) aplicada a partir do modelo ER. Esta é a entrega técnica concreta do grupo até o dia 27/08. \\
+\hline
+Fase 2 --- Identidade e cadastros base & Miguel Angel Balladares Huertas & 28/08 a 10/09 & RF06 (login, JWT, RBAC) e RF01/RF02 (CRUD de clientes e veículos) implementados, testados manualmente via Swagger. \\
+\hline
+Fase 3 --- Núcleo operacional & Leonardo Lotério de Lima & 11/09 a 24/09 & RF05 (catálogo) e RF03/RF04 (emissão de OS e histórico de status) implementados, com cálculo de orçamento a partir do catálogo. \\
+\hline
+Fase 4 --- Integração front-end e portal do cliente & Lucas Honorato dos Santos & 25/09 a 08/10 & Telas de login, gestão de OS, cadastro de clientes/veículos e portal do cliente consumindo a API real; suíte de testes automatizados das regras críticas de RF03/RF04. \\
+\hline
+Fase 5 --- CI/CD e deploy de validação & Miguel Angelo Dufloth Filho e Lucas Honorato dos Santos & 09/10 a 15/10 & Pipeline de GitHub Actions (lint + \texttt{pytest}) ativo a cada \emph{pull request}; deploy de validação em Render (API/BD) e Vercel (front-end). \\
+\hline
+\end{longtable}
+\endgroup
+
+\noindent\textit{Observação: estas datas são o planejamento da equipe a partir de hoje; ficam sujeitas a ajuste caso o professor orientador do PAC VI sinalize um calendário oficial diferente para os marcos do MVP 2.}
+
+\subsection{Acompanhamento e comunicação}
+
+Para reduzir o risco de atrasos silenciosos --- já identificado na Seção~\ref{sec:riscos-mvp2} como sobreposição de calendário com outras disciplinas --- a equipe adota:
+
+\begin{itemize}
+    \item \textbf{Reunião semanal de status}, toda sexta-feira, com atualização do progresso de cada fase e realocação de tarefas entre os quatro integrantes caso alguma fase esteja atrasada.
+    \item \textbf{Quadro de acompanhamento no GitHub} (Issues/Projects), com uma \emph{issue} por requisito (RF01--RF06) e por entregável técnico da Seção~2.4, atribuída ao responsável da fase correspondente na Tabela~\ref{tab:cronograma-mvp2}.
+    \item Cada responsável atualiza o status da própria \emph{issue} até a véspera da reunião semanal, permitindo identificar bloqueios antes que afetem a fase seguinte.
+\end{itemize}
+
+\subsection{Riscos específicos do MVP 2}
+\label{sec:riscos-mvp2}
+
+\vspace{6pt}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|L{3cm}|L{2.1cm}|L{0.9cm}|L{1cm}|L{0.9cm}|L{5cm}|}
+\hline
+\textbf{Risco} & \textbf{Categoria} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Nível} & \textbf{Mitigação} \\
+\hline
+\endfirsthead
+\multicolumn{6}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{Risco} & \textbf{Categoria} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Nível} & \textbf{Mitigação} \\
+\hline
+\endhead
+\hline
+\multicolumn{6}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+Inconsistências de contrato entre API real e front-end mockado & Técnico & Média & Médio & Médio & Contrato definido via OpenAPI/Swagger já na Fase 1; front-end consome o schema gerado automaticamente em vez de assumir formatos manualmente. \\
+\hline
+Curva de aprendizado da equipe com FastAPI, PostgreSQL e Alembic & Organizacional & Média & Médio & Médio & Sessão interna de \emph{pair programming} no início da Fase 1, com tutorial guiado compartilhado entre os quatro integrantes antes do início da Fase 2. \\
+\hline
+Sobreposição de calendário com entregas de outra disciplina do semestre & Organizacional & Média & Baixo & Baixo & Reuniões semanais fixas (Seção 2.7) para identificar atrasos cedo e redistribuir tarefas entre os quatro integrantes quando necessário. \\
+\hline
+Atraso na configuração de infraestrutura de deploy (Render/Vercel) & Técnico & Baixa & Médio & Baixo & Fase 5 isolada como etapa final sem dependências pendentes de outras fases; o deploy de validação pode escorregar sem travar as entregas anteriores do MVP 2. \\
+\hline
+Riscos de segurança já mapeados no PAC V (SQL Injection, falhas de autenticação) migrarem do papel para a implementação sem a devida mitigação & Segurança & Baixa & Alto & Médio & Checklist de segurança (Bcrypt, JWT, ORM, HTTPS) revisado como critério de aceite em cada \emph{pull request}, não apenas ao final do MVP 2. \\
+\hline
+\end{longtable}
+\endgroup
+
+\end{document}
