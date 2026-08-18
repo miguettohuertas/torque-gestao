@@ -103,14 +103,14 @@ torque-gestao/
 - **Concluído:** protótipo de alta fidelidade (19 telas mapeadas).
 - **Concluído:** documentação de especificação — requisitos funcionais, não funcionais, matriz de riscos e stack tecnológica.
 - **Concluído:** repositório do PAC VI criado.
-- **Em andamento:** convite dos demais integrantes como colaboradores.
-- **Em andamento:** migração dos materiais do PAC V para este repositório (ainda há documentos prontos que não foram incorporados).
-- **Pendente:** back-end e integração com banco de dados — próxima etapa do PAC VI.
+- **Concluído:** convite dos demais integrantes como colaboradores.
+- **Em andamento (Sprint 1 do MVP 2, até 27/08):** back-end em FastAPI (`apps/api`) com Docker + PostgreSQL local, modelo de dados completo via Alembic e autenticação real (login, JWT, RBAC) já implementada e testada; CRUD de clientes e veículos em desenvolvimento. Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
+- **Pendente:** ordens de serviço, catálogo, integração do front-end com a API real, CI/CD e deploy — fases seguintes do MVP 2 (a partir de 28/08).
 
 ## Próximos passos
 
-1. Iniciar a estruturação do back-end (FastAPI) a partir dos requisitos já especificados.
-2. Configurar o banco de dados PostgreSQL e o pipeline de CI/CD.
+1. Concluir a Sprint 1 do MVP 2 (RF06, RF01, RF02) até 27/08 — ver `apps/api/README.md`.
+2. Implementar ordens de serviço e catálogo (RF03, RF04, RF05), integrar o front-end à API real e configurar o pipeline de CI/CD.
 
 ## Equipe
 
@@ -130,6 +130,17 @@ torque-gestao/
 ## Como visualizar o protótipo
 
 O protótipo interativo está disponível em [torque-gestao.surge.sh](https://torque-gestao.surge.sh), ou localmente abrindo `apps/prototype/index.html` no navegador.
+
+## Como rodar o back-end localmente
+
+```bash
+cp apps/api/.env.example apps/api/.env
+docker compose up --build
+docker compose exec api alembic upgrade head
+docker compose exec api python -m app.seed
+```
+
+Documentação interativa da API: <http://localhost:8000/docs>. Instruções completas (incluindo execução sem Docker) em [`apps/api/README.md`](apps/api/README.md).
 
 ## Licença
 

@@ -204,14 +204,71 @@ O MVP 2 será considerado concluído quando, cumulativamente:
 \subsection{Cronograma e divisão de responsabilidades}
 \label{sec:cronograma-mvp2}
 
-As datas abaixo são o compromisso interno da equipe a partir de \textbf{18 de agosto de 2026}, com as fases distribuídas de forma equilibrada entre os quatro integrantes. Cada responsável principal conduz sua fase e revisa o trabalho das demais via \emph{pull request}; a fase seguinte só começa oficialmente após a anterior atingir sua entrega, mas a Fase 1 corre em paralelo à finalização desta documentação para que já exista progresso técnico concreto até 27/08.
+O professor orientador do PAC VI definiu que, até \textbf{27 de agosto de 2026}, além desta documentação, a equipe deve ter \textbf{uma parte relevante do MVP 2 efetivamente implementada} --- não apenas planejada. Como restam poucos dias úteis a partir de hoje (\textbf{18 de agosto}), as antigas Fase 1 (infraestrutura) e Fase 2 (identidade e cadastros base) foram compactadas em uma \textbf{Sprint 1}, com os quatro integrantes trabalhando em paralelo desde já, em vez de em sequência. Isso só é possível porque o contrato de dados já está fechado no modelo Entidade-Relacionamento (\texttt{docs/diagramas/modelo-er.md}): cada integrante pode começar sua parte imediatamente, sem esperar a infraestrutura do Miguel Angelo estar pronta, e integrar ao PostgreSQL real assim que ela existir (por volta do dia 21/08).
+
+\vspace{6pt}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}{|L{4.1cm}|L{10.9cm}|}
+\caption{Sprint 1 --- cronograma diário por integrante (18 a 27/08)} \label{tab:sprint1} \\
+\hline
+\textbf{Responsável} & \textbf{Etapas e datas} \\
+\hline
+\endfirsthead
+\multicolumn{2}{r}{\small(continuação)} \\[4pt]
+\hline
+\textbf{Responsável} & \textbf{Etapas e datas} \\
+\hline
+\endhead
+\hline
+\multicolumn{2}{r}{\small(continua na próxima página)} \\
+\endfoot
+\hline
+\endlastfoot
+Miguel Angelo Dufloth Filho \newline (infraestrutura) &
+\begin{itemize}[leftmargin=1em, itemsep=2pt, topsep=2pt]
+    \item \textbf{18--19/08:} pacote \texttt{apps/api} (camadas \emph{routers}/\emph{schemas}/\emph{models}) e \texttt{docker-compose.yml} (API + PostgreSQL).
+    \item \textbf{20--21/08:} \emph{models} SQLAlchemy de todas as entidades do modelo ER; Alembic configurado e primeira \emph{migration} aplicada.
+    \item \textbf{22--24/08:} apoio à integração dos demais integrantes contra o PostgreSQL real.
+    \item \textbf{25--27/08:} validação de ponta a ponta (\texttt{docker compose up} com todos os módulos plugados) e ajustes finais.
+\end{itemize} \\
+\hline
+Miguel Angel Balladares Huertas \newline (RF06 --- autenticação) &
+\begin{itemize}[leftmargin=1em, itemsep=2pt, topsep=2pt]
+    \item \textbf{18--20/08:} endpoint de login, \emph{hash} de senha com Bcrypt e emissão de JWT (testado localmente, sem depender do Postgres).
+    \item \textbf{21--23/08:} \emph{middleware}/\emph{dependency} de RBAC (Admin, Mecânico, Cliente) protegendo rotas.
+    \item \textbf{24--26/08:} integração com o PostgreSQL real assim que a infraestrutura estiver pronta; testes manuais via Swagger.
+    \item \textbf{27/08:} ajustes finais e demonstração.
+\end{itemize} \\
+\hline
+Leonardo Lotério de Lima \newline (RF01 --- clientes) &
+\begin{itemize}[leftmargin=1em, itemsep=2pt, topsep=2pt]
+    \item \textbf{18--20/08:} \emph{schema} Pydantic e \emph{model} de Cliente; CRUD básico em ambiente local.
+    \item \textbf{21--23/08:} validação de CPF/CNPJ e busca por nome ou documento.
+    \item \textbf{24--26/08:} integração com o PostgreSQL real; testes manuais via Swagger.
+    \item \textbf{27/08:} ajustes finais e demonstração.
+\end{itemize} \\
+\hline
+Lucas Honorato dos Santos \newline (RF02 --- veículos) &
+\begin{itemize}[leftmargin=1em, itemsep=2pt, topsep=2pt]
+    \item \textbf{18--20/08:} \emph{schema} Pydantic e \emph{model} de Veículo, acompanhando a estrutura de Cliente do Leonardo (relação de chave estrangeira).
+    \item \textbf{21--23/08:} CRUD de veículos vinculado a um cliente; validação de placa (padrão Mercosul e antigo).
+    \item \textbf{24--26/08:} integração com o PostgreSQL real; testes manuais via Swagger.
+    \item \textbf{27/08:} ajustes finais, demonstração e checklist do que foi entregue para reportar ao professor.
+\end{itemize} \\
+\hline
+\end{longtable}
+\endgroup
+
+\noindent\textbf{Entrega da Sprint 1 (27/08):} com um único comando (\texttt{docker compose up}), a API e o PostgreSQL sobem localmente; o login autentica de fato e emite um JWT válido; o RBAC protege as rotas por perfil; e o CRUD de clientes e de veículos persiste no banco de dados real --- tudo demonstrável via Swagger. RF03/RF04 (ordens de serviço) e RF05 (catálogo) dependem de clientes e veículos já existirem, por isso permanecem para a fase seguinte, e não porque ficaram de fora por atraso.
 
 \vspace{6pt}
 \begingroup
 \small
 \renewcommand{\arraystretch}{1.5}
-\begin{longtable}{|L{3cm}|L{3cm}|L{2cm}|L{6.2cm}|}
-\caption{Cronograma e responsáveis do MVP 2} \label{tab:cronograma-mvp2} \\
+\begin{longtable}{|L{4.1cm}|L{3cm}|L{2cm}|L{4.9cm}|}
+\caption{Fases seguintes do MVP 2 (a partir de 28/08)} \label{tab:fases-seguintes} \\
 \hline
 \textbf{Fase} & \textbf{Responsável} & \textbf{Período} & \textbf{Entrega da fase} \\
 \hline
@@ -226,31 +283,25 @@ As datas abaixo são o compromisso interno da equipe a partir de \textbf{18 de a
 \endfoot
 \hline
 \endlastfoot
-Fase 0 --- Documentação e planejamento & Todos os integrantes & 18/08 a 27/08 & Esta documentação revisada (escopo, cronograma e riscos do MVP 2) finalizada e enviada ao professor até 27/08, 23h59. \\
+Fase 3 --- Núcleo operacional & Leonardo Lotério de Lima & 28/08 a 10/09 & RF05 (catálogo) e RF03/RF04 (emissão de OS e histórico de status) implementados, com cálculo de orçamento a partir do catálogo. \\
 \hline
-Fase 1 --- Infraestrutura e modelagem & Miguel Angelo Dufloth Filho & 18/08 a 27/08 (em paralelo à Fase 0) & Pacote \texttt{apps/api} criado; \texttt{docker-compose} com PostgreSQL local funcionando; schema modelado e primeira \emph{migration} (Alembic) aplicada a partir do modelo ER. Esta é a entrega técnica concreta do grupo até o dia 27/08. \\
+Fase 4 --- Integração front-end e portal do cliente & Lucas Honorato dos Santos & 11/09 a 24/09 & Telas de login, gestão de OS, cadastro de clientes/veículos e portal do cliente consumindo a API real; suíte de testes automatizados das regras críticas de RF03/RF04. \\
 \hline
-Fase 2 --- Identidade e cadastros base & Miguel Angel Balladares Huertas & 28/08 a 10/09 & RF06 (login, JWT, RBAC) e RF01/RF02 (CRUD de clientes e veículos) implementados, testados manualmente via Swagger. \\
-\hline
-Fase 3 --- Núcleo operacional & Leonardo Lotério de Lima & 11/09 a 24/09 & RF05 (catálogo) e RF03/RF04 (emissão de OS e histórico de status) implementados, com cálculo de orçamento a partir do catálogo. \\
-\hline
-Fase 4 --- Integração front-end e portal do cliente & Lucas Honorato dos Santos & 25/09 a 08/10 & Telas de login, gestão de OS, cadastro de clientes/veículos e portal do cliente consumindo a API real; suíte de testes automatizados das regras críticas de RF03/RF04. \\
-\hline
-Fase 5 --- CI/CD e deploy de validação & Miguel Angelo Dufloth Filho e Lucas Honorato dos Santos & 09/10 a 15/10 & Pipeline de GitHub Actions (lint + \texttt{pytest}) ativo a cada \emph{pull request}; deploy de validação em Render (API/BD) e Vercel (front-end). \\
+Fase 5 --- CI/CD e deploy de validação & Miguel Angelo Dufloth Filho e Lucas Honorato dos Santos & 25/09 a 01/10 & Pipeline de GitHub Actions (lint + \texttt{pytest}) ativo a cada \emph{pull request}; deploy de validação em Render (API/BD) e Vercel (front-end). \\
 \hline
 \end{longtable}
 \endgroup
 
-\noindent\textit{Observação: estas datas são o planejamento da equipe a partir de hoje; ficam sujeitas a ajuste caso o professor orientador do PAC VI sinalize um calendário oficial diferente para os marcos do MVP 2.}
+\noindent\textit{Observação: as datas da Sprint 1 são o compromisso firme da equipe para a entrega de 27/08. As datas das fases seguintes são o planejamento atual e ficam sujeitas a ajuste caso o professor orientador do PAC VI sinalize um calendário oficial diferente para os marcos do MVP 2.}
 
 \subsection{Acompanhamento e comunicação}
 
 Para reduzir o risco de atrasos silenciosos --- já identificado na Seção~\ref{sec:riscos-mvp2} como sobreposição de calendário com outras disciplinas --- a equipe adota:
 
 \begin{itemize}
-    \item \textbf{Reunião semanal de status}, toda sexta-feira, com atualização do progresso de cada fase e realocação de tarefas entre os quatro integrantes caso alguma fase esteja atrasada.
-    \item \textbf{Quadro de acompanhamento no GitHub} (Issues/Projects), com uma \emph{issue} por requisito (RF01--RF06) e por entregável técnico da Seção~2.4, atribuída ao responsável da fase correspondente na Tabela~\ref{tab:cronograma-mvp2}.
-    \item Cada responsável atualiza o status da própria \emph{issue} até a véspera da reunião semanal, permitindo identificar bloqueios antes que afetem a fase seguinte.
+    \item \textbf{Reunião semanal de status}, toda sexta-feira, com atualização do progresso de cada fase e realocação de tarefas entre os quatro integrantes caso alguma fase esteja atrasada. Durante a Sprint 1 (18 a 27/08), essa checagem é diária, dado o prazo curto e o compromisso assumido com o professor.
+    \item \textbf{Quadro de acompanhamento no GitHub} (Issues/Projects), com uma \emph{issue} por requisito (RF01--RF06) e por entregável técnico da Seção~2.4, atribuída ao responsável correspondente nas Tabelas~\ref{tab:sprint1} e~\ref{tab:fases-seguintes}.
+    \item Cada responsável atualiza o status da própria \emph{issue} até a véspera da reunião de acompanhamento, permitindo identificar bloqueios antes que afetem a fase seguinte.
 \end{itemize}
 
 \subsection{Riscos específicos do MVP 2}
@@ -275,9 +326,9 @@ Para reduzir o risco de atrasos silenciosos --- já identificado na Seção~\ref
 \endfoot
 \hline
 \endlastfoot
-Inconsistências de contrato entre API real e front-end mockado & Técnico & Média & Médio & Médio & Contrato definido via OpenAPI/Swagger já na Fase 1; front-end consome o schema gerado automaticamente em vez de assumir formatos manualmente. \\
+Inconsistências de contrato entre API real e front-end mockado & Técnico & Média & Médio & Médio & Contrato definido via OpenAPI/Swagger já na Sprint 1; front-end consome o schema gerado automaticamente em vez de assumir formatos manualmente. \\
 \hline
-Curva de aprendizado da equipe com FastAPI, PostgreSQL e Alembic & Organizacional & Média & Médio & Médio & Sessão interna de \emph{pair programming} no início da Fase 1, com tutorial guiado compartilhado entre os quatro integrantes antes do início da Fase 2. \\
+Curva de aprendizado da equipe com FastAPI, PostgreSQL e Alembic & Organizacional & Média & Médio & Médio & Sessão interna de \emph{pair programming} no início da Sprint 1, com tutorial guiado compartilhado entre os quatro integrantes desde o primeiro dia. \\
 \hline
 Sobreposição de calendário com entregas de outra disciplina do semestre & Organizacional & Média & Baixo & Baixo & Reuniões semanais fixas (Seção 2.7) para identificar atrasos cedo e redistribuir tarefas entre os quatro integrantes quando necessário. \\
 \hline

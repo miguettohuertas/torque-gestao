@@ -1,0 +1,50 @@
+# Ambiente de desenvolvimento local do Torque Gestão (MVP 2 — Fase 1).
+#
+# Uso:
+#   1. cp apps/api/.env.example apps/api/.env   (e ajuste se precisar)
+#   2. docker compose up --build
+#   3. Em outro terminal, aplique as migrations e crie o usuário admin:
+#        docker compose exec api alembic upgrade head
+#        docker compose exec api python -m app.seed
+#   4. Acesse a documentação interativa: http://localhost:8000/docs
+#
+# `docker compose up` sozinho já cumpre o critério de aceite 1 do MVP 2
+# (Seção 2.5 de docs/academic/documentacao-mvp1.tex): API + banco de dados
+# no ar com um único comando.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: torque
+      POSTGRES_PASSWORD: torque
+      POSTGRES_DB: torque_gestao
+    ports:
+      - "5432:5432"
+    volumes:
+      - torque_gestao_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U torque -d torque_gestao"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+    restart: unless-stopped
+    env_file:
+      - ./apps/api/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://torque:torque@db:5432/torque_gestao
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+
+volumes:
+  torque_gestao_db_data:

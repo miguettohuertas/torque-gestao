@@ -6,3 +6,12 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Backend (apps/api) — Python
+apps/api/.venv/
+apps/api/__pycache__/
+apps/api/**/__pycache__/
+apps/api/*.db
+apps/api/.env
+**/__pycache__/
+*.pyc
