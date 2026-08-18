@@ -3,12 +3,16 @@ Model da entidade HISTORICO_STATUS (RF04 — registro de cada transição de
 status de uma OS, usado no portal do cliente e no histórico do veículo).
 """
 from datetime import date
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Date, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.models.common import generate_uuid
+
+if TYPE_CHECKING:
+    from app.models.ordem_servico import OrdemServico
 
 
 class HistoricoStatus(Base):

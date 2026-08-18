@@ -6,12 +6,12 @@ precisa importar todos os models (ver app/models/__init__.py).
 """
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+import app.models  # noqa: F401  (garante que todos os models sejam registrados)
+from alembic import context
 from app.config import settings
 from app.database import Base
-import app.models  # noqa: F401  (garante que todos os models sejam registrados)
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)

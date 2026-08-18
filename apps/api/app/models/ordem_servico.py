@@ -8,12 +8,19 @@ estado é responsabilidade da camada de serviço/router (Fase 3), não do
 model — aqui o campo `status` só guarda o valor atual.
 """
 from datetime import date
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Date, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.models.common import generate_uuid
+
+if TYPE_CHECKING:
+    from app.models.cliente import Cliente
+    from app.models.historico_status import HistoricoStatus
+    from app.models.item_os import ItemOS
+    from app.models.veiculo import Veiculo
 
 STATUS_AGUARDANDO_DIAGNOSTICO = "aguardando_diagnostico"
 STATUS_EM_EXECUCAO = "em_execucao"

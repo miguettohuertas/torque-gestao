@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Migrations são geradas automaticamente pelo Alembic — não faz sentido
+# lintar código que não escrevemos à mão.
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]  # comprimento de linha: o formatador não é obrigatório nesta Sprint
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -5,11 +5,17 @@ Espelha a entidade CLIENTE definida em docs/diagramas/modelo-er.md, com o
 campo cpf usado tanto para CPF quanto CNPJ (validação de formato fica na
 camada de schema/Pydantic, não no banco).
 """
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.models.common import generate_uuid
+
+if TYPE_CHECKING:
+    from app.models.ordem_servico import OrdemServico
+    from app.models.veiculo import Veiculo
 
 
 class Cliente(Base):

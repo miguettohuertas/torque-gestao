@@ -38,6 +38,20 @@ python -m app.seed
 uvicorn app.main:app --reload
 ```
 
+## Lint e testes
+
+Rodados automaticamente a cada push/PR em `apps/api/**` pelo workflow
+[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml). Para rodar
+localmente antes de abrir um PR:
+
+```bash
+cd apps/api
+source .venv/bin/activate    # criado no passo anterior
+pip install ruff==0.6.9
+ruff check .                 # lint
+pytest -v                    # testes (SQLite em memória, não precisa de Postgres rodando)
+```
+
 ## Estrutura
 
 ```text
@@ -58,7 +72,9 @@ apps/api/
 │       ├── clientes.py       # RF01 — esqueleto, ver TODOs no arquivo
 │       └── veiculos.py        # RF02 — esqueleto, ver TODOs no arquivo
 ├── alembic/                    # migrations do banco
+├── tests/                       # pytest (roda contra SQLite em memória)
 ├── Dockerfile
+├── pyproject.toml                # config do ruff (lint) e do pytest
 └── requirements.txt
 ```
 
@@ -67,8 +83,10 @@ apps/api/
 - [x] Estrutura do projeto, Docker e PostgreSQL local.
 - [x] Modelo ER completo mapeado em SQLAlchemy (`app/models/`) e primeira
       migration aplicada (`alembic/versions/`).
-- [x] RF06 — autenticação real (login, JWT, RBAC) implementada e testada
-      manualmente ponta a ponta.
+- [x] RF06 — autenticação real (login, JWT, RBAC) implementada e coberta
+      por testes automatizados (`tests/test_auth.py`).
+- [x] CI (GitHub Actions) rodando lint + testes a cada push/PR — adiantado
+      da Fase 5 para já existir desde o começo do desenvolvimento real.
 - [ ] RF01 — CRUD de clientes (responsável: Leonardo — ver TODOs em
       `app/routers/clientes.py`).
 - [ ] RF02 — CRUD de veículos (responsável: Lucas — ver TODOs em

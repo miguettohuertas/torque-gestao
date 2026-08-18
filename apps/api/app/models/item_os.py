@@ -7,11 +7,16 @@ CATALOGO_PECA dependendo de `tipo` ("mao_obra" ou "peca") — por isso não é
 uma ForeignKey de banco (o catálogo de origem varia por tipo); a
 consistência é validada na camada de serviço da Fase 3.
 """
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.models.common import generate_uuid
+
+if TYPE_CHECKING:
+    from app.models.ordem_servico import OrdemServico
 
 TIPO_MAO_DE_OBRA = "mao_obra"
 TIPO_PECA = "peca"

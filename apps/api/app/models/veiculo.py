@@ -5,11 +5,17 @@ A validação do formato da placa (Mercosul ou padrão antigo — requisito de
 domínio, ver Seção 4.5.2.3 de docs/academic/archives/reference.tex) fica na
 camada de schema/Pydantic, não no banco.
 """
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.models.common import generate_uuid
+
+if TYPE_CHECKING:
+    from app.models.cliente import Cliente
+    from app.models.ordem_servico import OrdemServico
 
 
 class Veiculo(Base):
