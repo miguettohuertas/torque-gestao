@@ -10,10 +10,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_user
+from app.core.deps import get_current_user, require_role
 from app.core.security import create_access_token, verify_password
 from app.database import get_db
-from app.models.usuario import Usuario
+from app.models.usuario import ROLE_ADMIN, Usuario
 from app.schemas.auth import Token, UsuarioPublico
 
 router = APIRouter(prefix="/auth", tags=["autenticação"])
@@ -45,3 +45,20 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 def me(usuario_atual: Usuario = Depends(get_current_user)):
     """Retorna os dados do usuário autenticado — usado pelo front-end após o login."""
     return usuario_atual
+
+
+@router.get("/usuarios", response_model=list[UsuarioPublico])
+def listar_usuarios(
+    db: Session = Depends(get_db),
+    _usuario_atual: Usuario = Depends(require_role(ROLE_ADMIN)),
+):
+    """
+    Lista todos os usuários cadastrados (Admin, Mecânico, Cliente).
+
+    Endpoint de exemplo do RBAC (RF06, Sprint 1, 21-23/08): só o perfil Admin
+    pode gerenciar usuários, então esta rota usa `require_role(ROLE_ADMIN)`
+    em vez de `get_current_user` — qualquer outro perfil autenticado recebe
+    403, e quem não tem token recebe 401 (barrado antes mesmo do RBAC checar
+    o perfil, já que `require_role` depende de `get_current_user`).
+    """
+    return db.scalars(select(Usuario).order_by(Usuario.name)).all()

@@ -24,7 +24,7 @@ from sqlalchemy.pool import StaticPool  # noqa: E402
 from app.core.security import hash_password  # noqa: E402
 from app.database import Base, get_db  # noqa: E402
 from app.main import app  # noqa: E402
-from app.models.usuario import ROLE_ADMIN, Usuario  # noqa: E402
+from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO, Usuario  # noqa: E402
 
 
 @pytest.fixture()
@@ -65,6 +65,21 @@ def admin_user(db_session):
         name="Admin de Teste",
         email="admin.teste@torquegestao.com.br",
         role=ROLE_ADMIN,
+        password_hash=hash_password("senha123"),
+    )
+    db_session.add(usuario)
+    db_session.commit()
+    db_session.refresh(usuario)
+    return usuario
+
+
+@pytest.fixture()
+def mecanico_user(db_session):
+    """Usuário Mecânico já persistido, usado para testar o RBAC (perfil não-Admin)."""
+    usuario = Usuario(
+        name="Mecânico de Teste",
+        email="mecanico.teste@torquegestao.com.br",
+        role=ROLE_MECANICO,
         password_hash=hash_password("senha123"),
     )
     db_session.add(usuario)
