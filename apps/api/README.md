@@ -69,8 +69,10 @@ apps/api/
 │   └── routers/
 │       ├── health.py       # GET /health
 │       ├── auth.py          # RF06 — login (JWT) e /auth/me
-│       ├── clientes.py       # RF01 — esqueleto, ver TODOs no arquivo
-│       └── veiculos.py        # RF02 — esqueleto, ver TODOs no arquivo
+│       ├── clientes.py       # RF01 — CRUD de clientes
+│       ├── veiculos.py        # RF02 — CRUD de veículos
+│       ├── catalogo.py         # RF05 — catálogo de serviços e peças
+│       └── ordens_servico.py    # RF03/RF04 — emissão de OS e status
 ├── alembic/                    # migrations do banco
 ├── tests/                       # pytest (roda contra SQLite em memória)
 ├── Dockerfile
@@ -96,8 +98,20 @@ apps/api/
       subindo juntos com um único comando, migration aplicada e login
       testado via Swagger) — confirmado por Miguel Angel Balladares
       Huertas e já usado numa apresentação.
-- [ ] RF01 — CRUD de clientes (responsável: Leonardo — ver TODOs em
-      `app/routers/clientes.py`).
-- [ ] RF02 — CRUD de veículos (responsável: Lucas — ver TODOs em
-      `app/routers/veiculos.py`).
-- [ ] RF03/RF04/RF05 — ordens de serviço e catálogo (Fase 3).
+- [x] RF01 — CRUD de clientes, com validação de CPF/CNPJ e busca por
+      nome/e-mail/documento (`app/routers/clientes.py`,
+      `tests/test_clientes.py`).
+- [x] RF02 — CRUD de veículos, vinculado a um cliente existente e com
+      validação de placa (Mercosul e padrão antigo)
+      (`app/routers/veiculos.py`, `tests/test_veiculos.py`).
+- [x] RF05 — catálogo de serviços e peças, leitura para Admin/Mecânico
+      e cadastro só por Admin (`app/routers/catalogo.py`,
+      `tests/test_catalogo.py`).
+- [x] RF03/RF04 — emissão de OS com orçamento calculado a partir do
+      catálogo e fluxo de status validado (sem pular nem voltar etapa),
+      com histórico em `HISTORICO_STATUS`
+      (`app/routers/ordens_servico.py`, `tests/test_ordens_servico.py`).
+- [ ] `docker compose up` revalidado com RF01–RF05 — a validação
+      anterior cobriu só RF06.
+- [ ] Integração do front-end com a API real (Fase 4).
+- [ ] CI/CD estendido para deploy e deploy em si (Render/Vercel, Fase 5).

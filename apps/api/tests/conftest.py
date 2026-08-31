@@ -24,7 +24,7 @@ from sqlalchemy.pool import StaticPool  # noqa: E402
 from app.core.security import hash_password  # noqa: E402
 from app.database import Base, get_db  # noqa: E402
 from app.main import app  # noqa: E402
-from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO, Usuario  # noqa: E402
+from app.models.usuario import ROLE_ADMIN, ROLE_CLIENTE, ROLE_MECANICO, Usuario  # noqa: E402
 
 
 @pytest.fixture()
@@ -86,3 +86,29 @@ def mecanico_user(db_session):
     db_session.commit()
     db_session.refresh(usuario)
     return usuario
+
+
+@pytest.fixture()
+def cliente_user(db_session):
+    usuario = Usuario(
+        name="Cliente de Teste",
+        email="cliente.teste@torquegestao.com.br",
+        role=ROLE_CLIENTE,
+        password_hash=hash_password("senha123"),
+    )
+    db_session.add(usuario)
+    db_session.commit()
+    db_session.refresh(usuario)
+    return usuario
+
+
+@pytest.fixture()
+def auth_header(client):
+    def _autenticar(usuario, senha: str = "senha123") -> dict[str, str]:
+        response = client.post(
+            "/auth/login", data={"username": usuario.email, "password": senha}
+        )
+        token = response.json()["access_token"]
+        return {"Authorization": f"Bearer {token}"}
+
+    return _autenticar

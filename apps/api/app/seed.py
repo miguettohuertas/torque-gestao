@@ -16,10 +16,24 @@ from sqlalchemy import select
 
 from app.core.security import hash_password
 from app.database import SessionLocal
+from app.models.catalogo_peca import CatalogoPeca
+from app.models.catalogo_servico import CatalogoServico
 from app.models.usuario import ROLE_ADMIN, Usuario
 
 ADMIN_EMAIL = "admin@torquegestao.com.br"
 ADMIN_SENHA_INICIAL = "torque123"  # trocar no primeiro login em produção
+
+SERVICOS_INICIAIS = [
+    {"nome": "Troca de óleo", "categoria": "Manutenção", "preco": "120.00"},
+    {"nome": "Alinhamento e balanceamento", "categoria": "Manutenção", "preco": "150.00"},
+    {"nome": "Revisão de freios", "categoria": "Freios", "preco": "180.00"},
+]
+
+PECAS_INICIAIS = [
+    {"nome": "Filtro de óleo", "marca": "Bosch", "preco": "35.50", "estoque": 20},
+    {"nome": "Pastilha de freio (jogo)", "marca": "Fras-le", "preco": "89.90", "estoque": 15},
+    {"nome": "Óleo de motor 5W30 (litro)", "marca": "Mobil", "preco": "42.00", "estoque": 50},
+]
 
 
 def seed_admin() -> None:
@@ -43,5 +57,21 @@ def seed_admin() -> None:
         db.close()
 
 
+def seed_catalogo() -> None:
+    db = SessionLocal()
+    try:
+        if db.scalar(select(CatalogoServico)) or db.scalar(select(CatalogoPeca)):
+            print("Catálogo já tem itens; nada a fazer.")
+            return
+
+        db.add_all(CatalogoServico(**dados) for dados in SERVICOS_INICIAIS)
+        db.add_all(CatalogoPeca(**dados) for dados in PECAS_INICIAIS)
+        db.commit()
+        print(f"Catálogo inicial criado: {len(SERVICOS_INICIAIS)} serviços, {len(PECAS_INICIAIS)} peças.")
+    finally:
+        db.close()
+
+
 if __name__ == "__main__":
     seed_admin()
+    seed_catalogo()

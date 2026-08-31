@@ -1,31 +1,103 @@
-"""
-Router de Veículos (RF02 — Cadastro de Veículos).
-
-Responsável pela Sprint 1: Lucas Honorato dos Santos
-(ver Tabela "Sprint 1" em docs/academic/documentacao-mvp1.tex, Seção 2.6).
-
-Este arquivo é só o esqueleto: o model `Veiculo` (app/models/veiculo.py) e a
-tabela `veiculos` já existem via Alembic (Fase 1). Falta implementar:
-
-  TODO (18-20/08): schemas Pydantic de request/response em
-      app/schemas/veiculo.py (ex.: VeiculoCreate, VeiculoOut), acompanhando
-      a estrutura de Cliente que o Leonardo está definindo em paralelo.
-  TODO (21-23/08): CRUD de veículos vinculado a um cliente existente
-      (`cliente_id`) e validação de placa (Mercosul: ABC1D23, e antiga:
-      AAA-9999 — ver requisito de domínio no relatório do PAC V).
-  TODO (24-26/08): trocar qualquer dado de teste local pelo PostgreSQL real
-      subido pela Fase 1; conferir manualmente pelo Swagger em /docs.
-"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_user
+from app.core.deps import require_role
 from app.database import get_db
+from app.models.cliente import Cliente
+from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO
+from app.models.veiculo import Veiculo
+from app.schemas.veiculo import VeiculoCreate, VeiculoOut, VeiculoUpdate
 
 router = APIRouter(prefix="/veiculos", tags=["veículos"])
 
+_equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 
-@router.get("")
-def listar_veiculos(db: Session = Depends(get_db), usuario=Depends(get_current_user)):
-    """TODO (RF02): retornar a lista de veículos, com filtro opcional por cliente_id."""
-    raise NotImplementedError("Implementar em Sprint 1 — responsável: Lucas")
+_PLACA_EM_USO = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Já existe um veículo cadastrado com esta placa.",
+)
+_CLIENTE_NAO_ENCONTRADO = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Cliente não encontrado para vincular o veículo.",
+)
+
+
+def _buscar_ou_404(veiculo_id: str, db: Session) -> Veiculo:
+    veiculo = db.get(Veiculo, veiculo_id)
+    if veiculo is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Veículo não encontrado.")
+    return veiculo
+
+
+def _validar_cliente_existe(cliente_id: str, db: Session) -> None:
+    if db.get(Cliente, cliente_id) is None:
+        raise _CLIENTE_NAO_ENCONTRADO
+
+
+@router.get("", response_model=list[VeiculoOut])
+def listar_veiculos(
+    cliente_id: str | None = None,
+    db: Session = Depends(get_db),
+    _usuario=Depends(_equipe_oficina),
+):
+    query = select(Veiculo).order_by(Veiculo.plate)
+    if cliente_id:
+        query = query.where(Veiculo.cliente_id == cliente_id)
+    return db.scalars(query).all()
+
+
+@router.get("/{veiculo_id}", response_model=VeiculoOut)
+def obter_veiculo(
+    veiculo_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+):
+    return _buscar_ou_404(veiculo_id, db)
+
+
+@router.post("", response_model=VeiculoOut, status_code=status.HTTP_201_CREATED)
+def criar_veiculo(
+    dados: VeiculoCreate, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+):
+    _validar_cliente_existe(dados.cliente_id, db)
+
+    veiculo = Veiculo(**dados.model_dump())
+    db.add(veiculo)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise _PLACA_EM_USO
+    db.refresh(veiculo)
+    return veiculo
+
+
+@router.put("/{veiculo_id}", response_model=VeiculoOut)
+def atualizar_veiculo(
+    veiculo_id: str,
+    dados: VeiculoUpdate,
+    db: Session = Depends(get_db),
+    _usuario=Depends(_equipe_oficina),
+):
+    veiculo = _buscar_ou_404(veiculo_id, db)
+    _validar_cliente_existe(dados.cliente_id, db)
+
+    for campo, valor in dados.model_dump().items():
+        setattr(veiculo, campo, valor)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise _PLACA_EM_USO
+    db.refresh(veiculo)
+    return veiculo
+
+
+@router.delete("/{veiculo_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remover_veiculo(
+    veiculo_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+):
+    veiculo = _buscar_ou_404(veiculo_id, db)
+    db.delete(veiculo)
+    db.commit()

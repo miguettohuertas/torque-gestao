@@ -11,7 +11,7 @@ Documentação interativa (RNF06 — OpenAPI/Swagger): http://localhost:8000/doc
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import auth, clientes, health, veiculos
+from app.routers import auth, catalogo, clientes, health, ordens_servico, veiculos
 
 app = FastAPI(
     title="Torque Gestão API",
@@ -34,7 +34,5 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(clientes.router)
 app.include_router(veiculos.router)
-# Próximos routers (Fase 3, responsável: Leonardo):
-#   from app.routers import ordens_servico, catalogo
-#   app.include_router(ordens_servico.router)
-#   app.include_router(catalogo.router)
+app.include_router(catalogo.router)
+app.include_router(ordens_servico.router)

@@ -61,9 +61,6 @@ def test_me_com_token_valido_retorna_dados_do_usuario(client, admin_user):
 
 
 def test_rota_protegida_sem_token_e_barrada_pelo_rbac(client):
-    # /clientes ainda é um esqueleto (RF01, responsável: Leonardo), mas o
-    # RBAC precisa barrar ANTES de qualquer lógica de negócio quando não há
-    # token — por isso o teste espera 401, não o NotImplementedError do stub.
     response = client.get("/clientes")
 
     assert response.status_code == 401
