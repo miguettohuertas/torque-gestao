@@ -105,14 +105,14 @@ torque-gestao/
 - **Concluído:** repositório do PAC VI criado.
 - **Concluído:** convite dos demais integrantes como colaboradores.
 - **Concluído — RF06 (autenticação e RBAC):** back-end em FastAPI (`apps/api`), modelo de dados completo via Alembic, e autenticação real (login, hash Bcrypt, JWT) com RBAC (`require_role`) protegendo rotas por perfil (Admin/Mecânico/Cliente). Coberto por 10 testes automatizados (CI verde) e validado manualmente com um PostgreSQL real, não só o SQLite em memória dos testes.
-- **Em aberto (Sprint 1 do MVP 2, prazo original 27/08):** CRUD de clientes (RF01, responsável Leonardo) e CRUD de veículos (RF02, responsável Lucas) seguem como esqueleto (`NotImplementedError`) — sem commits desde 22/08. A subida completa via `docker compose up` (API + PostgreSQL com um único comando) ainda não foi confirmada de ponta a ponta por ninguém no histórico do repositório. Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
+- **Concluído — infraestrutura local:** `docker compose up` sobe API e PostgreSQL juntos com um único comando; migration do Alembic e login/RBAC testados via Swagger de ponta a ponta.
+- **Em aberto (Sprint 1 do MVP 2, prazo original 27/08):** CRUD de clientes (RF01, responsável Leonardo) e CRUD de veículos (RF02, responsável Lucas) seguem como esqueleto (`NotImplementedError`) — sem commits desde 22/08. Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
 - **Pendente:** ordens de serviço, catálogo, integração do front-end com a API real, CI/CD e deploy — fases seguintes do MVP 2.
 
 ## Próximos passos
 
 1. Fechar RF01 (clientes) e RF02 (veículos), pendentes desde a Sprint 1 — ver `apps/api/README.md`.
-2. Confirmar o `docker compose up` de ponta a ponta com PostgreSQL real numa máquina com acesso normal ao Docker Hub.
-3. Implementar ordens de serviço e catálogo (RF03, RF04, RF05), integrar o front-end à API real e configurar o pipeline de CI/CD.
+2. Implementar ordens de serviço e catálogo (RF03, RF04, RF05), integrar o front-end à API real e configurar o pipeline de CI/CD.
 
 ## Equipe
 

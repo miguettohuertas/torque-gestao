@@ -92,11 +92,12 @@ apps/api/
       do SQLite em memória usado pelos testes automatizados).
 - [x] CI (GitHub Actions) rodando lint + testes a cada push/PR — adiantado
       da Fase 5 para já existir desde o começo do desenvolvimento real.
+- [x] `docker compose up` validado de ponta a ponta (API + PostgreSQL
+      subindo juntos com um único comando, migration aplicada e login
+      testado via Swagger) — confirmado por Miguel Angel Balladares
+      Huertas e já usado numa apresentação.
 - [ ] RF01 — CRUD de clientes (responsável: Leonardo — ver TODOs em
       `app/routers/clientes.py`).
 - [ ] RF02 — CRUD de veículos (responsável: Lucas — ver TODOs em
       `app/routers/veiculos.py`).
-- [ ] `docker compose up` validado de ponta a ponta (API + PostgreSQL
-      subindo juntos com um único comando) — ainda sem confirmação de
-      nenhum integrante no histórico do repositório.
 - [ ] RF03/RF04/RF05 — ordens de serviço e catálogo (Fase 3).
