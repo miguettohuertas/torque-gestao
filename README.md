@@ -104,13 +104,15 @@ torque-gestao/
 - **Concluído:** documentação de especificação — requisitos funcionais, não funcionais, matriz de riscos e stack tecnológica.
 - **Concluído:** repositório do PAC VI criado.
 - **Concluído:** convite dos demais integrantes como colaboradores.
-- **Em andamento (Sprint 1 do MVP 2, até 27/08):** back-end em FastAPI (`apps/api`) com Docker + PostgreSQL local, modelo de dados completo via Alembic e autenticação real (login, JWT, RBAC) já implementada e testada; CRUD de clientes e veículos em desenvolvimento. Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
-- **Pendente:** ordens de serviço, catálogo, integração do front-end com a API real, CI/CD e deploy — fases seguintes do MVP 2 (a partir de 28/08).
+- **Concluído — RF06 (autenticação e RBAC):** back-end em FastAPI (`apps/api`), modelo de dados completo via Alembic, e autenticação real (login, hash Bcrypt, JWT) com RBAC (`require_role`) protegendo rotas por perfil (Admin/Mecânico/Cliente). Coberto por 10 testes automatizados (CI verde) e validado manualmente com um PostgreSQL real, não só o SQLite em memória dos testes.
+- **Em aberto (Sprint 1 do MVP 2, prazo original 27/08):** CRUD de clientes (RF01, responsável Leonardo) e CRUD de veículos (RF02, responsável Lucas) seguem como esqueleto (`NotImplementedError`) — sem commits desde 22/08. A subida completa via `docker compose up` (API + PostgreSQL com um único comando) ainda não foi confirmada de ponta a ponta por ninguém no histórico do repositório. Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
+- **Pendente:** ordens de serviço, catálogo, integração do front-end com a API real, CI/CD e deploy — fases seguintes do MVP 2.
 
 ## Próximos passos
 
-1. Concluir a Sprint 1 do MVP 2 (RF06, RF01, RF02) até 27/08 — ver `apps/api/README.md`.
-2. Implementar ordens de serviço e catálogo (RF03, RF04, RF05), integrar o front-end à API real e configurar o pipeline de CI/CD.
+1. Fechar RF01 (clientes) e RF02 (veículos), pendentes desde a Sprint 1 — ver `apps/api/README.md`.
+2. Confirmar o `docker compose up` de ponta a ponta com PostgreSQL real numa máquina com acesso normal ao Docker Hub.
+3. Implementar ordens de serviço e catálogo (RF03, RF04, RF05), integrar o front-end à API real e configurar o pipeline de CI/CD.
 
 ## Equipe
 

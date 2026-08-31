@@ -84,11 +84,19 @@ apps/api/
 - [x] Modelo ER completo mapeado em SQLAlchemy (`app/models/`) e primeira
       migration aplicada (`alembic/versions/`).
 - [x] RF06 — autenticação real (login, JWT, RBAC) implementada e coberta
-      por testes automatizados (`tests/test_auth.py`).
+      por testes automatizados (`tests/test_auth.py`), incluindo o 403 de
+      perfil sem permissão em `GET /auth/usuarios` (rota protegida com
+      `require_role`).
+- [x] RF06 — validado manualmente contra um PostgreSQL real (migration
+      do Alembic aplicada e fluxo de login/RBAC testado via Swagger fora
+      do SQLite em memória usado pelos testes automatizados).
 - [x] CI (GitHub Actions) rodando lint + testes a cada push/PR — adiantado
       da Fase 5 para já existir desde o começo do desenvolvimento real.
 - [ ] RF01 — CRUD de clientes (responsável: Leonardo — ver TODOs em
       `app/routers/clientes.py`).
 - [ ] RF02 — CRUD de veículos (responsável: Lucas — ver TODOs em
       `app/routers/veiculos.py`).
-- [ ] RF03/RF04/RF05 — ordens de serviço e catálogo (Fase 3, a partir de 28/08).
+- [ ] `docker compose up` validado de ponta a ponta (API + PostgreSQL
+      subindo juntos com um único comando) — ainda sem confirmação de
+      nenhum integrante no histórico do repositório.
+- [ ] RF03/RF04/RF05 — ordens de serviço e catálogo (Fase 3).
