@@ -1,0 +1,15 @@
+# Normaliza terminadores de linha para evitar diffs espúrios entre
+# integrantes usando Windows, macOS e Linux no mesmo repositório.
+* text=auto eol=lf
+
+# Arquivos binários — nunca normalizar/converter.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
