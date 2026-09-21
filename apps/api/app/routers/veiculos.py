@@ -3,7 +3,12 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.deps import require_role
+from app.core.deps import (
+    leitura_operacional,
+    require_role,
+    restringir_cliente,
+    verificar_proprietario,
+)
 from app.database import get_db
 from app.models.cliente import Cliente
 from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO
@@ -40,19 +45,22 @@ def _validar_cliente_existe(cliente_id: str, db: Session) -> None:
 def listar_veiculos(
     cliente_id: str | None = None,
     db: Session = Depends(get_db),
-    _usuario=Depends(_equipe_oficina),
+    _usuario=Depends(leitura_operacional),
 ):
     query = select(Veiculo).order_by(Veiculo.plate)
     if cliente_id:
         query = query.where(Veiculo.cliente_id == cliente_id)
+    query = restringir_cliente(query, Veiculo.cliente_id, _usuario)
     return db.scalars(query).all()
 
 
 @router.get("/{veiculo_id}", response_model=VeiculoOut)
 def obter_veiculo(
-    veiculo_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+    veiculo_id: str, db: Session = Depends(get_db), _usuario=Depends(leitura_operacional)
 ):
-    return _buscar_ou_404(veiculo_id, db)
+    veiculo = _buscar_ou_404(veiculo_id, db)
+    verificar_proprietario(veiculo.cliente_id, _usuario)
+    return veiculo
 
 
 @router.post("", response_model=VeiculoOut, status_code=status.HTTP_201_CREATED)

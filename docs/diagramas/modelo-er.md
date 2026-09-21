@@ -1,6 +1,6 @@
 # Modelo Entidade-Relacionamento
 
-> Baseado nas entidades definidas em `apps/prototype/src/mock-data.jsx`.
+> Modelo persistido em `apps/api/app/models/`, atualizado para a integração do portal (Fase 4).
 
 ```mermaid
 erDiagram
@@ -26,6 +26,8 @@ erDiagram
         string name
         string email
         string role
+        string password_hash
+        string cliente_id FK "opcional, único"
     }
 
     ORDEM_SERVICO {
@@ -71,6 +73,7 @@ erDiagram
         int    estoque
     }
 
+    CLIENTE          o|--o| USUARIO          : "acesso ao portal"
     CLIENTE          ||--o{ VEICULO          : "possui"
     CLIENTE          ||--o{ ORDEM_SERVICO    : "solicita"
     VEICULO          ||--o{ ORDEM_SERVICO    : "objeto de"
@@ -81,3 +84,8 @@ erDiagram
     CATALOGO_SERVICO ||--o{ ITEM_OS          : "referencia"
     CATALOGO_PECA    ||--o{ ITEM_OS          : "referencia"
 ```
+
+O vínculo de portal é explícito: `usuarios.cliente_id` referencia `clientes.id`,
+é opcional e único. Usuários sem vínculo não veem cadastros do portal. E-mail
+não é usado como critério de autorização. A migration `6c4e91a2b730` adiciona
+esse vínculo sem conceder acesso automaticamente a usuários existentes.

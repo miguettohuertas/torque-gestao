@@ -111,7 +111,17 @@ apps/api/
       catálogo e fluxo de status validado (sem pular nem voltar etapa),
       com histórico em `HISTORICO_STATUS`
       (`app/routers/ordens_servico.py`, `tests/test_ordens_servico.py`).
-- [ ] `docker compose up` revalidado com RF01–RF05 — a validação
-      anterior cobriu só RF06.
-- [ ] Integração do front-end com a API real (Fase 4).
+- [x] Ambiente Docker/PostgreSQL validado com RF01–RF05 no fluxo integrado
+      de navegador (schema de teste isolado); evidências em `docs/entregas/fase4-24-09.md`.
+- [x] Integração do front-end e portal com a API real (Fase 4), com testes RF03/RF04.
+      Veja [execução e validação](../prototype/README.md).
 - [ ] CI/CD estendido para deploy e deploy em si (Render/Vercel, Fase 5).
+
+
+## Portal do cliente (Fase 4)
+
+As rotas de leitura de clientes, veículos, OS e histórico também aceitam o perfil
+Cliente, com filtro obrigatório pelo vínculo `usuarios.cliente_id`. Escritas
+continuam restritas à equipe. Aplique `alembic upgrade head` para criar o vínculo.
+Para criar credenciais de um cadastro existente, execute
+`python -m app.provisionar_cliente ID_DO_CLIENTE`; a senha é solicitada interativamente.

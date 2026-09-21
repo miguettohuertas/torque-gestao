@@ -62,3 +62,18 @@ def require_role(*allowed_roles: str):
         return usuario
 
     return _verificar
+
+
+leitura_operacional = require_role("admin", "mecanico", "cliente")
+
+
+def restringir_cliente(query, coluna, usuario):
+    """O vínculo é explícito; e-mail nunca concede acesso a dados de clientes."""
+    if usuario.role == "cliente":
+        query = query.where(coluna == usuario.cliente_id) if usuario.cliente_id else query.where(False)
+    return query
+
+
+def verificar_proprietario(cliente_id, usuario):
+    if usuario.role == "cliente" and cliente_id != usuario.cliente_id:
+        raise HTTPException(status_code=404, detail="Registro não encontrado.")
