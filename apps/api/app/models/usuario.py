@@ -8,7 +8,7 @@ validou credenciais de verdade. Para a Sprint 1 este model adiciona
 aceito, `modelo-er.md` deve ser atualizado para refletir esse campo,
 conforme previsto nos entregáveis técnicos do MVP 2.
 """
-from sqlalchemy import String
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -29,4 +29,7 @@ class Usuario(Base):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     email: Mapped[str] = mapped_column(String(160), nullable=False, unique=True)
     role: Mapped[str] = mapped_column(String(20), nullable=False)
+    cliente_id: Mapped[str | None] = mapped_column(
+        String, ForeignKey("clientes.id"), nullable=True, unique=True
+    )
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)

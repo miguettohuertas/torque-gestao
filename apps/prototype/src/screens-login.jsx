@@ -5,24 +5,17 @@
 const LoginScreen = ({ onLogin }) => {
   const [email, setEmail]     = useState('');
   const [password, setPassword] = useState('');
-  const [selected, setSelected] = useState('');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [showPw, setShowPw]     = useState(false);
 
-  const DEMO = [
-    { role:'admin',  label:'Administrador', email:'admin@torquegestao.com.br',  desc:'Acesso completo ao sistema' },
-    { role:'mech',   label:'Mecânico',       email:'carlos@torquegestao.com.br', desc:'OS atribuídas a Carlos A.' },
-    { role:'client', label:'Cliente',         email:'joao.silva@email.com',       desc:'Portal de acompanhamento' },
-  ];
-
-  const pick = (d) => { setSelected(d.role); setEmail(d.email); setPassword('senha123'); setError(''); };
-
-  const submit = (e) => {
-    e && e.preventDefault();
-    if (!email || !password) { setError('Preencha e-mail e senha para continuar.'); return; }
-    setLoading(true);
-    setTimeout(() => { setLoading(false); onLogin(selected || 'admin'); }, 900);
+  const submit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setError(''); setLoading(true);
+    try { await onLogin(email, password); }
+    catch (err) { setError(err.message); }
+    finally { setLoading(false); }
   };
 
   return (
@@ -55,37 +48,23 @@ const LoginScreen = ({ onLogin }) => {
           {/* Form */}
           <form onSubmit={submit} style={{ padding:'28px 32px 32px' }}>
 
-            {/* Demo selector */}
-            <div style={{ marginBottom:24 }}>
-              <div style={{ fontSize:11, fontWeight:600, color:C.fgSubtle, textTransform:'uppercase',
-                letterSpacing:'0.07em', marginBottom:8 }}>Acesso rápido — demonstração</div>
-              <div style={{ display:'flex', gap:8 }}>
-                {DEMO.map(d=>(
-                  <button key={d.role} type="button" onClick={()=>pick(d)}
-                    style={{ flex:1, padding:'10px 6px', borderRadius:8,
-                      border:`2px solid ${selected===d.role?C.amber:C.border}`,
-                      background:selected===d.role?C.amber100:'#fff',
-                      cursor:'pointer', textAlign:'center', transition:'all 150ms' }}>
-                    <div style={{ fontSize:12, fontWeight:700, color:C.p800 }}>{d.label}</div>
-                    <div style={{ fontSize:10, color:C.fgSubtle, marginTop:1, lineHeight:1.3 }}>{d.desc}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Fields */}
             <div style={{ display:'flex', flexDirection:'column', gap:14, marginBottom:8 }}>
-              <Field label="E-mail" type="email" value={email} placeholder="seu@email.com"
-                onChange={e=>{setEmail(e.target.value);setError('');}}/>
+              <label style={{display:'grid',gap:6,fontSize:13,fontWeight:600}}>
+                E-mail
+                <input required type="email" autoComplete="username" value={email} placeholder="seu@email.com"
+                  onChange={e=>{setEmail(e.target.value);setError('');}}
+                  style={{height:48,padding:'0 14px',border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:15}}/>
+              </label>
               <div>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:5 }}>
-                  <label style={{ fontSize:13, fontWeight:600, color:C.fg }}>Senha</label>
+                  <label htmlFor="login-password" style={{ fontSize:13, fontWeight:600, color:C.fg }}>Senha</label>
                   <button type="button" onClick={()=>setShowPw(!showPw)}
                     style={{ background:'none', border:'none', cursor:'pointer', fontSize:12, color:C.p500, fontWeight:600 }}>
                     {showPw?'Ocultar':'Mostrar'}
                   </button>
                 </div>
-                <input type={showPw?'text':'password'} value={password} placeholder="Sua senha"
+                <input id="login-password" required autoComplete="current-password" type={showPw?'text':'password'} value={password} placeholder="Sua senha"
                   onChange={e=>{setPassword(e.target.value);setError('');}}
                   style={{ width:'100%', height:52, padding:'0 14px', border:`1.5px solid ${C.border}`,
                     borderRadius:8, fontSize:15, fontFamily:'Inter', color:C.fg, background:'#fff', outline:'none' }}
@@ -96,15 +75,9 @@ const LoginScreen = ({ onLogin }) => {
             </div>
 
             {error && (
-              <div style={{ background:C.error.bg, color:C.error.text, fontSize:13, fontWeight:500,
+              <div role="alert" style={{ background:C.error.bg, color:C.error.text, fontSize:13, fontWeight:500,
                 padding:'10px 14px', borderRadius:8, marginBottom:14 }}>{error}</div>
             )}
-
-            <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:20 }}>
-              <button type="button" style={{ background:'none', border:'none', cursor:'pointer', fontSize:13, color:C.p500, fontWeight:600 }}>
-                Esqueci minha senha
-              </button>
-            </div>
 
             <button type="submit" disabled={loading}
               style={{ width:'100%', height:56, background:loading?C.p700:C.amber, color:C.p800,
@@ -119,7 +92,7 @@ const LoginScreen = ({ onLogin }) => {
 
             <div style={{ marginTop:18, padding:'12px 14px', background:C.p50, borderRadius:8,
               border:`1px solid ${C.p100}`, fontSize:12, color:C.fgMuted, lineHeight:1.5 }}>
-              <strong style={{color:C.p800}}>Segurança:</strong> Sessão protegida por JWT + TLS. Dados armazenados conforme LGPD.
+              Para recuperar seu acesso, entre em contato com a oficina.
             </div>
           </form>
         </div>

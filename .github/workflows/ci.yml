@@ -1,4 +1,4 @@
-name: Backend CI
+name: API e front-end CI
 
 # Roda lint (ruff) e a suíte de testes (pytest) do apps/api a cada push ou
 # pull request que mexa no back-end, conforme o entregável técnico da Fase 5
@@ -14,11 +14,13 @@ on:
     branches: [main]
     paths:
       - "apps/api/**"
+      - "apps/prototype/**"
       - ".github/workflows/ci.yml"
   pull_request:
     branches: [main]
     paths:
       - "apps/api/**"
+      - "apps/prototype/**"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
 
@@ -52,3 +54,32 @@ jobs:
 
       - name: Testes (pytest)
         run: pytest -v
+
+  frontend:
+    name: Front-end e fluxo integrado
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/prototype
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: apps/api/requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/prototype/package-lock.json
+      - run: pip install -r ../api/requirements.txt
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-results
+          path: apps/prototype/test-results/

@@ -2,10 +2,15 @@ from datetime import date
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from app.core.deps import require_role
+from app.core.deps import (
+    leitura_operacional,
+    require_role,
+    restringir_cliente,
+    verificar_proprietario,
+)
 from app.database import get_db
 from app.models.catalogo_peca import CatalogoPeca
 from app.models.catalogo_servico import CatalogoServico
@@ -139,7 +144,7 @@ def listar_ordens_servico(
     veiculo_id: str | None = None,
     status_atual: str | None = None,
     db: Session = Depends(get_db),
-    _usuario=Depends(_equipe_oficina),
+    _usuario=Depends(leitura_operacional),
 ):
     query = select(OrdemServico).order_by(OrdemServico.data_abertura.desc())
     if cliente_id:
@@ -148,14 +153,17 @@ def listar_ordens_servico(
         query = query.where(OrdemServico.veiculo_id == veiculo_id)
     if status_atual:
         query = query.where(OrdemServico.status == status_atual)
+    query = restringir_cliente(query, OrdemServico.cliente_id, _usuario)
     return [_serializar_os(ordem) for ordem in db.scalars(query).all()]
 
 
 @router.get("/{os_id}", response_model=OrdemServicoOut)
 def obter_ordem_servico(
-    os_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+    os_id: str, db: Session = Depends(get_db), _usuario=Depends(leitura_operacional)
 ):
-    return _serializar_os(_buscar_ou_404(os_id, db))
+    ordem = _buscar_ou_404(os_id, db)
+    verificar_proprietario(ordem.cliente_id, _usuario)
+    return _serializar_os(ordem)
 
 
 @router.patch("/{os_id}/status", response_model=OrdemServicoOut)
@@ -179,10 +187,18 @@ def atualizar_status(
             )
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=detail)
 
-    ordem.status = dados.status
+    resultado = db.execute(
+        update(OrdemServico)
+        .where(OrdemServico.id == os_id, OrdemServico.status == ordem.status)
+        .values(status=dados.status)
+        .execution_options(synchronize_session=False)
+    )
+    if resultado.rowcount != 1:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="A OS foi atualizada. Recarregue e tente novamente.")
     db.add(
         HistoricoStatus(
-            os_id=ordem.id, usuario_id=usuario.id, status=ordem.status, data=date.today()
+            os_id=ordem.id, usuario_id=usuario.id, status=dados.status, data=date.today()
         )
     )
     db.commit()
@@ -192,10 +208,11 @@ def atualizar_status(
 
 @router.get("/{os_id}/historico", response_model=list[HistoricoStatusOut])
 def listar_historico(
-    os_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+    os_id: str, db: Session = Depends(get_db), _usuario=Depends(leitura_operacional)
 ):
-    _buscar_ou_404(os_id, db)
+    ordem = _buscar_ou_404(os_id, db)
+    verificar_proprietario(ordem.cliente_id, _usuario)
     query = (
         select(HistoricoStatus).where(HistoricoStatus.os_id == os_id).order_by(HistoricoStatus.data)
     )
-    return db.scalars(query).all()
+    return sorted(db.scalars(query).all(), key=lambda h: FLUXO_STATUS_OS.index(h.status))

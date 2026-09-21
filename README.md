@@ -131,7 +131,7 @@ torque-gestao/
 
 ## Como visualizar o protótipo
 
-O protótipo interativo está disponível em [torque-gestao.surge.sh](https://torque-gestao.surge.sh), ou localmente abrindo `apps/prototype/index.html` no navegador.
+A demonstração anterior está publicada em [torque-gestao.surge.sh](https://torque-gestao.surge.sh). Para executar a versão integrada localmente, suba a API e sirva `apps/prototype` por HTTP conforme o [guia do front-end](apps/prototype/README.md); abrir o HTML diretamente não executa a aplicação corretamente.
 
 ## Como rodar o back-end localmente
 
@@ -151,3 +151,14 @@ Documentação interativa da API: <http://localhost:8000/docs>. Instruções com
 ---
 
 *Projeto desenvolvido como parte da disciplina PAC (Projeto de Aprendizagem Colaborativa) — Engenharia de Software, Católica SC, Joinville/SC.*
+
+
+## Integração com a API — Fase 4
+
+O front-end em `apps/prototype` agora autentica pela API e persiste clientes,
+veículos e ordens de serviço. O portal consulta somente os dados vinculados ao
+cliente autenticado. Veja [execução, acesso ao portal e testes](apps/prototype/README.md).
+Aplique `alembic upgrade head` antes de usar a nova versão, inclusive em bancos
+existentes. O documento do MVP continua em `docs/academic/documentacao-mvp1.tex`.
+
+Checklist e evidências da entrega até 24/09: [Fase 4](docs/entregas/fase4-24-09.md).

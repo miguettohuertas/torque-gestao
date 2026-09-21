@@ -3,10 +3,15 @@ from sqlalchemy import or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.deps import require_role
+from app.core.deps import (
+    leitura_operacional,
+    require_role,
+    restringir_cliente,
+    verificar_proprietario,
+)
 from app.database import get_db
 from app.models.cliente import Cliente
-from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO
+from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO, Usuario
 from app.schemas.cliente import ClienteCreate, ClienteOut, ClienteUpdate
 
 router = APIRouter(prefix="/clientes", tags=["clientes"])
@@ -30,7 +35,7 @@ def _buscar_ou_404(cliente_id: str, db: Session) -> Cliente:
 def listar_clientes(
     busca: str | None = None,
     db: Session = Depends(get_db),
-    _usuario=Depends(_equipe_oficina),
+    _usuario=Depends(leitura_operacional),
 ):
     query = select(Cliente).order_by(Cliente.name)
     if busca:
@@ -42,13 +47,15 @@ def listar_clientes(
                 Cliente.cpf.ilike(termo),
             )
         )
+    query = restringir_cliente(query, Cliente.id, _usuario)
     return db.scalars(query).all()
 
 
 @router.get("/{cliente_id}", response_model=ClienteOut)
 def obter_cliente(
-    cliente_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
+    cliente_id: str, db: Session = Depends(get_db), _usuario=Depends(leitura_operacional)
 ):
+    verificar_proprietario(cliente_id, _usuario)
     return _buscar_ou_404(cliente_id, db)
 
 
@@ -92,5 +99,7 @@ def remover_cliente(
     cliente_id: str, db: Session = Depends(get_db), _usuario=Depends(_equipe_oficina)
 ):
     cliente = _buscar_ou_404(cliente_id, db)
+    if db.scalar(select(Usuario.id).where(Usuario.cliente_id == cliente_id)):
+        raise HTTPException(status_code=409, detail="Cliente possui acesso ao portal vinculado.")
     db.delete(cliente)
     db.commit()

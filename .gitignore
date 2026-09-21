@@ -15,3 +15,8 @@ apps/api/*.db
 apps/api/.env
 **/__pycache__/
 *.pyc
+
+# Front-end e artefatos de testes
+node_modules/
+apps/prototype/test-results/
+apps/prototype/playwright-report/

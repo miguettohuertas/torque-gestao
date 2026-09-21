@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: torque
       POSTGRES_DB: torque_gestao
     ports:
-      - "5432:5432"
+      - "${TORQUE_DB_PORT:-5433}:5432"
     volumes:
       - torque_gestao_db_data:/var/lib/postgresql/data
     healthcheck:
