@@ -49,3 +49,10 @@ curl -s https://torquegestao.duckdns.org/api/health   # {"status":"ok","database
 - Segredos só em `deploy/.env.prod` (fora do git). Sem credenciais no repositório.
 - CORS restrito ao próprio domínio (`CORS_ORIGINS`); HSTS e demais cabeçalhos no nginx.
 - Pendente: limite de tentativas de login (rate limit) e backup do volume `torque_gestao_db_data`.
+
+## Pendências
+
+- Rate limit de login (`limit_req`) e fechamento de `/api/docs` em produção.
+- Backup agendado do Postgres, com teste de restauração.
+- Deploy automático via CI/CD e monitoramento do `/api/health`.
+- Telegram (RF07): preencher `TELEGRAM_BOT_TOKEN` e subir com `--profile telegram`.
