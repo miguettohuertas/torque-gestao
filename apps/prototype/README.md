@@ -38,6 +38,11 @@ A interface integrada mantém as cores do projeto e funciona em desktop e celula
    React e Babel continuam sendo carregados pelos CDNs do protótipo; é necessária
    conexão à internet. Não abra `index.html` diretamente via `file://`.
 
+## Produção
+
+Em produção o nginx entrega `/config.js` com `TORQUE_API_URL='/api'` (mesma origem, sem CORS);
+o `config.js` deste diretório vale só para desenvolvimento. Veja [`docs/deploy.md`](../../docs/deploy.md).
+
 ## Validar a entrega
 
 - Confira no painel administrativo os totais de OS, clientes e veículos, a distribuição por status e as previsões para hoje. Os cartões de status abrem a lista filtrada.

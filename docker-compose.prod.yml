@@ -1,0 +1,61 @@
+# Produção (workstation). Uso:
+#   docker compose -f docker-compose.prod.yml --env-file deploy/.env.prod up -d --build
+# Só escuta em 127.0.0.1; o nginx do host publica em https://torquegestao.duckdns.org.
+name: torque-gestao
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: torque
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD}
+      POSTGRES_DB: torque_gestao
+    volumes:
+      - torque_gestao_db_data:/var/lib/postgresql/data
+    networks: [interna]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U torque -d torque_gestao"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+    restart: unless-stopped
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://torque:${DB_PASSWORD}@db:5432/torque_gestao
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?defina JWT_SECRET_KEY}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:-}
+      ENVIRONMENT: production
+      CORS_ORIGINS: https://torquegestao.duckdns.org
+    ports:
+      - "127.0.0.1:8210:8000"
+    networks: [interna]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - ./apps/prototype:/usr/share/nginx/html:ro
+    ports:
+      - "127.0.0.1:3210:80"
+    networks: [interna]
+
+networks:
+  interna:
+
+volumes:
+  torque_gestao_db_data:

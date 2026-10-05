@@ -119,7 +119,9 @@ apps/api/
 - [x] RF07 — notificações de status da OS por Telegram, com vínculo opt-in do
       cliente (`app/services/telegram*.py`, `app/telegram_poller.py`,
       `tests/test_telegram.py`).
-- [ ] CI/CD estendido para deploy e deploy em si (Render/Vercel, Fase 5).
+- [x] Deploy em produção (Docker + nginx + DuckDNS) em https://torquegestao.duckdns.org;
+      veja [`docs/deploy.md`](../../docs/deploy.md). CORS configurável por `CORS_ORIGINS`.
+- [ ] CI/CD automático de deploy, rate limit de login e backup do banco.
 
 
 ## Portal do cliente (Fase 4)
