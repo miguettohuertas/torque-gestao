@@ -10,10 +10,15 @@ A interface integrada mantém as cores do projeto e funciona em desktop e celula
 
    ```sh
    cp apps/api/.env.example apps/api/.env
-   docker compose up --build -d
+   docker compose --profile telegram up --build -d
    docker compose exec api alembic upgrade head
    docker compose exec api python -m app.seed
+   docker compose exec api python -m app.seed_demo
    ```
+
+   O perfil `telegram` sobe o worker das notificações (RF07). O `seed_demo` cria os
+   usuários de teste `mecanico@` e `cliente@torquegestao.com.br` (senha `torque123`),
+   um cliente vinculado ao portal e um veículo.
 
    Se o `.env` já existir, preserve suas configurações. A migration nova adiciona
    o vínculo entre usuário e cliente; execute-a também em bancos já existentes.

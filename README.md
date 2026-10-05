@@ -109,12 +109,14 @@ torque-gestao/
 - **Concluído — RF06 (autenticação e RBAC):** back-end em FastAPI (`apps/api`), modelo de dados completo via Alembic, e autenticação real (login, hash Bcrypt, JWT) com RBAC (`require_role`) protegendo rotas por perfil (Admin/Mecânico/Cliente). Coberto por 10 testes automatizados (CI verde) e validado manualmente com um PostgreSQL real, não só o SQLite em memória dos testes.
 - **Concluído — infraestrutura local:** `docker compose up` sobe API e PostgreSQL juntos com um único comando; migration do Alembic e login/RBAC testados via Swagger de ponta a ponta.
 - **Concluído — RF01 a RF05:** CRUD de clientes (validação de CPF/CNPJ e busca), CRUD de veículos (validação de placa Mercosul/antiga), catálogo de serviços e peças, e emissão/acompanhamento de ordens de serviço com orçamento calculado a partir do catálogo e histórico de status — todos implementados e testados (`apps/api/tests/`). Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
-- **Pendente:** revalidar `docker compose up` com RF01–RF05, integração do front-end com a API real e deploy — fases seguintes do MVP 2.
+- **Concluído — Fase 4:** front-end e portal do cliente integrados à API real, com testes das regras de OS; evidências em [`docs/entregas/fase4-24-09.md`](docs/entregas/fase4-24-09.md).
+- **Concluído — RF07:** notificações de status da OS por Telegram, em substituição a e-mail/SMS, com vínculo opt-in do cliente.
+- **Pendente:** deploy de validação (Render/Vercel) — Fase 5 do MVP 2.
 
 ## Próximos passos
 
-1. Revalidar `docker compose up` de ponta a ponta agora com RF01–RF05 — ver `apps/api/README.md`.
-2. Integrar o front-end à API real e configurar o pipeline de deploy (Render/Vercel).
+1. Configurar o pipeline de deploy de validação (Render/Vercel).
+2. Em produção, trocar o poller do Telegram por webhook ou por um worker dedicado.
 
 ## Equipe
 
@@ -135,16 +137,30 @@ torque-gestao/
 
 A demonstração anterior está publicada em [torque-gestao.surge.sh](https://torque-gestao.surge.sh). Para executar a versão integrada localmente, suba a API e sirva `apps/prototype` por HTTP conforme o [guia do front-end](apps/prototype/README.md); abrir o HTML diretamente não executa a aplicação corretamente.
 
-## Como rodar o back-end localmente
+## Como executar (ambiente local)
+
+Requisitos: Docker Desktop aberto (no macOS: `brew install --cask docker-desktop`) e Python 3 para servir o front-end.
+
+**Primeira vez**
 
 ```bash
-cp apps/api/.env.example apps/api/.env
-docker compose up --build
+cp apps/api/.env.example apps/api/.env      # opcional: preencha o bot do Telegram (abaixo)
+docker compose --profile telegram up --build -d
 docker compose exec api alembic upgrade head
-docker compose exec api python -m app.seed
+docker compose exec api python -m app.seed         # admin e catálogo
+docker compose exec api python -m app.seed_demo    # mecânico, cliente e veículo de teste
+python3 -m http.server 5173 --directory apps/prototype
 ```
 
-Documentação interativa da API: <http://localhost:8000/docs>. Instruções completas (incluindo execução sem Docker) em [`apps/api/README.md`](apps/api/README.md).
+Abra <http://localhost:5173>. A documentação interativa da API fica em <http://localhost:8000/docs>.
+
+**Nos dias seguintes** basta `docker compose --profile telegram up -d` e o comando do front-end. O front-end **não** roda em container: precisa ser servido de novo após reiniciar o computador. O banco fica em um volume do Docker; `docker compose down -v` apaga os dados.
+
+**Usuários de teste** (ambiente local; senha `torque123` para todos): `admin@torquegestao.com.br`, `mecanico@torquegestao.com.br` e `cliente@torquegestao.com.br`. Troque as senhas antes de qualquer deploy.
+
+**Notificações por Telegram (RF07):** crie um bot no `@BotFather`, preencha `TELEGRAM_BOT_TOKEN` e `TELEGRAM_BOT_USERNAME` em `apps/api/.env` e recrie os containers. Sem o token, nada é enviado. Para vincular, entre como cliente (ou como equipe, na lista de clientes), use **Gerar link de vínculo**, abra o link no celular e toque em Iniciar. Detalhes em [`apps/api/README.md`](apps/api/README.md#notificações-por-telegram-rf07).
+
+Guias detalhados: [API e execução sem Docker](apps/api/README.md) · [front-end, portal e testes](apps/prototype/README.md).
 
 ## Licença
 
