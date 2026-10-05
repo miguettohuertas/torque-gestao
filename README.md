@@ -111,11 +111,11 @@ torque-gestao/
 - **Concluído — RF01 a RF05:** CRUD de clientes (validação de CPF/CNPJ e busca), CRUD de veículos (validação de placa Mercosul/antiga), catálogo de serviços e peças, e emissão/acompanhamento de ordens de serviço com orçamento calculado a partir do catálogo e histórico de status — todos implementados e testados (`apps/api/tests/`). Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
 - **Concluído — Fase 4:** front-end e portal do cliente integrados à API real, com testes das regras de OS; evidências em [`docs/entregas/fase4-24-09.md`](docs/entregas/fase4-24-09.md).
 - **Concluído — RF07:** notificações de status da OS por Telegram, em substituição a e-mail/SMS, com vínculo opt-in do cliente.
-- **Pendente:** deploy de validação (Render/Vercel) — Fase 5 do MVP 2.
+- **Concluído — deploy:** sistema em produção em [torquegestao.duckdns.org](https://torquegestao.duckdns.org); arquitetura e operação em [`docs/deploy.md`](docs/deploy.md).
 
 ## Próximos passos
 
-1. Configurar o pipeline de deploy de validação (Render/Vercel).
+1. Automatizar o deploy (CI/CD) e configurar backup do banco.
 2. Em produção, trocar o poller do Telegram por webhook ou por um worker dedicado.
 
 ## Equipe
@@ -156,7 +156,7 @@ Abra <http://localhost:5173>. A documentação interativa da API fica em <http:/
 
 **Nos dias seguintes** basta `docker compose --profile telegram up -d` e o comando do front-end. O front-end **não** roda em container: precisa ser servido de novo após reiniciar o computador. O banco fica em um volume do Docker; `docker compose down -v` apaga os dados.
 
-**Usuários de teste** (ambiente local; senha `torque123` para todos): `admin@torquegestao.com.br`, `mecanico@torquegestao.com.br` e `cliente@torquegestao.com.br`. Troque as senhas antes de qualquer deploy.
+**Usuários de teste** (ambiente local; senha `torque123` para todos): `admin@torquegestao.com.br`, `mecanico@torquegestao.com.br` e `cliente@torquegestao.com.br`. Em produção não use essas senhas (ver [`docs/deploy.md`](docs/deploy.md)).
 
 **Notificações por Telegram (RF07):** crie um bot no `@BotFather`, preencha `TELEGRAM_BOT_TOKEN` e `TELEGRAM_BOT_USERNAME` em `apps/api/.env` e recrie os containers. Sem o token, nada é enviado. Para vincular, entre como cliente (ou como equipe, na lista de clientes), use **Gerar link de vínculo**, abra o link no celular e toque em Iniciar. Detalhes em [`apps/api/README.md`](apps/api/README.md#notificações-por-telegram-rf07).
 

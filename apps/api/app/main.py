@@ -8,6 +8,8 @@ completo via `docker compose up`):
 
 Documentação interativa (RNF06 — OpenAPI/Swagger): http://localhost:8000/docs
 """
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,13 +28,14 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# Libera o front-end (protótipo em apps/prototype, hoje em torque-gestao.surge.sh,
-# e futuramente em Vercel) a consumir a API durante o desenvolvimento. Restringir
-# a origem exata antes do deploy de produção (Fase 5).
+# CORS_ORIGINS (lista separada por vírgula) restringe as origens em produção;
+# sem ela, mantém "*" para o desenvolvimento local.
+_origens = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_origens,
+    allow_credentials="*" not in _origens,
     allow_methods=["*"],
     allow_headers=["*"],
 )
