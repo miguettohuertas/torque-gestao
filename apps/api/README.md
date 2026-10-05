@@ -8,14 +8,15 @@ critérios de aceite e cronograma em
 
 ```bash
 cp apps/api/.env.example apps/api/.env    # ajuste os valores se precisar
-docker compose up --build
+docker compose --profile telegram up --build -d   # o perfil sobe o worker do Telegram (RF07)
 ```
 
-Em outro terminal, com os containers no ar:
+Com os containers no ar:
 
 ```bash
 docker compose exec api alembic upgrade head   # cria as tabelas no Postgres
 docker compose exec api python -m app.seed     # cria o usuário admin inicial
+docker compose exec api python -m app.seed_demo  # opcional: mecânico, cliente e veículo de teste
 ```
 
 A documentação interativa (Swagger) fica em <http://localhost:8000/docs>.
@@ -115,6 +116,9 @@ apps/api/
       de navegador (schema de teste isolado); evidências em `docs/entregas/fase4-24-09.md`.
 - [x] Integração do front-end e portal com a API real (Fase 4), com testes RF03/RF04.
       Veja [execução e validação](../prototype/README.md).
+- [x] RF07 — notificações de status da OS por Telegram, com vínculo opt-in do
+      cliente (`app/services/telegram*.py`, `app/telegram_poller.py`,
+      `tests/test_telegram.py`).
 - [ ] CI/CD estendido para deploy e deploy em si (Render/Vercel, Fase 5).
 
 
