@@ -10,6 +10,15 @@ erDiagram
         string email
         string phone
         string cpf
+        string telegram_chat_id "opcional (RF07)"
+    }
+
+    TELEGRAM_VINCULO {
+        string   id         PK
+        string   cliente_id FK
+        string   token_hash
+        datetime expira_em
+        datetime usado_em
     }
 
     VEICULO {
@@ -74,6 +83,7 @@ erDiagram
     }
 
     CLIENTE          o|--o| USUARIO          : "acesso ao portal"
+    CLIENTE          ||--o{ TELEGRAM_VINCULO : "convida"
     CLIENTE          ||--o{ VEICULO          : "possui"
     CLIENTE          ||--o{ ORDEM_SERVICO    : "solicita"
     VEICULO          ||--o{ ORDEM_SERVICO    : "objeto de"
@@ -89,3 +99,8 @@ O vínculo de portal é explícito: `usuarios.cliente_id` referencia `clientes.i
 é opcional e único. Usuários sem vínculo não veem cadastros do portal. E-mail
 não é usado como critério de autorização. A migration `6c4e91a2b730` adiciona
 esse vínculo sem conceder acesso automaticamente a usuários existentes.
+
+O RF07 (notificações por Telegram) adiciona `clientes.telegram_chat_id` (opcional;
+vazio significa avisos desativados) e a tabela `telegram_vinculos`, que guarda apenas
+o hash do convite, com expiração e uso único. O `chat_id` só é gravado depois que o
+próprio cliente abre o link do bot (opt-in). A migration é `8d2f5b7c1a94`.

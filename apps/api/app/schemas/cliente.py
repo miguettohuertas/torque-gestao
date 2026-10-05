@@ -57,11 +57,17 @@ class ClienteUpdate(ClienteCreate):
     pass
 
 
+class ConviteTelegramOut(BaseModel):
+    link: str
+    expira_em_minutos: int
+
+
 class ClienteOut(BaseModel):
     id: str
     name: str
     email: EmailStr
     phone: str | None = None
     cpf: str
+    telegram_vinculado: bool = False
 
     model_config = {"from_attributes": True}

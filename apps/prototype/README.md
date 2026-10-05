@@ -42,8 +42,11 @@ A interface integrada mantém as cores do projeto e funciona em desktop e celula
 - Avance o status e consulte o histórico. Somente a próxima etapa é oferecida.
 - Recarregue a página: a sessão é validada em `/auth/me` e os dados são relidos da API.
 - Saia e entre como cliente para consultar veículos, OS e histórico.
-- Use **Atualizar** para reler os dados. Atualização automática e notificações não
-  fazem parte desta fase, conforme o documento do MVP.
+- Use **Atualizar** para reler os dados. A atualização automática da tela não faz
+  parte desta fase, conforme o documento do MVP.
+- Avisos no Telegram (RF07): na lista de clientes (equipe) ou no painel do portal,
+  use **Gerar link de vínculo**. Requer o bot configurado, conforme o
+  [README da API](../api/README.md#notificações-por-telegram-rf07).
 
 Não há criação automática de credenciais ao cadastrar um cliente. Para conceder
 acesso ao portal, copie o ID exibido na listagem de clientes e execute:

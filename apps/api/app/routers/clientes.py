@@ -12,7 +12,8 @@ from app.core.deps import (
 from app.database import get_db
 from app.models.cliente import Cliente
 from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO, Usuario
-from app.schemas.cliente import ClienteCreate, ClienteOut, ClienteUpdate
+from app.schemas.cliente import ClienteCreate, ClienteOut, ClienteUpdate, ConviteTelegramOut
+from app.services import telegram, telegram_vinculo
 
 router = APIRouter(prefix="/clientes", tags=["clientes"])
 
@@ -102,4 +103,31 @@ def remover_cliente(
     if db.scalar(select(Usuario.id).where(Usuario.cliente_id == cliente_id)):
         raise HTTPException(status_code=409, detail="Cliente possui acesso ao portal vinculado.")
     db.delete(cliente)
+    db.commit()
+
+
+# RF07 — o cliente (pelo portal) ou a equipe gera o convite do Telegram.
+@router.post("/{cliente_id}/telegram/vinculo", response_model=ConviteTelegramOut)
+def gerar_convite_telegram(
+    cliente_id: str, db: Session = Depends(get_db), usuario=Depends(leitura_operacional)
+):
+    verificar_proprietario(cliente_id, usuario)
+    cliente = _buscar_ou_404(cliente_id, db)
+    if not telegram.telegram_habilitado():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Integração com o Telegram não está configurada.",
+        )
+    token = telegram_vinculo.gerar_convite(db, cliente)
+    return ConviteTelegramOut(
+        link=telegram.link_de_vinculo(token), expira_em_minutos=telegram_vinculo.EXPIRA_EM_MINUTOS
+    )
+
+
+@router.delete("/{cliente_id}/telegram", status_code=status.HTTP_204_NO_CONTENT)
+def desvincular_telegram(
+    cliente_id: str, db: Session = Depends(get_db), usuario=Depends(leitura_operacional)
+):
+    verificar_proprietario(cliente_id, usuario)
+    _buscar_ou_404(cliente_id, db).telegram_chat_id = None
     db.commit()

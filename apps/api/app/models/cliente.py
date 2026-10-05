@@ -26,6 +26,12 @@ class Cliente(Base):
     email: Mapped[str] = mapped_column(String(160), nullable=False, unique=True)
     phone: Mapped[str] = mapped_column(String(20), nullable=True)
     cpf: Mapped[str] = mapped_column(String(18), nullable=False, unique=True)
+    # RF07: chat do Telegram vinculado pelo próprio cliente (opt-in); limpar = desativar avisos.
+    telegram_chat_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+
+    @property
+    def telegram_vinculado(self) -> bool:
+        return bool(self.telegram_chat_id)
 
     veiculos: Mapped[list["Veiculo"]] = relationship(
         back_populates="cliente", cascade="all, delete-orphan"

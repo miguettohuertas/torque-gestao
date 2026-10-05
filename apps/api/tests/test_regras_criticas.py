@@ -178,7 +178,7 @@ def test_rotas_operacionais_exigem_login(client, scenario):
 
 
 def test_transicao_concorrente_nao_duplica_historico(client, scenario, db_session, admin_user):
-    from fastapi import HTTPException
+    from fastapi import BackgroundTasks, HTTPException
     from sqlalchemy.orm import Session
 
     from app.routers.ordens_servico import atualizar_status
@@ -189,10 +189,14 @@ def test_transicao_concorrente_nao_duplica_historico(client, scenario, db_sessio
     assert stale.status == "aguardando_diagnostico"
     # Duas sessões leram a mesma etapa; a primeira conclui antes do UPDATE da segunda.
     with Session(bind=db_session.get_bind()) as concurrent:
-        atualizar_status(order["id"], StatusUpdate(status="em_execucao"), concurrent, admin_user)
+        atualizar_status(
+            order["id"], StatusUpdate(status="em_execucao"), BackgroundTasks(), concurrent, admin_user
+        )
     assert stale.status == "aguardando_diagnostico"
     with pytest.raises(HTTPException) as error:
-        atualizar_status(order["id"], StatusUpdate(status="em_execucao"), db_session, admin_user)
+        atualizar_status(
+            order["id"], StatusUpdate(status="em_execucao"), BackgroundTasks(), db_session, admin_user
+        )
     assert error.value.status_code == 409
     assert db_session.scalar(select(func.count()).select_from(HistoricoStatus)) == 2
     db_session.refresh(stale)
