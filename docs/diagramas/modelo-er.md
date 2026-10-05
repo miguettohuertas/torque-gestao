@@ -10,8 +10,7 @@ erDiagram
         string email
         string phone
         string cpf
-        string telegram_chat_id "opcional, único (RF07)"
-        bool   notificar_telegram
+        string telegram_chat_id "opcional (RF07)"
     }
 
     TELEGRAM_VINCULO {
@@ -101,7 +100,7 @@ O vínculo de portal é explícito: `usuarios.cliente_id` referencia `clientes.i
 não é usado como critério de autorização. A migration `6c4e91a2b730` adiciona
 esse vínculo sem conceder acesso automaticamente a usuários existentes.
 
-O RF07 (notificações por Telegram) adiciona `clientes.telegram_chat_id` (opcional e
-único) e `clientes.notificar_telegram`, além da tabela `telegram_vinculos`, que guarda
-apenas o hash do convite, com expiração e uso único. O `chat_id` só é gravado depois
-que o próprio cliente abre o link do bot (opt-in). A migration é `8d2f5b7c1a94`.
+O RF07 (notificações por Telegram) adiciona `clientes.telegram_chat_id` (opcional;
+vazio significa avisos desativados) e a tabela `telegram_vinculos`, que guarda apenas
+o hash do convite, com expiração e uso único. O `chat_id` só é gravado depois que o
+próprio cliente abre o link do bot (opt-in). A migration é `8d2f5b7c1a94`.

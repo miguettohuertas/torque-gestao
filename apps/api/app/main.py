@@ -17,7 +17,6 @@ from app.routers import (
     clientes,
     health,
     ordens_servico,
-    telegram,
     veiculos,
 )
 
@@ -44,4 +43,3 @@ app.include_router(clientes.router)
 app.include_router(veiculos.router)
 app.include_router(catalogo.router)
 app.include_router(ordens_servico.router)
-app.include_router(telegram.router)

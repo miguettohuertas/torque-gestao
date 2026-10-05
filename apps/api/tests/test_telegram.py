@@ -1,4 +1,5 @@
 """RF07: notificações de status por Telegram e vínculo do cliente."""
+from contextlib import nullcontext
 from datetime import timedelta
 
 import httpx
@@ -82,16 +83,15 @@ def test_finalizada_avisa_que_pode_retirar(client, cenario, db_session, telegram
     assert "já pode ser retirado" in enviadas[-1][1]
 
 
-@pytest.mark.parametrize("vinculado,ativo,opt_in", [(False, True, True), (True, False, True), (True, True, False)])
-def test_sem_vinculo_ou_sem_token_ou_sem_opt_in_nao_envia(
-    client, cenario, db_session, monkeypatch, enviadas, vinculado, ativo, opt_in
+@pytest.mark.parametrize("vinculado,ativo", [(False, True), (True, False)])
+def test_sem_vinculo_ou_sem_configuracao_nao_envia(
+    client, cenario, db_session, monkeypatch, enviadas, vinculado, ativo
 ):
     headers, cliente_id, veiculo_id, servico_id = cenario
     monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "token-de-teste" if ativo else "")
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_USERNAME", "torque_bot")
     if vinculado:
         _vincular(db_session, cliente_id)
-    db_session.get(Cliente, cliente_id).notificar_telegram = opt_in
-    db_session.commit()
 
     os_id = _abrir_os(client, headers, cliente_id, veiculo_id, servico_id)
     response = client.patch(
@@ -207,16 +207,53 @@ def test_convite_expirado_e_token_inexistente_sao_recusados(db_session, cenario,
     assert db_session.get(Cliente, cliente_id).telegram_chat_id is None
 
 
-def test_chat_ja_vinculado_a_outro_cliente_e_recusado(db_session, cenario, telegram_ativo):
+def test_parar_desvincula_todos_os_cadastros_do_mesmo_chat(db_session, cenario, telegram_ativo):
     _, cliente_id, *_ = cenario
-    _vincular(db_session, cliente_id)
     outro = Cliente(name="Outro", email="o@example.com", cpf="11222333000181")
     db_session.add(outro)
     db_session.commit()
-    token = telegram_vinculo.gerar_convite(db_session, outro)
+    for cliente in (db_session.get(Cliente, cliente_id), outro):
+        token = telegram_vinculo.gerar_convite(db_session, cliente)
+        assert telegram_vinculo.confirmar_convite(db_session, token, CHAT) is cliente
 
-    assert telegram_vinculo.confirmar_convite(db_session, token, CHAT) is None
+    assert telegram_poller.tratar_mensagem(db_session, CHAT, "/parar") == telegram_poller.MSG_PARAR
+    assert db_session.get(Cliente, cliente_id).telegram_chat_id is None
     assert db_session.get(Cliente, outro.id).telegram_chat_id is None
+
+
+def test_enviar_mensagem_chama_a_bot_api(telegram_ativo, monkeypatch):
+    chamadas = []
+
+    class Resposta:
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setattr(
+        httpx, "post", lambda url, **kw: chamadas.append((url, kw["json"])) or Resposta()
+    )
+    assert telegram.enviar_mensagem(CHAT, "olá") is True
+    assert chamadas == [
+        ("https://api.telegram.org/bottoken-de-teste/sendMessage", {"chat_id": CHAT, "text": "olá"})
+    ]
+
+
+def test_poller_processa_lote_vincula_e_devolve_proximo_offset(
+    db_session, cenario, telegram_ativo, enviadas, monkeypatch
+):
+    _, cliente_id, *_ = cenario
+    token = telegram_vinculo.gerar_convite(db_session, db_session.get(Cliente, cliente_id))
+    monkeypatch.setattr(telegram_poller, "SessionLocal", lambda: nullcontext(db_session))
+    privado = {"id": int(CHAT), "type": "private"}
+    lote = [
+        {"update_id": 10, "message": {"chat": {"id": -5, "type": "group"}, "text": "/parar"}},
+        {"update_id": 11, "message": {"chat": privado, "text": f"/start {token}"}},
+        {"update_id": 12, "edited_message": {}},
+    ]
+
+    assert telegram_poller.processar_atualizacoes(lote) == 13
+    assert db_session.get(Cliente, cliente_id).telegram_chat_id == CHAT
+    assert len(enviadas) == 1 and enviadas[0][0] == CHAT
+    assert telegram_poller.processar_atualizacoes([]) is None
 
 
 def test_parar_e_desvincular_removem_o_chat(client, db_session, cenario):

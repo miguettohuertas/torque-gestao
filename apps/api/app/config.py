@@ -22,7 +22,6 @@ class Settings(BaseSettings):
     # Notificações por Telegram (RF07). Sem token, o envio é desativado.
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_BOT_USERNAME: str = ""
-    TELEGRAM_VINCULO_EXPIRA_MINUTOS: int = 30
 
     # Ambiente
     ENVIRONMENT: str = "development"

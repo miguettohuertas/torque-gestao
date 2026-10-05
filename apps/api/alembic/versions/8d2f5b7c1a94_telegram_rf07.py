@@ -9,12 +9,7 @@ depends_on = None
 
 
 def upgrade():
-    with op.batch_alter_table("clientes") as batch:
-        batch.add_column(sa.Column("telegram_chat_id", sa.String(length=32), nullable=True))
-        batch.add_column(
-            sa.Column("notificar_telegram", sa.Boolean(), nullable=False, server_default=sa.true())
-        )
-        batch.create_unique_constraint("uq_cliente_telegram_chat", ["telegram_chat_id"])
+    op.add_column("clientes", sa.Column("telegram_chat_id", sa.String(length=32), nullable=True))
 
     op.create_table(
         "telegram_vinculos",
@@ -32,6 +27,4 @@ def upgrade():
 def downgrade():
     op.drop_table("telegram_vinculos")
     with op.batch_alter_table("clientes") as batch:
-        batch.drop_constraint("uq_cliente_telegram_chat", type_="unique")
-        batch.drop_column("notificar_telegram")
         batch.drop_column("telegram_chat_id")

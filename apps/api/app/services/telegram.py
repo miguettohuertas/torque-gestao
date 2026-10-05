@@ -32,17 +32,19 @@ _MENSAGENS_STATUS = {
 }
 
 
+# O httpx registra a URL completa em INFO, e ela contém o token do bot.
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
+
 def telegram_habilitado() -> bool:
-    return bool(settings.TELEGRAM_BOT_TOKEN)
+    return bool(settings.TELEGRAM_BOT_TOKEN and settings.TELEGRAM_BOT_USERNAME)
 
 
 def _url(metodo: str) -> str:
     return f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/{metodo}"
 
 
-def link_de_vinculo(token: str) -> str | None:
-    if not settings.TELEGRAM_BOT_USERNAME:
-        return None
+def link_de_vinculo(token: str) -> str:
     return f"https://t.me/{settings.TELEGRAM_BOT_USERNAME}?start={token}"
 
 
@@ -56,7 +58,7 @@ def montar_mensagem_status(ordem: OrdemServico) -> str:
 def preparar_notificacao_status(ordem: OrdemServico) -> tuple[str, str] | None:
     """Devolve (chat_id, texto) se o cliente puder receber o aviso; senão, None."""
     cliente = ordem.cliente
-    if not telegram_habilitado() or not cliente.telegram_chat_id or not cliente.notificar_telegram:
+    if not telegram_habilitado() or not cliente.telegram_chat_id:
         return None
     return cliente.telegram_chat_id, montar_mensagem_status(ordem)
 

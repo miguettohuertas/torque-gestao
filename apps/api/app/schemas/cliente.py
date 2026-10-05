@@ -57,6 +57,11 @@ class ClienteUpdate(ClienteCreate):
     pass
 
 
+class ConviteTelegramOut(BaseModel):
+    link: str
+    expira_em_minutos: int
+
+
 class ClienteOut(BaseModel):
     id: str
     name: str

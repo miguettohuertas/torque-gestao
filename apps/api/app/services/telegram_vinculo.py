@@ -1,19 +1,19 @@
 """Regras do vínculo cliente <-> Telegram (RF07): convite, confirmação e desvínculo."""
 import hashlib
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import delete, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
-from app.config import settings
 from app.models.cliente import Cliente
 from app.models.telegram_vinculo import TelegramVinculo
 
+EXPIRA_EM_MINUTOS = 30
+
 
 def _agora() -> datetime:
-    return datetime.utcnow()
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 def _hash(token: str) -> str:
@@ -32,7 +32,7 @@ def gerar_convite(db: Session, cliente: Cliente) -> str:
         TelegramVinculo(
             cliente_id=cliente.id,
             token_hash=_hash(token),
-            expira_em=_agora() + timedelta(minutes=settings.TELEGRAM_VINCULO_EXPIRA_MINUTOS),
+            expira_em=_agora() + timedelta(minutes=EXPIRA_EM_MINUTOS),
         )
     )
     db.commit()
@@ -51,20 +51,13 @@ def confirmar_convite(db: Session, token: str, chat_id: str) -> Cliente | None:
 
     convite.usado_em = _agora()
     cliente.telegram_chat_id = chat_id
-    cliente.notificar_telegram = True
-    try:
-        db.commit()
-    except IntegrityError:
-        # O mesmo chat já está vinculado a outro cliente.
-        db.rollback()
-        return None
+    db.commit()
     return cliente
 
 
 def desvincular_chat(db: Session, chat_id: str) -> bool:
-    cliente = db.scalar(select(Cliente).where(Cliente.telegram_chat_id == chat_id))
-    if cliente is None:
-        return False
-    cliente.telegram_chat_id = None
+    resultado = db.execute(
+        update(Cliente).where(Cliente.telegram_chat_id == chat_id).values(telegram_chat_id=None)
+    )
     db.commit()
-    return True
+    return resultado.rowcount > 0
