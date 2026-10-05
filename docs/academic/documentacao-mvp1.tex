@@ -126,7 +126,7 @@ Evoluir o Torque Gestão de um protótipo de interface com dados mockados para u
 
 \subsection{Escopo funcional priorizado}
 
-O escopo do MVP 2 foi priorizado a partir dos Requisitos Funcionais já especificados no relatório do PAC V. Os requisitos ligados ao fluxo central da oficina (RF01 a RF06) compõem o núcleo do MVP; funcionalidades administrativas de apoio (relatórios financeiros e KPIs avançados, gestão completa de usuários pela interface) ficam para uma terceira iteração, priorizando primeiro um fluxo de ponta a ponta funcionando de verdade.
+O escopo do MVP 2 foi priorizado a partir dos Requisitos Funcionais já especificados no relatório do PAC V. Os requisitos ligados ao fluxo central da oficina (RF01 a RF06) compõem o núcleo do MVP, complementado pelas notificações de status por Telegram (RF07); funcionalidades administrativas de apoio (relatórios financeiros e KPIs avançados, gestão completa de usuários pela interface) ficam para uma terceira iteração, priorizando primeiro um fluxo de ponta a ponta funcionando de verdade.
 
 \vspace{6pt}
 \renewcommand{\arraystretch}{1.4}
@@ -158,11 +158,13 @@ RF04 & Acompanhamento de Status & Persistência do fluxo de estados da OS (Aguar
 \hline
 RF05 & Catálogo de Serviços e Peças & Endpoints de consulta (e cadastro por Admin) do catálogo, usados na composição do orçamento da OS. \\
 \hline
+RF07 & Notificações por Telegram & Aviso automático ao cliente, via bot do Telegram, na abertura da OS e a cada mudança de status do fluxo de RF04, substituindo o e-mail/SMS previstos originalmente. O cliente vincula o próprio Telegram por link de convite (\emph{opt-in}); falhas no envio não impedem a atualização da OS. \\
+\hline
 \end{longtable}
 
 \noindent\textbf{Portal do cliente:} passa a ler dados reais no MVP 2. Reaproveitando os mesmos endpoints de RF01, RF02 e RF04 (sem back-end adicional), o cliente autenticado via RF06 consulta o status real de suas OS e o histórico real de seus veículos --- eliminando a lacuna que existia no rascunho anterior deste documento, em que o portal ficava ambíguo entre incluído e não incluído no MVP 2.
 
-\noindent\textbf{Fora do escopo do MVP 2} (reservado para o MVP 3): relatório financeiro e KPIs avançados do dashboard (dados agregados reais), tela de configurações do sistema, e refinamentos de UX do portal do cliente que dependem de infraestrutura adicional --- notificações em tempo real (e-mail/SMS) e atualização automática via \emph{WebSocket/polling}, que exigem componentes fora do escopo de back-end definido nesta iteração.
+\noindent\textbf{Fora do escopo do MVP 2} (reservado para o MVP 3): relatório financeiro e KPIs avançados do dashboard (dados agregados reais), tela de configurações do sistema, e refinamentos de UX do portal do cliente que dependem de infraestrutura adicional --- atualização automática da tela via \emph{WebSocket/polling}, que exige componentes fora do escopo de back-end definido nesta iteração. As notificações de status ao cliente, antes previstas por e-mail/SMS, passam a ser feitas por \textbf{Telegram} (RF07), canal gratuito e sem infraestrutura de envio de e-mail ou SMS.
 
 \subsection{Arquitetura e modelo de dados}
 

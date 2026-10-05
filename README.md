@@ -47,6 +47,7 @@ O projeto foi desenvolvido a partir da elicitação de requisitos junto a oficin
 - Catálogo centralizado de serviços e peças com preços de referência;
 - Gestão de usuários e permissões (RBAC);
 - Portal do cliente com acompanhamento de OS em tempo real e histórico de manutenções.
+- Notificações de status da OS ao cliente via **Telegram** (bot), em substituição a e-mail/SMS.
 
 O detalhamento de todas as 19 telas especificadas está no relatório em [`docs/academic`](./docs/academic).
 
@@ -57,6 +58,7 @@ O detalhamento de todas as 19 telas especificadas está no relatório em [`docs/
 | Back-end | Python com FastAPI (APIs RESTful) |
 | Front-end | JavaScript/TypeScript com React |
 | Banco de dados | PostgreSQL |
+| Notificações | Telegram Bot API (substitui e-mail/SMS) |
 | Conteinerização / CI-CD | Docker + GitHub Actions |
 | Hospedagem | Render (back-end e banco) e Vercel (front-end) |
 | Versionamento | Git / GitHub |
