@@ -46,5 +46,23 @@ services:
     volumes:
       - ./apps/api:/app
 
+  # RF07: recebe as mensagens do bot (/start <token>) para vincular clientes.
+  # Só faz algo com TELEGRAM_BOT_TOKEN preenchido; use: docker compose --profile telegram up
+  telegram-poller:
+    build:
+      context: ./apps/api
+    profiles: ["telegram"]
+    restart: unless-stopped
+    command: python -m app.telegram_poller
+    env_file:
+      - ./apps/api/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://torque:torque@db:5432/torque_gestao
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+
 volumes:
   torque_gestao_db_data:

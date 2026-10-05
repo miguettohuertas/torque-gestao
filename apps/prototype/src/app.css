@@ -4,3 +4,5 @@
 .workspace .summary-tile{display:flex;flex-direction:column;gap:14px;padding:20px;text-align:left;border:1px solid #dde4f1;border-radius:10px;background:#f5f7fb}
 .summary-tile span{font-size:13px;color:#52637e}.summary-tile strong{font-size:32px;color:#1b2b4b}
 .status-summary{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 24px}.status-summary button{display:flex;align-items:center;gap:14px}.status-summary strong{border-radius:20px;background:#edf2fb;padding:4px 10px}
+
+.telegram-link{margin-top:12px;font-size:13px}.telegram-link a{overflow-wrap:anywhere}

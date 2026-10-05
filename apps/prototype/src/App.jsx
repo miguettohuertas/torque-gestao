@@ -132,6 +132,27 @@ function OperationalDashboard({ data, onOrders, onCreate, onCustomers, onVehicle
   </section>;
 }
 
+const TelegramLink = ({ customer, onChanged }) => {
+  const [invite, setInvite] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState('');
+  const run = async action => {
+    setBusy(true); setProblem('');
+    try { await action(); } catch (e) { setProblem(e.message); } finally { setBusy(false); }
+  };
+  const generate = () => run(async () => setInvite(await api.request(`/clientes/${customer.id}/telegram/vinculo`, { method: 'POST' })));
+  const unlink = () => run(async () => { await api.request(`/clientes/${customer.id}/telegram`, { method: 'DELETE' }); setInvite(null); onChanged(); });
+  return <div className="telegram-link">
+    <strong>Avisos no Telegram:</strong> {customer.telegram_vinculado ? 'ativados' : 'não ativados'}
+    {problem && <div className="error" role="alert">{problem}</div>}
+    {invite && <p>Abra o link no celular do cliente e toque em Iniciar (vale por {invite.expira_em_minutos} minutos): <a href={invite.link} target="_blank" rel="noreferrer">{invite.link}</a></p>}
+    <div className="toolbar">
+      <button disabled={busy} onClick={generate}>{customer.telegram_vinculado ? 'Vincular outro Telegram' : 'Gerar link de vínculo'}</button>
+      {customer.telegram_vinculado && <button disabled={busy} onClick={unlink}>Desativar avisos</button>}
+    </div>
+  </div>;
+};
+
 const App = () => {
   const [user, setUser] = useState(null);
   const [restoring, setRestoring] = useState(true);
@@ -192,10 +213,10 @@ const App = () => {
         {page === 'os' && <><div className="toolbar"><FormField label="Status"><select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}><option value="">Todos</option>{FLOW.map(s => <option key={s} value={s}>{STATUS[s]}</option>)}</select></FormField>{!portal && <button className="primary" onClick={() => navigate('nova-os')}>Nova OS</button>}</div>{orderList(filtered)}</>}
         {page === 'nova-os' && !portal && <OrderForm data={data} onSave={async values => { const saved = await create('/ordens-servico', values, 'orders', 'os'); showOrder(saved.id); }}/>}
         {page === 'detalhe' && selected && <OrderDetail key={selected} id={selected} portal={portal} onChanged={order => setData(d => ({ ...d, orders: d.orders.map(o => o.id === order.id ? order : o) }))}/>}
-        {page === 'clientes' && !portal && <><div className="toolbar"><input aria-label="Buscar cliente" placeholder="Buscar nome, e-mail ou documento" value={search} onChange={e => setSearch(e.target.value)}/><button className="primary" onClick={() => navigate('novo-cliente')}>Novo cliente</button></div>{data.customers.filter(c => `${c.name} ${c.email} ${c.cpf}`.toLowerCase().includes(search.toLowerCase())).map(c => <article className="record" key={c.id}><h3>{c.name}</h3><p>{c.email} · {c.phone || 'Sem telefone'} · {c.cpf}</p><small>ID: {c.id}</small><p>{data.vehicles.filter(v => v.cliente_id === c.id).map(v => v.plate).join(' · ') || 'Nenhum veículo cadastrado'}</p></article>)}{!data.customers.length && <Empty>Nenhum cliente cadastrado.</Empty>}</>}
+        {page === 'clientes' && !portal && <><div className="toolbar"><input aria-label="Buscar cliente" placeholder="Buscar nome, e-mail ou documento" value={search} onChange={e => setSearch(e.target.value)}/><button className="primary" onClick={() => navigate('novo-cliente')}>Novo cliente</button></div>{data.customers.filter(c => `${c.name} ${c.email} ${c.cpf}`.toLowerCase().includes(search.toLowerCase())).map(c => <article className="record" key={c.id}><h3>{c.name}</h3><p>{c.email} · {c.phone || 'Sem telefone'} · {c.cpf}</p><small>ID: {c.id}</small><TelegramLink customer={c} onChanged={() => setVersion(v => v + 1)}/><p>{data.vehicles.filter(v => v.cliente_id === c.id).map(v => v.plate).join(' · ') || 'Nenhum veículo cadastrado'}</p></article>)}{!data.customers.length && <Empty>Nenhum cliente cadastrado.</Empty>}</>}
         {page === 'novo-cliente' && !portal && <CustomerForm onSave={values => create('/clientes', { ...values, phone: values.phone || null }, 'customers', 'clientes')}/>}
         {page === 'novo-veiculo' && !portal && <VehicleForm customers={data.customers} onSave={values => create('/veiculos', { ...values, year: values.year || null }, 'vehicles', 'veiculos')}/>}
-        {(page === 'veiculos' || page === 'painel') && <>{!portal && <button className="primary" onClick={() => navigate('novo-veiculo')}>Novo veículo</button>}<div className="vehicle-grid">{data.vehicles.map(v => <article className="record" key={v.id}><span className="plate">{v.plate}</span><h3>{v.make} {v.model}</h3><p>{v.year || 'Ano não informado'}</p><p>{data.orders.filter(o => o.veiculo_id === v.id && o.status !== 'entregue').length} OS em aberto</p><div className="toolbar"><button onClick={() => { setVehicleFilter(v.id); setStatusFilter(''); navigate('os'); }}>Acompanhar OS</button><button onClick={() => { setVehicleFilter(v.id); navigate('historico'); }}>Histórico</button></div></article>)}</div>{!data.vehicles.length && <Empty>Nenhum veículo vinculado ao seu cadastro.</Empty>}</>}
+        {(page === 'veiculos' || page === 'painel') && <>{portal && data.customers[0] && <div className="card"><TelegramLink customer={data.customers[0]} onChanged={() => setVersion(v => v + 1)}/></div>}{!portal && <button className="primary" onClick={() => navigate('novo-veiculo')}>Novo veículo</button>}<div className="vehicle-grid">{data.vehicles.map(v => <article className="record" key={v.id}><span className="plate">{v.plate}</span><h3>{v.make} {v.model}</h3><p>{v.year || 'Ano não informado'}</p><p>{data.orders.filter(o => o.veiculo_id === v.id && o.status !== 'entregue').length} OS em aberto</p><div className="toolbar"><button onClick={() => { setVehicleFilter(v.id); setStatusFilter(''); navigate('os'); }}>Acompanhar OS</button><button onClick={() => { setVehicleFilter(v.id); navigate('historico'); }}>Histórico</button></div></article>)}</div>{!data.vehicles.length && <Empty>Nenhum veículo vinculado ao seu cadastro.</Empty>}</>}
         {page === 'historico' && <><p>Todos os atendimentos registrados, incluindo ordens em andamento e entregues.</p><FormField label="Veículo"><select value={vehicleFilter} onChange={e => setVehicleFilter(e.target.value)}><option value="">Todos os veículos</option>{data.vehicles.map(v => <option value={v.id} key={v.id}>{vehicleName(v.id)}</option>)}</select></FormField>{orderList(data.orders.filter(o => !vehicleFilter || o.veiculo_id === vehicleFilter))}</>}
         {page === 'os' && vehicleFilter && <button onClick={() => setVehicleFilter('')}>Mostrar todos os veículos</button>}
       </div>}

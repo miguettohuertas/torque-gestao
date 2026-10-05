@@ -14,6 +14,7 @@ from app.models.cliente import Cliente
 from app.models.historico_status import HistoricoStatus
 from app.models.item_os import ItemOS
 from app.models.ordem_servico import OrdemServico
+from app.models.telegram_vinculo import TelegramVinculo
 from app.models.usuario import Usuario
 from app.models.veiculo import Veiculo
 
@@ -26,4 +27,5 @@ __all__ = [
     "HistoricoStatus",
     "CatalogoServico",
     "CatalogoPeca",
+    "TelegramVinculo",
 ]

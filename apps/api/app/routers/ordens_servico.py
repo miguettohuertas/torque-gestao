@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
@@ -27,6 +27,7 @@ from app.schemas.ordem_servico import (
     OrdemServicoOut,
     StatusUpdate,
 )
+from app.services import telegram
 
 router = APIRouter(prefix="/ordens-servico", tags=["ordens de serviço"])
 
@@ -90,9 +91,17 @@ def _buscar_ou_404(os_id: str, db: Session) -> OrdemServico:
     return ordem
 
 
+def _agendar_notificacao(background: BackgroundTasks, ordem: OrdemServico) -> None:
+    """RF07: avisa o cliente no Telegram depois da resposta, sem afetar a requisição."""
+    aviso = telegram.preparar_notificacao_status(ordem)
+    if aviso:
+        background.add_task(telegram.enviar_mensagem, *aviso)
+
+
 @router.post("", response_model=OrdemServicoOut, status_code=status.HTTP_201_CREATED)
 def criar_ordem_servico(
     dados: OrdemServicoCreate,
+    background: BackgroundTasks,
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(_equipe_oficina),
 ):
@@ -135,6 +144,7 @@ def criar_ordem_servico(
     )
     db.commit()
     db.refresh(ordem)
+    _agendar_notificacao(background, ordem)
     return _serializar_os(ordem)
 
 
@@ -170,6 +180,7 @@ def obter_ordem_servico(
 def atualizar_status(
     os_id: str,
     dados: StatusUpdate,
+    background: BackgroundTasks,
     db: Session = Depends(get_db),
     usuario: Usuario = Depends(_equipe_oficina),
 ):
@@ -203,6 +214,7 @@ def atualizar_status(
     )
     db.commit()
     db.refresh(ordem)
+    _agendar_notificacao(background, ordem)
     return _serializar_os(ordem)
 
 

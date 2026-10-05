@@ -125,3 +125,22 @@ Cliente, com filtro obrigatório pelo vínculo `usuarios.cliente_id`. Escritas
 continuam restritas à equipe. Aplique `alembic upgrade head` para criar o vínculo.
 Para criar credenciais de um cadastro existente, execute
 `python -m app.provisionar_cliente ID_DO_CLIENTE`; a senha é solicitada interativamente.
+
+## Notificações por Telegram (RF07)
+
+O Telegram substitui o e-mail/SMS: o cliente recebe uma mensagem quando a OS é aberta
+e a cada mudança de status. O envio roda depois da resposta (`BackgroundTasks`) e uma
+falha do Telegram nunca impede a atualização da OS.
+
+1. Crie um bot com o `@BotFather` e preencha em `apps/api/.env`:
+   `TELEGRAM_BOT_TOKEN` e `TELEGRAM_BOT_USERNAME` (sem o `@`). Com o token vazio,
+   nada é enviado.
+2. Aplique a migration: `docker compose exec api alembic upgrade head`.
+3. Suba o worker que recebe as mensagens do bot (polling, sem URL pública):
+   `docker compose --profile telegram up -d telegram-poller`
+   (ou, sem Docker, `python -m app.telegram_poller`).
+4. Vínculo do cliente: `POST /clientes/{id}/telegram/vinculo` devolve um link
+   `https://t.me/<bot>?start=<token>` válido por 30 minutos e de uso único. O cliente
+   abre o link e toca em Iniciar. O front-end tem o botão na lista de clientes (equipe)
+   e no painel do portal (cliente).
+5. Desativar: `DELETE /clientes/{id}/telegram` ou o comando `/parar` no bot.

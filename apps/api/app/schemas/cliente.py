@@ -63,5 +63,6 @@ class ClienteOut(BaseModel):
     email: EmailStr
     phone: str | None = None
     cpf: str
+    telegram_vinculado: bool = False
 
     model_config = {"from_attributes": True}
