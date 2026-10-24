@@ -51,7 +51,13 @@ source .venv/bin/activate    # criado no passo anterior
 pip install ruff==0.6.9
 ruff check .                 # lint
 pytest -v                    # testes (SQLite em memória, não precisa de Postgres rodando)
+pytest --cov=app             # + cobertura (o CI exige no mínimo 95%)
+pytest -m seguranca          # só os testes de segurança
 ```
+
+Para rodar a mesma suíte contra PostgreSQL, defina `TEST_DATABASE_URL`. A
+estratégia completa de testes, a matriz requisito × teste e o guia para
+escrever testes novos estão em [`docs/testes.md`](../../docs/testes.md).
 
 ## Estrutura
 
