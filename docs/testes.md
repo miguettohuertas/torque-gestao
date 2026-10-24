@@ -108,13 +108,15 @@ pytest -m seguranca                # só os testes de segurança
 pytest tests/test_regras_criticas.py -k transicoes   # um arquivo / filtro por nome
 ```
 
-Contra PostgreSQL (ex.: o do `docker compose up`, num banco **só de teste** —
-as tabelas são apagadas a cada teste):
+Contra PostgreSQL (ex.: o do `docker compose up`, que fica na porta **5433**
+do seu computador), num banco **só de teste** — as tabelas são apagadas a
+cada teste:
 
 ```bash
-docker compose exec db createdb -U torque torque_test
-TEST_DATABASE_URL=postgresql+psycopg2://torque:torque@localhost:5432/torque_test pytest
-# PowerShell: $env:TEST_DATABASE_URL="postgresql+psycopg2://torque:torque@localhost:5432/torque_test"; pytest
+docker compose up -d db
+docker compose exec db createdb -U torque torque_test     # só na primeira vez
+TEST_DATABASE_URL=postgresql+psycopg2://torque:torque@localhost:5433/torque_test pytest
+# PowerShell: $env:TEST_DATABASE_URL="postgresql+psycopg2://torque:torque@localhost:5433/torque_test"; pytest
 ```
 
 ### Front-end (`apps/prototype`)
@@ -128,9 +130,14 @@ npm run test:e2e                   # E2E: sobe a API de teste e o front sozinho
 npx playwright test --ui           # modo visual, bom para depurar
 ```
 
-O E2E usa o Python do sistema para subir a API (`python3`); se o seu
-ambiente virtual tiver outro nome, defina `TORQUE_PYTHON` (ex.:
-`TORQUE_PYTHON=../api/.venv/bin/python npm run test:e2e`).
+O E2E usa `python3` para subir a API de teste. Para usar o Python do
+ambiente virtual do back-end, informe o caminho **absoluto** em
+`TORQUE_PYTHON`:
+
+```bash
+TORQUE_PYTHON="$(realpath ../api/.venv/bin/python)" npm run test:e2e
+# PowerShell: $env:TORQUE_PYTHON = (Resolve-Path ..\api\.venv\Scripts\python.exe).Path; npm run test:e2e
+```
 
 ## 6. Integração contínua
 
