@@ -4,10 +4,14 @@ Fixtures compartilhadas dos testes.
 As variáveis de ambiente precisam ser definidas ANTES de qualquer `import app...`,
 porque app/config.py lê `Settings()` (via env) no momento da importação.
 
-Cada teste recebe um banco SQLite em memória isolado (criado do zero a cada
-função de teste), então a ordem dos testes nunca importa e não há
-necessidade de um PostgreSQL real rodando para a suíte passar — útil tanto
-para rodar localmente quanto no CI, sem precisar de um serviço de banco.
+Cada teste recebe um banco isolado, criado do zero a cada função de teste,
+então a ordem dos testes nunca importa:
+
+- Padrão: SQLite em memória — rápido, sem nenhum serviço externo.
+- Com TEST_DATABASE_URL apontando para um PostgreSQL de teste (ex.:
+  postgresql+psycopg2://torque:torque@localhost:5432/torque_test), a mesma
+  suíte roda contra o banco usado em produção. As tabelas são criadas e
+  apagadas a cada teste; NUNCA aponte para um banco com dados reais.
 """
 import os
 
@@ -26,23 +30,45 @@ from app.database import Base, get_db  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models.usuario import ROLE_ADMIN, ROLE_CLIENTE, ROLE_MECANICO, Usuario  # noqa: E402
 
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "")
 
-@pytest.fixture()
-def db_session():
-    """Banco SQLite em memória, criado do zero para cada teste (isolamento total)."""
-    engine = create_engine(
+
+def _criar_engine():
+    if TEST_DATABASE_URL:
+        return create_engine(TEST_DATABASE_URL)
+    return create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
-    Base.metadata.create_all(bind=engine)
-    testing_session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    session = testing_session_local()
+
+
+@pytest.fixture()
+def engine():
+    """Engine do banco de teste com o schema criado do zero (isolamento total)."""
+    test_engine = _criar_engine()
+    Base.metadata.drop_all(bind=test_engine)
+    Base.metadata.create_all(bind=test_engine)
+    try:
+        yield test_engine
+    finally:
+        Base.metadata.drop_all(bind=test_engine)
+        test_engine.dispose()
+
+
+@pytest.fixture()
+def session_factory(engine):
+    """Fábrica de sessões ligada ao banco de teste (para código que usa SessionLocal)."""
+    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@pytest.fixture()
+def db_session(session_factory):
+    session = session_factory()
     try:
         yield session
     finally:
         session.close()
-        Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture()
