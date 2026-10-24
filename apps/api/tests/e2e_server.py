@@ -59,6 +59,8 @@ def main():
             db.flush()
             db.add(Usuario(name="Cliente Portal", email=customer.email, role="cliente",
                            cliente_id=customer.id, password_hash=hash_password("portal123")))
+            db.add(Usuario(name="Mecânico E2E", email="mecanico@example.com", role="mecanico",
+                           password_hash=hash_password("mecanico123")))
             db.commit()
         import uvicorn
         try:
