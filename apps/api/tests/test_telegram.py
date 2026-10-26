@@ -274,3 +274,93 @@ def test_mensagens_irrelevantes_nao_geram_resposta(db_session):
     assert telegram_poller.tratar_mensagem(db_session, CHAT, "/start") == (
         telegram_poller.MSG_BOAS_VINDAS
     )
+
+
+def test_enviar_mensagem_sem_token_nao_chama_a_rede(monkeypatch):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "")
+    monkeypatch.setattr(httpx, "post", lambda *a, **kw: pytest.fail("não deveria chamar a rede"))
+
+    assert telegram.enviar_mensagem(CHAT, "olá") is False
+
+
+def test_enviar_mensagem_com_falha_de_rede_devolve_false(telegram_ativo, monkeypatch, caplog):
+    def _falhar(*args, **kwargs):
+        raise httpx.ConnectError("sem rede")
+
+    monkeypatch.setattr(httpx, "post", _falhar)
+
+    assert telegram.enviar_mensagem(CHAT, "olá") is False
+    assert "token-de-teste" not in caplog.text  # o token do bot nunca vai para o log
+
+
+def _resposta_get(corpo=None, erro=None):
+    class Resposta:
+        def raise_for_status(self):
+            if erro:
+                raise erro
+
+        def json(self):
+            if isinstance(corpo, Exception):
+                raise corpo
+            return corpo
+
+    return Resposta()
+
+
+def test_buscar_atualizacoes_devolve_resultado_e_repassa_offset(telegram_ativo, monkeypatch):
+    chamadas = []
+
+    def _get(url, params, timeout):
+        chamadas.append(params)
+        return _resposta_get({"ok": True, "result": [{"update_id": 7}]})
+
+    monkeypatch.setattr(httpx, "get", _get)
+
+    assert telegram.buscar_atualizacoes(offset=7, timeout=0) == [{"update_id": 7}]
+    assert chamadas[0]["offset"] == 7
+
+
+@pytest.mark.parametrize(
+    "resposta",
+    [
+        _resposta_get(erro=httpx.HTTPStatusError("502", request=None, response=None)),
+        _resposta_get(corpo=ValueError("json inválido")),
+    ],
+)
+def test_buscar_atualizacoes_com_falha_devolve_lista_vazia(telegram_ativo, monkeypatch, resposta):
+    monkeypatch.setattr(httpx, "get", lambda *a, **kw: resposta)
+
+    assert telegram.buscar_atualizacoes(offset=None, timeout=0) == []
+
+
+def test_poller_sem_token_encerra_com_mensagem(monkeypatch):
+    monkeypatch.setattr(settings, "TELEGRAM_BOT_TOKEN", "")
+
+    with pytest.raises(SystemExit, match="TELEGRAM_BOT_TOKEN"):
+        telegram_poller.main()
+
+
+def test_poller_laco_principal_espera_lote_vazio_e_avanca_o_offset(telegram_ativo, monkeypatch):
+    class Encerrar(Exception):
+        pass
+
+    lotes = iter([[], [{"update_id": 7, "message": {"text": "oi", "chat": {"type": "group", "id": 1}}}]])
+    offsets = []
+
+    def _buscar(offset):
+        offsets.append(offset)
+        try:
+            return next(lotes)
+        except StopIteration:
+            raise Encerrar from None
+
+    esperas = []
+    monkeypatch.setattr(telegram, "buscar_atualizacoes", _buscar)
+    monkeypatch.setattr(telegram_poller.time, "sleep", esperas.append)
+
+    with pytest.raises(Encerrar):
+        telegram_poller.main()
+
+    assert esperas == [1]  # lote vazio: espera 1 s e tenta de novo
+    assert offsets == [None, None, 8]  # após o update 7, o próximo offset é 8
+

@@ -1,5 +1,7 @@
 const { defineConfig } = require('@playwright/test');
 module.exports = defineConfig({
+  // workers: 1 e ordem alfabética dos arquivos: flows.spec.cjs roda primeiro e
+  // confere os contadores do banco recém-criado; os demais specs só adicionam dados.
   timeout: 60000, testDir: './tests', testMatch: '**/*.spec.cjs', workers: 1,
   use: { baseURL: 'http://127.0.0.1:4173', trace: 'retain-on-failure' },
   webServer: [

@@ -1,3 +1,5 @@
+import pytest
+
 CPF_VALIDO = "111.444.777-35"
 CNPJ_VALIDO = "11.222.333/0001-81"
 
@@ -131,3 +133,37 @@ def test_remover_cliente_retorna_204_e_some_da_listagem(client, admin_user, auth
 
     assert delete_response.status_code == 204
     assert get_response.status_code == 404
+
+
+def test_atualizar_cliente_com_email_de_outro_cadastro_retorna_409(
+    client, admin_user, auth_header
+):
+    headers = auth_header(admin_user)
+    client.post("/clientes", json=_payload_cliente(), headers=headers)
+    segundo = client.post(
+        "/clientes",
+        json=_payload_cliente(email="outro@example.com", cpf=CNPJ_VALIDO),
+        headers=headers,
+    ).json()
+
+    response = client.put(
+        f"/clientes/{segundo['id']}",
+        json=_payload_cliente(email="fulano@example.com", cpf=CNPJ_VALIDO),
+        headers=headers,
+    )
+
+    assert response.status_code == 409
+    assert client.get(f"/clientes/{segundo['id']}", headers=headers).json()["email"] == (
+        "outro@example.com"
+    )
+
+
+@pytest.mark.parametrize("documento", ["000.000.000-00", "123.456.789-00", "11.111.111/1111-11", "123"])
+def test_documentos_com_digito_verificador_errado_sao_recusados(
+    client, admin_user, auth_header, documento
+):
+    response = client.post(
+        "/clientes", json=_payload_cliente(cpf=documento), headers=auth_header(admin_user)
+    )
+
+    assert response.status_code == 422

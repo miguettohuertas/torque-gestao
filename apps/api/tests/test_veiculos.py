@@ -143,3 +143,20 @@ def test_remover_veiculo_retorna_204_e_some_da_listagem(client, admin_user, auth
 
     assert delete_response.status_code == 204
     assert get_response.status_code == 404
+
+
+def test_atualizar_veiculo_para_placa_de_outro_retorna_409(client, admin_user, auth_header):
+    headers = auth_header(admin_user)
+    cliente_id = _criar_cliente(client, headers)
+    client.post("/veiculos", json=_payload_veiculo(cliente_id), headers=headers)
+    segundo = client.post(
+        "/veiculos", json=_payload_veiculo(cliente_id, plate="XYZ9A87"), headers=headers
+    ).json()
+
+    response = client.put(
+        f"/veiculos/{segundo['id']}",
+        json=_payload_veiculo(cliente_id, plate="abc-1d23"),
+        headers=headers,
+    )
+
+    assert response.status_code == 409

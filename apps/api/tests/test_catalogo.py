@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_criar_servico_como_admin_retorna_201(client, admin_user, auth_header):
     response = client.post(
         "/catalogo/servicos",
@@ -81,3 +84,66 @@ def test_criar_peca_com_estoque_negativo_retorna_422(client, admin_user, auth_he
     )
 
     assert response.status_code == 422
+
+
+def test_listar_atualizar_e_remover_peca(client, admin_user, mecanico_user, auth_header):
+    admin = auth_header(admin_user)
+    criada = client.post(
+        "/catalogo/pecas",
+        json={"nome": "Filtro de ar", "marca": "Mann", "preco": "48.00", "estoque": 5},
+        headers=admin,
+    ).json()
+
+    listadas = client.get("/catalogo/pecas", headers=auth_header(mecanico_user))
+    atualizada = client.put(
+        f"/catalogo/pecas/{criada['id']}",
+        json={"nome": "Filtro de ar esportivo", "marca": "K&N", "preco": "199.90", "estoque": 2},
+        headers=admin,
+    )
+    removida = client.delete(f"/catalogo/pecas/{criada['id']}", headers=admin)
+
+    assert [p["nome"] for p in listadas.json()] == ["Filtro de ar"]
+    assert atualizada.status_code == 200
+    assert atualizada.json()["estoque"] == 2
+    assert removida.status_code == 204
+    assert client.get("/catalogo/pecas", headers=admin).json() == []
+
+
+def test_mecanico_nao_altera_nem_remove_peca(client, admin_user, mecanico_user, auth_header):
+    criada = client.post(
+        "/catalogo/pecas",
+        json={"nome": "Vela", "preco": "25.00", "estoque": 8},
+        headers=auth_header(admin_user),
+    ).json()
+    mecanico = auth_header(mecanico_user)
+
+    alterar = client.put(
+        f"/catalogo/pecas/{criada['id']}",
+        json={"nome": "Vela", "preco": "1.00", "estoque": 8},
+        headers=mecanico,
+    )
+    remover = client.delete(f"/catalogo/pecas/{criada['id']}", headers=mecanico)
+
+    assert alterar.status_code == 403
+    assert remover.status_code == 403
+
+
+@pytest.mark.parametrize(
+    "metodo, rota, corpo",
+    [
+        ("put", "/catalogo/servicos/inexistente", {"nome": "X", "preco": "1.00"}),
+        ("delete", "/catalogo/servicos/inexistente", None),
+        ("put", "/catalogo/pecas/inexistente", {"nome": "X", "preco": "1.00", "estoque": 0}),
+        ("delete", "/catalogo/pecas/inexistente", None),
+    ],
+)
+def test_item_de_catalogo_inexistente_retorna_404(
+    client, admin_user, auth_header, metodo, rota, corpo
+):
+    kwargs = {"headers": auth_header(admin_user)}
+    if corpo is not None:
+        kwargs["json"] = corpo
+
+    response = getattr(client, metodo)(rota, **kwargs)
+
+    assert response.status_code == 404
