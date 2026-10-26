@@ -111,7 +111,8 @@ jobs:
 
   frontend:
     name: Front-end e fluxo integrado
-    runs-on: ubuntu-latest
+    # Versão fixa: o Playwright não suporta o Ubuntu 26.04 que o ubuntu-latest passou a usar.
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: apps/prototype
