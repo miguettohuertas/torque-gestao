@@ -51,7 +51,7 @@ source .venv/bin/activate    # criado no passo anterior
 pip install ruff==0.6.9
 ruff check .                 # lint
 pytest -v                    # testes (SQLite em memória, não precisa de Postgres rodando)
-pytest --cov=app             # + cobertura (o CI exige no mínimo 95%)
+pytest --cov=app             # + cobertura (o CI exige 100%)
 pytest -m seguranca          # só os testes de segurança
 ```
 
