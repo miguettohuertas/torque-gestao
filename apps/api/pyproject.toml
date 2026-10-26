@@ -15,6 +15,7 @@ markers = [
     "seguranca: testes de segurança (token, injeção, RBAC) ligados ao mapeamento de riscos",
     "contrato: testes de contrato gerados a partir do OpenAPI (Schemathesis)",
     "smoke: verificação rápida e somente leitura de que o sistema responde",
+    "aceitacao: cenários Dado/Quando/Então dos critérios de aceite dos requisitos",
 ]
 
 # Cobertura (pytest --cov=app). O CI falha se a cobertura de linhas e ramos
