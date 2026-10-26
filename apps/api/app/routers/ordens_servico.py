@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy import select, update
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.deps import (
     leitura_operacional,
@@ -157,7 +157,12 @@ def listar_ordens_servico(
     db: Session = Depends(get_db),
     _usuario=Depends(leitura_operacional),
 ):
-    query = select(OrdemServico).order_by(OrdemServico.data_abertura.desc())
+    # selectinload busca os itens de todas as OS numa única consulta (evita N+1).
+    query = (
+        select(OrdemServico)
+        .options(selectinload(OrdemServico.itens))
+        .order_by(OrdemServico.data_abertura.desc())
+    )
     if cliente_id:
         query = query.where(OrdemServico.cliente_id == cliente_id)
     if veiculo_id:

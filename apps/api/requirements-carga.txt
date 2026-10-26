@@ -1,0 +1,3 @@
+# Dependências só do teste de carga (tests/carga). Pesadas, por isso ficam fora do requirements.txt.
+-r requirements.txt
+locust==2.47.0

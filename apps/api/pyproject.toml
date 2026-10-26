@@ -16,6 +16,7 @@ markers = [
     "contrato: testes de contrato gerados a partir do OpenAPI (Schemathesis)",
     "smoke: verificação rápida e somente leitura de que o sistema responde",
     "aceitacao: cenários Dado/Quando/Então dos critérios de aceite dos requisitos",
+    "desempenho: consultas por requisição e orçamento de tempo das listagens",
 ]
 
 # Cobertura (pytest --cov=app). O CI falha se a cobertura de linhas e ramos

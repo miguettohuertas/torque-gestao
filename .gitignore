@@ -27,3 +27,6 @@ deploy/.env.prod
 .coverage
 coverage.xml
 htmlcov/
+
+# Relatórios do teste de carga
+apps/api/tests/carga/relatorio/
