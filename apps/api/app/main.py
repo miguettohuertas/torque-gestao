@@ -13,6 +13,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.entrada_segura import RejeitarCaractereNulo
 from app.routers import (
     auth,
     catalogo,
@@ -31,6 +32,9 @@ app = FastAPI(
 # CORS_ORIGINS (lista separada por vírgula) restringe as origens em produção;
 # sem ela, mantém "*" para o desenvolvimento local.
 _origens = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()]
+
+# Adicionado antes do CORS para ficar por dentro dele: a recusa também leva os cabeçalhos CORS.
+app.add_middleware(RejeitarCaractereNulo)
 
 app.add_middleware(
     CORSMiddleware,
