@@ -59,7 +59,7 @@ const LoginScreen = ({ onLogin }) => {
               <div>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:5 }}>
                   <label htmlFor="login-password" style={{ fontSize:13, fontWeight:600, color:C.fg }}>Senha</label>
-                  <button type="button" onClick={()=>setShowPw(!showPw)}
+                  <button type="button" onClick={()=>setShowPw(!showPw)} aria-label={showPw?'Ocultar senha':'Mostrar senha'}
                     style={{ background:'none', border:'none', cursor:'pointer', fontSize:12, color:C.p500, fontWeight:600 }}>
                     {showPw?'Ocultar':'Mostrar'}
                   </button>
