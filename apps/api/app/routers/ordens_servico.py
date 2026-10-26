@@ -11,6 +11,7 @@ from app.core.deps import (
     restringir_cliente,
     verificar_proprietario,
 )
+from app.core.respostas import CONFLITO, NAO_ENCONTRADO, PROTEGIDA, REQUISICAO_INVALIDA
 from app.database import get_db
 from app.models.catalogo_peca import CatalogoPeca
 from app.models.catalogo_servico import CatalogoServico
@@ -29,7 +30,7 @@ from app.schemas.ordem_servico import (
 )
 from app.services import telegram
 
-router = APIRouter(prefix="/ordens-servico", tags=["ordens de serviço"])
+router = APIRouter(prefix="/ordens-servico", tags=["ordens de serviço"], responses={**PROTEGIDA, **NAO_ENCONTRADO, **CONFLITO, **REQUISICAO_INVALIDA})
 
 _equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 

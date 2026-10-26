@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.deps import require_role
+from app.core.respostas import CONFLITO, NAO_ENCONTRADO, PROTEGIDA
 from app.database import get_db
 from app.models.catalogo_peca import CatalogoPeca
 from app.models.catalogo_servico import CatalogoServico
@@ -14,7 +15,7 @@ from app.schemas.catalogo import (
     CatalogoServicoOut,
 )
 
-router = APIRouter(prefix="/catalogo", tags=["catálogo"])
+router = APIRouter(prefix="/catalogo", tags=["catálogo"], responses={**PROTEGIDA, **NAO_ENCONTRADO, **CONFLITO})
 
 _equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 _apenas_admin = require_role(ROLE_ADMIN)

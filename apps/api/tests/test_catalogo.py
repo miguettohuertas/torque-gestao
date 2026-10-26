@@ -147,3 +147,26 @@ def test_item_de_catalogo_inexistente_retorna_404(
     response = getattr(client, metodo)(rota, **kwargs)
 
     assert response.status_code == 404
+
+
+# Regressão: achado pelo teste de contrato. Um preço como 0.001 passava na
+# validação (> 0), virava 0.00 no banco e a resposta estourava com erro 500.
+@pytest.mark.parametrize("rota", ["/catalogo/servicos", "/catalogo/pecas"])
+@pytest.mark.parametrize("preco", ["0.001", "0.004", "10.999", "123456789.00"])
+def test_preco_fora_do_formato_do_banco_retorna_422_e_nao_500(
+    client, admin_user, auth_header, rota, preco
+):
+    response = client.post(
+        rota, json={"nome": "Item", "preco": preco}, headers=auth_header(admin_user)
+    )
+
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize("rota", ["/catalogo/servicos", "/catalogo/pecas"])
+def test_preco_com_duas_casas_e_no_limite_do_banco_e_aceito(client, admin_user, auth_header, rota):
+    response = client.post(
+        rota, json={"nome": "Item", "preco": "99999999.99"}, headers=auth_header(admin_user)
+    )
+
+    assert response.status_code == 201

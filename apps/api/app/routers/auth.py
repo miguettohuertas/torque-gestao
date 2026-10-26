@@ -11,12 +11,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user, require_role
+from app.core.respostas import PROTEGIDA
 from app.core.security import create_access_token, verify_password
 from app.database import get_db
 from app.models.usuario import ROLE_ADMIN, Usuario
 from app.schemas.auth import Token, UsuarioPublico
 
-router = APIRouter(prefix="/auth", tags=["autenticação"])
+router = APIRouter(prefix="/auth", tags=["autenticação"], responses={**PROTEGIDA})
 
 
 @router.post("/login", response_model=Token)

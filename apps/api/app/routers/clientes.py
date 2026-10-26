@@ -9,13 +9,14 @@ from app.core.deps import (
     restringir_cliente,
     verificar_proprietario,
 )
+from app.core.respostas import CONFLITO, INDISPONIVEL, NAO_ENCONTRADO, PROTEGIDA
 from app.database import get_db
 from app.models.cliente import Cliente
 from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO, Usuario
 from app.schemas.cliente import ClienteCreate, ClienteOut, ClienteUpdate, ConviteTelegramOut
 from app.services import telegram, telegram_vinculo
 
-router = APIRouter(prefix="/clientes", tags=["clientes"])
+router = APIRouter(prefix="/clientes", tags=["clientes"], responses={**PROTEGIDA, **NAO_ENCONTRADO, **CONFLITO, **INDISPONIVEL})
 
 _equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 
