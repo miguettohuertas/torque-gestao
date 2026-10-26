@@ -12,6 +12,14 @@ name: API e front-end CI
 #   3. frontend       — testes unitários do cliente HTTP (node:test) e o
 #                       fluxo integrado no navegador (Playwright) contra a API
 #                       real com PostgreSQL.
+#   4. carga          — Locust com usuários simultâneos contra a API real com
+#                       PostgreSQL; reprova se o p95 ou a taxa de falhas
+#                       passarem dos limites (tests/carga/locustfile.py).
+#
+# O pytest (jobs 1 e 2) já inclui os testes de contrato (OpenAPI), aceitação
+# (Dado/Quando/Então), smoke e desempenho; o Playwright (job 3) inclui a
+# acessibilidade (axe-core). O smoke test do ambiente de produção fica em
+# .github/workflows/smoke-producao.yml.
 #
 # Estratégia completa e como rodar localmente: docs/testes.md.
 
@@ -154,3 +162,41 @@ jobs:
         with:
           name: playwright-results
           path: apps/prototype/test-results/
+
+  carga:
+    name: Carga com usuários simultâneos (Locust, PostgreSQL)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: apps/api
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: torque
+          POSTGRES_PASSWORD: torque
+          POSTGRES_DB: torque_carga
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U torque -d torque_carga"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TORQUE_E2E_POSTGRES_URL: postgresql+psycopg2://torque:torque@localhost:5432/torque_carga
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: apps/api/requirements-carga.txt
+      - run: pip install -r requirements-carga.txt
+      - name: Carga (30 usuários por 20 s)
+        run: python tests/carga/executar.py --usuarios 30 --rampa 10 --duracao 20
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorio-de-carga
+          path: apps/api/tests/carga/relatorio/

@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy import select, update
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.deps import (
     leitura_operacional,
@@ -11,6 +11,7 @@ from app.core.deps import (
     restringir_cliente,
     verificar_proprietario,
 )
+from app.core.respostas import CONFLITO, NAO_ENCONTRADO, PROTEGIDA, REQUISICAO_INVALIDA
 from app.database import get_db
 from app.models.catalogo_peca import CatalogoPeca
 from app.models.catalogo_servico import CatalogoServico
@@ -29,7 +30,7 @@ from app.schemas.ordem_servico import (
 )
 from app.services import telegram
 
-router = APIRouter(prefix="/ordens-servico", tags=["ordens de serviço"])
+router = APIRouter(prefix="/ordens-servico", tags=["ordens de serviço"], responses={**PROTEGIDA, **NAO_ENCONTRADO, **CONFLITO, **REQUISICAO_INVALIDA})
 
 _equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 
@@ -156,7 +157,12 @@ def listar_ordens_servico(
     db: Session = Depends(get_db),
     _usuario=Depends(leitura_operacional),
 ):
-    query = select(OrdemServico).order_by(OrdemServico.data_abertura.desc())
+    # selectinload busca os itens de todas as OS numa única consulta (evita N+1).
+    query = (
+        select(OrdemServico)
+        .options(selectinload(OrdemServico.itens))
+        .order_by(OrdemServico.data_abertura.desc())
+    )
     if cliente_id:
         query = query.where(OrdemServico.cliente_id == cliente_id)
     if veiculo_id:

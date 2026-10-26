@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class CatalogoServicoCreate(BaseModel):
     nome: str = Field(min_length=1, max_length=120)
     categoria: str | None = Field(default=None, max_length=60)
-    preco: Decimal = Field(gt=0)
+    preco: Decimal = Field(gt=0, max_digits=10, decimal_places=2)
 
 
 class CatalogoServicoOut(CatalogoServicoCreate):
@@ -18,7 +18,7 @@ class CatalogoServicoOut(CatalogoServicoCreate):
 class CatalogoPecaCreate(BaseModel):
     nome: str = Field(min_length=1, max_length=120)
     marca: str | None = Field(default=None, max_length=60)
-    preco: Decimal = Field(gt=0)
+    preco: Decimal = Field(gt=0, max_digits=10, decimal_places=2)
     estoque: int = Field(default=0, ge=0)
 
 

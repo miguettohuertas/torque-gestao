@@ -364,3 +364,25 @@ def test_poller_laco_principal_espera_lote_vazio_e_avanca_o_offset(telegram_ativ
     assert esperas == [1]  # lote vazio: espera 1 s e tenta de novo
     assert offsets == [None, None, 8]  # após o update 7, o próximo offset é 8
 
+
+
+def test_convite_de_cliente_que_nao_existe_mais_e_recusado(db_session, cenario, telegram_ativo, monkeypatch):
+    _, cliente_id, *_ = cenario
+    token = telegram_vinculo.gerar_convite(db_session, db_session.get(Cliente, cliente_id))
+    # Simula o cadastro removido depois do convite (no PostgreSQL a chave
+    # estrangeira nem deixaria apagar, mas o código não pode confiar nisso).
+    monkeypatch.setattr(db_session, "get", lambda *args, **kwargs: None)
+
+    assert telegram_vinculo.confirmar_convite(db_session, token, CHAT) is None
+
+
+def test_poller_mensagem_privada_sem_resposta_nao_envia_nada(
+    db_session, cenario, telegram_ativo, enviadas, monkeypatch
+):
+    monkeypatch.setattr(telegram_poller, "SessionLocal", lambda: nullcontext(db_session))
+    lote = [{"update_id": 3, "message": {"text": "bom dia", "chat": {"type": "private", "id": 42}}}]
+
+    proximo = telegram_poller.processar_atualizacoes(lote)
+
+    assert proximo == 4
+    assert enviadas == []

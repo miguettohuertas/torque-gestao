@@ -1,0 +1,29 @@
+name: Smoke test da produção
+
+# Verificação rápida e SOMENTE LEITURA do ambiente publicado (nada é criado):
+# confere API, banco, contrato, proteção das rotas e o front-end. Roda todo dia
+# de manhã e pode ser disparado à mão depois de cada deploy (Actions > Run workflow).
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 08:00 em Brasília
+  workflow_dispatch:
+    inputs:
+      api:
+        description: URL da API
+        default: https://torquegestao.duckdns.org/api
+      front:
+        description: URL do front-end
+        default: https://torquegestao.duckdns.org
+
+jobs:
+  smoke:
+    name: Smoke test (produção)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Rodar o smoke test
+        run: python apps/api/tests/smoke.py "${{ inputs.api || 'https://torquegestao.duckdns.org/api' }}" --front "${{ inputs.front || 'https://torquegestao.duckdns.org' }}"

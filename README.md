@@ -111,7 +111,7 @@ torque-gestao/
 - **Concluído — RF01 a RF05:** CRUD de clientes (validação de CPF/CNPJ e busca), CRUD de veículos (validação de placa Mercosul/antiga), catálogo de serviços e peças, e emissão/acompanhamento de ordens de serviço com orçamento calculado a partir do catálogo e histórico de status — todos implementados e testados (`apps/api/tests/`). Detalhes, cronograma e responsáveis em [`docs/academic/documentacao-mvp1.tex`](docs/academic/documentacao-mvp1.tex).
 - **Concluído — Fase 4:** front-end e portal do cliente integrados à API real, com testes das regras de OS; evidências em [`docs/entregas/fase4-24-09.md`](docs/entregas/fase4-24-09.md).
 - **Concluído — RF07:** notificações de status da OS por Telegram, em substituição a e-mail/SMS, com vínculo opt-in do cliente.
-- **Concluído — testes automatizados:** 277 testes (264 de API, 7 unitários do front-end, 6 E2E por perfil), cobertura de 99% no back-end, rodando no CI em SQLite e em PostgreSQL; inclui testes de segurança ligados ao mapeamento de riscos. Estratégia e matriz requisito × teste em [`docs/testes.md`](docs/testes.md).
+- **Concluído — testes automatizados:** 396 testes (377 de API, 7 unitários do front-end, 12 E2E) e carga com Locust, cobrindo 11 tipos de teste: unitário, integração, E2E, aceitação (Dado/Quando/Então), regressão, segurança, contrato de API, smoke, desempenho, carga e acessibilidade (WCAG 2.1 AA). Cobertura de 100% (linhas e ramos) no back-end, exigida pelo CI em SQLite e PostgreSQL. Estratégia, matriz requisito × teste e comandos em [`docs/testes.md`](docs/testes.md).
 - **Concluído — deploy:** sistema em produção em [torquegestao.duckdns.org](https://torquegestao.duckdns.org); arquitetura e operação em [`docs/deploy.md`](docs/deploy.md).
 
 ## Próximos passos

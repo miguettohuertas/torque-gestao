@@ -9,13 +9,14 @@ from app.core.deps import (
     restringir_cliente,
     verificar_proprietario,
 )
+from app.core.respostas import CONFLITO, NAO_ENCONTRADO, PROTEGIDA
 from app.database import get_db
 from app.models.cliente import Cliente
 from app.models.usuario import ROLE_ADMIN, ROLE_MECANICO
 from app.models.veiculo import Veiculo
 from app.schemas.veiculo import VeiculoCreate, VeiculoOut, VeiculoUpdate
 
-router = APIRouter(prefix="/veiculos", tags=["veículos"])
+router = APIRouter(prefix="/veiculos", tags=["veículos"], responses={**PROTEGIDA, **NAO_ENCONTRADO, **CONFLITO})
 
 _equipe_oficina = require_role(ROLE_ADMIN, ROLE_MECANICO)
 
