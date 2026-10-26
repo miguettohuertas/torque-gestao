@@ -18,6 +18,10 @@ import os
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key-not-for-production")
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 os.environ.setdefault("ENVIRONMENT", "test")
+# O .env de desenvolvimento pode ter o token de um bot real: os testes nunca
+# podem depender dele nem falar com o Telegram (variável de ambiente vence o .env).
+os.environ["TELEGRAM_BOT_TOKEN"] = ""
+os.environ["TELEGRAM_BOT_USERNAME"] = ""
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

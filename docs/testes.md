@@ -25,7 +25,7 @@ teste automatizado e como rodar tudo localmente e no CI.
                 │  E2E (6)     │  Playwright: navegador real + API real
                 ├──────────────┤
                 │ Integração   │  pytest + TestClient: HTTP → FastAPI →
-                │  da API (153)│  SQLAlchemy → banco (SQLite e PostgreSQL)
+                │  da API (264)│  SQLAlchemy → banco (SQLite e PostgreSQL)
                 ├──────────────┤
                 │ Unitário (7+)│  node:test (cliente HTTP do front) e
                 │              │  funções puras do back (validação, Telegram)
@@ -82,7 +82,7 @@ constraints do banco, serialização), e ainda roda em ~1–2 minutos.
 | **RF03** — Emissão de OS e orçamento | `test_ordens_servico.py` (10), `test_regras_criticas.py`: orçamento calculado pelo servidor, preço enviado pelo cliente ignorado, *snapshot* de preços, quantidades inválidas, criação atômica | `flows` (total R$ 191,00), `mecanico` (R$ 180,00) |
 | **RF04** — Fluxo de status e histórico | `test_regras_criticas.py`: matriz completa das 25 transições, status desconhecido, transição concorrente sem histórico duplicado; `test_ordens_servico.py`: pular/voltar etapa (409) | `flows` (5 etapas até Entregue), `mecanico` |
 | **RF05** — Catálogo de serviços e peças | `test_catalogo.py` (13): CRUD de serviços e peças, validação de preço/estoque, 404, Mecânico só consulta | usado em `flows` e `mecanico` |
-| **RF06** — Autenticação e RBAC | `test_auth.py` (9), `test_seguranca.py` (22) | login com senha errada (`flows`), sessão expirada (`flows`), menus por perfil (`mecanico`, `portal-isolamento`) |
+| **RF06** — Autenticação e RBAC | `test_auth.py` (9), `test_seguranca.py` (22), `test_rbac_matriz.py` (109): todas as rotas × os 3 perfis + sem token; falha se uma rota nova não entrar na matriz | login com senha errada (`flows`), sessão expirada (`flows`), menus por perfil (`mecanico`, `portal-isolamento`) |
 | **RF07** — Notificações por Telegram | `test_telegram.py` (23): aviso na abertura e a cada status, opt-in por convite de uso único, convite expirado, desvínculo, falha de rede não afeta a OS, token do bot fora dos logs | — (serviço externo) |
 | **Portal do cliente** | `test_regras_criticas.py`: isolamento em listas, detalhes, filtros e escrita; vínculo não usa e-mail para autorizar | `flows`, `portal-isolamento` |
 | **Risco: falhas de autenticação** | `test_seguranca.py`: token adulterado, de outro segredo, expirado, sem `sub`, com `alg: none`, de usuário removido; perfil forjado no token não eleva privilégio; senha só como hash Bcrypt | `flows` (token inválido volta ao login) |

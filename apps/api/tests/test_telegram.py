@@ -339,3 +339,28 @@ def test_poller_sem_token_encerra_com_mensagem(monkeypatch):
     with pytest.raises(SystemExit, match="TELEGRAM_BOT_TOKEN"):
         telegram_poller.main()
 
+
+def test_poller_laco_principal_espera_lote_vazio_e_avanca_o_offset(telegram_ativo, monkeypatch):
+    class Encerrar(Exception):
+        pass
+
+    lotes = iter([[], [{"update_id": 7, "message": {"text": "oi", "chat": {"type": "group", "id": 1}}}]])
+    offsets = []
+
+    def _buscar(offset):
+        offsets.append(offset)
+        try:
+            return next(lotes)
+        except StopIteration:
+            raise Encerrar from None
+
+    esperas = []
+    monkeypatch.setattr(telegram, "buscar_atualizacoes", _buscar)
+    monkeypatch.setattr(telegram_poller.time, "sleep", esperas.append)
+
+    with pytest.raises(Encerrar):
+        telegram_poller.main()
+
+    assert esperas == [1]  # lote vazio: espera 1 s e tenta de novo
+    assert offsets == [None, None, 8]  # após o update 7, o próximo offset é 8
+
